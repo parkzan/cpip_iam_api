@@ -1,4 +1,4 @@
-package com.prior.iam;
+package co.prior.iam;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
