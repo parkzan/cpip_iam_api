@@ -21,22 +21,38 @@ public class SystemCreateService {
     public  String createSystem(SystemAddReq systemAddReq){
 
 
-
    if(!StringUtils.isBlank(systemAddReq.getSystemCode()) && !StringUtils.isBlank(systemAddReq.getSystemName()) ){
-       SystemEntity check = systemRepository.findBySystemCodeAndAndIsDeleted(systemAddReq.getSystemCode(),"N");
+       SystemEntity check = systemRepository.findBySystemCodeAndIsDeleted(systemAddReq.getSystemCode(),"N");
 
 if (check == null) {
     SystemEntity systemEntity = new SystemEntity();
     systemEntity.setSystemCode(systemAddReq.getSystemCode());
     systemEntity.setSystemIcon(systemAddReq.getSystemIcon());
     systemEntity.setSystemName(systemAddReq.getSystemName());
-    systemEntity.setCreatedBy("API");
+    systemEntity.setCreatedBy("ADMIN");
     systemEntity.setCreatedDate(new Date());
     systemEntity.setIsDeleted("N");
 
     systemRepository.save(systemEntity);
 
     return "success";
+}
+else{
+    SystemEntity systemEntity = systemRepository.findBySystemCodeAndIsDeleted(systemAddReq.getSystemCode(),"Y");
+    if (systemEntity != null ){
+        //// upadte
+
+        systemEntity.setSystemIcon(systemAddReq.getSystemIcon());
+        systemEntity.setSystemName(systemAddReq.getSystemName());
+        systemEntity.setCreatedBy("API");
+        systemEntity.setCreatedDate(new Date());
+        systemEntity.setIsDeleted("N");
+
+        systemRepository.save(systemEntity);
+
+        return "success";
+    }
+
 }
    }
 

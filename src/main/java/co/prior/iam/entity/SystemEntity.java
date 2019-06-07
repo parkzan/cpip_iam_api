@@ -9,12 +9,13 @@ import javax.persistence.*;
 import java.util.Date;
 
 @Entity
-@Table(name =  "sys_ms_system")
+@Table(name = "iam_ms_system")
 @Getter
 @Setter
 public class SystemEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @SequenceGenerator(name = "system_id_seq", sequenceName = "iam_ms_system_system_id_seq")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "system_id_seq")
     @Column(name = "system_id")
     private Integer systemID;
 
@@ -34,10 +35,10 @@ public class SystemEntity {
     private String isDeleted = "N";
 
     @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "created_date", length = 19, nullable = false)
+    @Column(name = "created_date",nullable = false)
     private Date createdDate;
     @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "updated_date", length = 19)
+    @Column(name = "updated_date")
     private Date updatedDate;
     @Column(name = "created_by", length = 50, nullable = false)
     private String createdBy;
