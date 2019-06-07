@@ -17,7 +17,7 @@ public class SystemEntity {
     @SequenceGenerator(name = "system_id_seq", sequenceName = "iam_ms_system_system_id_seq")
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "system_id_seq")
     @Column(name = "system_id")
-    private Integer systemID;
+    private Long systemID;
 
     @Column(name = "system_code")
     private String systemCode;

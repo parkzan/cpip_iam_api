@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface SystemRepository  extends JpaRepository<SystemEntity,Integer>, JpaSpecificationExecutor<SystemEntity> {
+public interface SystemRepository  extends JpaRepository<SystemEntity,Long>, JpaSpecificationExecutor<SystemEntity> {
 
     SystemEntity findBySystemCodeAndIsDeleted(String sysCode , String isDelete);
 
