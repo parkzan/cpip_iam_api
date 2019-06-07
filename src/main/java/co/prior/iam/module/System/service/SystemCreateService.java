@@ -44,7 +44,7 @@ else{
 
         systemEntity.setSystemIcon(systemAddReq.getSystemIcon());
         systemEntity.setSystemName(systemAddReq.getSystemName());
-        systemEntity.setCreatedBy("API");
+        systemEntity.setCreatedBy("ADMIN");
         systemEntity.setCreatedDate(new Date());
         systemEntity.setIsDeleted("N");
 

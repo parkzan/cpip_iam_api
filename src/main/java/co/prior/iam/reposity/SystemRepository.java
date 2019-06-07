@@ -12,4 +12,6 @@ import java.util.List;
 public interface SystemRepository  extends JpaRepository<SystemEntity,Integer>, JpaSpecificationExecutor<SystemEntity> {
 
     SystemEntity findBySystemCodeAndIsDeleted(String sysCode , String isDelete);
+
+    List<SystemEntity> findByIsDeleted(String isDelete);
 }
