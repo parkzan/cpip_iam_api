@@ -14,7 +14,7 @@ import java.util.Date;
 @Setter
 public class SystemEntity {
     @Id
-    @SequenceGenerator(name = "system_id_seq", sequenceName = "iam_ms_system_system_id_seq")
+    @SequenceGenerator(name = "system_id_seq", sequenceName = "iam_ms_system_system_id_seq",allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "system_id_seq")
     @Column(name = "system_id")
     private Long systemID;
