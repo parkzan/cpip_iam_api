@@ -13,11 +13,17 @@ spring:
     url: jdbc:postgresql://prod-db.droppointcrm.com:15432/prior_db_iam
     username: prior_iam
     password: priorP@ssw0rdIAM
+
+
+
   jpa:
     database: POSTGRESQL
     show-sql: true
     properties:
       hibernate:
+        default_schema: iam2
         temp:
           use_jdbc_metadata_defaults: false
+
+
     
