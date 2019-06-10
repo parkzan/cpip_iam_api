@@ -1,3 +1,4 @@
+
 server:
   servlet:
     contextPath: "/iam/api/v2"
