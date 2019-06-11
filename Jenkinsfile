@@ -40,7 +40,7 @@ pipeline {
         }
       }
     }
-    stage('Build Release && SonarQube Analysis') {
+    stage('Build Release') {
       when {
         branch 'master'
       }
