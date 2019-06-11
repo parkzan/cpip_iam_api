@@ -21,7 +21,15 @@ pipeline {
       steps {
         container('maven') {
           sh "mvn versions:set -DnewVersion=$PREVIEW_VERSION"
-          sh "mvn install"
+
+          withSonarQubeEnv('sonarkube-sonarqube') {
+            sh "mvn clean install sonar:sonar"
+          }
+
+          timeout(time: 10, unit: 'MINUTES') {
+            waitForQualityGate abortPipeline: true
+          }
+
           sh "skaffold version"
           sh "export VERSION=$PREVIEW_VERSION && skaffold build -f skaffold.yaml"
           sh "jx step post build --image $DOCKER_REGISTRY/$ORG/$APP_NAME:$PREVIEW_VERSION"
@@ -32,7 +40,7 @@ pipeline {
         }
       }
     }
-    stage('Build Release') {
+    stage('Build Release && SonarQube Analysis') {
       when {
         branch 'master'
       }
@@ -44,15 +52,19 @@ pipeline {
           sh "git config --global credential.helper store"
           sh "jx step git credentials"
 
-          withSonarQubeEnv('sonarkube-sonarqube') {
-            sh 'mvn clean package sonar:sonar'
-          }
-
           // so we can retrieve the version in later steps
           sh "echo \$(jx-release-version) > VERSION"
           sh "mvn versions:set -DnewVersion=\$(cat VERSION)"
           sh "jx step tag --version \$(cat VERSION)"
-          sh "mvn clean deploy"
+
+          withSonarQubeEnv('sonarkube-sonarqube') {
+            sh "mvn clean deploy sonar:sonar"
+          }
+
+          timeout(time: 10, unit: 'MINUTES') {
+            waitForQualityGate abortPipeline: true
+          }
+
           sh "skaffold version"
           sh "export VERSION=`cat VERSION` && skaffold build -f skaffold.yaml"
           sh "jx step post build --image $DOCKER_REGISTRY/$ORG/$APP_NAME:\$(cat VERSION)"
