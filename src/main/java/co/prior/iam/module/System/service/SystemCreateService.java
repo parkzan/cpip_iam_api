@@ -1,14 +1,14 @@
 package co.prior.iam.module.System.service;
 
 
-import co.prior.iam.common.BaseApiRespone;
+
 import co.prior.iam.entity.IamMsSystem;
 import co.prior.iam.module.System.model.req.SystemAddReq;
 import co.prior.iam.module.System.model.res.SystemRespone;
 import co.prior.iam.reposity.SystemRepository;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,13 +18,19 @@ import java.util.Optional;
 
 @Service
 public class SystemCreateService {
-    @Autowired
+
+
     SystemRepository systemRepository;
 
+    public  SystemCreateService(SystemRepository systemRepository){
+
+        this.systemRepository = systemRepository ;
+    }
+
     @Transactional
-    public BaseApiRespone<SystemRespone> createSystem(SystemAddReq systemAddReq) throws Exception {
-        BaseApiRespone<SystemRespone> respone = new BaseApiRespone<>();
-   if(!StringUtils.isBlank(systemAddReq.getSystemCode()) && !StringUtils.isBlank(systemAddReq.getSystemName()) ){
+    public ResponseEntity<SystemRespone> createSystem(SystemAddReq systemAddReq) throws Exception {
+        SystemRespone respone = new SystemRespone();
+
        Optional<IamMsSystem> check = systemRepository.findBySystemCodeAndIsDeleted(systemAddReq.getSystemCode(),"N");
 
             if (!check.isPresent()) {
@@ -41,20 +47,18 @@ public class SystemCreateService {
                  systemRepository.save(iamMsSystem);
 
 
-                 respone.setResCode(HttpStatus.OK.toString());
-                respone.setMessage("create " + iamMsSystem.getSystemCode() +" success" );
+                 respone.setCode("S001");
+                respone.setMessage("success" );
 
 
-                return respone;
+                return new ResponseEntity<>(respone,HttpStatus.CREATED);
              }
-            else {
-                throw new Exception("duplicate System Code");
-            }
 
-   }
 
-return respone;
+        respone.setCode("E001");
+        respone.setMessage("data not found");
 
+        return new ResponseEntity<>(respone,HttpStatus.NOT_FOUND);
     }
 
 }

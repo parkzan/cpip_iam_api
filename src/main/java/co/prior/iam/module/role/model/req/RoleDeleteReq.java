@@ -11,5 +11,5 @@ import lombok.Setter;
 public class RoleDeleteReq {
 
     private String roleCode;
-    private String systemId;
+    private Long systemId;
 }

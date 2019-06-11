@@ -7,8 +7,8 @@ import co.prior.iam.module.System.model.req.SystemDeleteReq;
 import co.prior.iam.module.System.model.res.SystemRespone;
 import co.prior.iam.reposity.SystemRepository;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,28 +18,34 @@ import java.util.Optional;
 @Service
 public class SystemDeleteService {
 
-    @Autowired
+
     SystemRepository systemRepository;
 
+    public SystemDeleteService(SystemRepository systemRepository){
+        this.systemRepository = systemRepository ;
+    }
+
     @Transactional
-    public BaseApiRespone<SystemRespone> deleteSystem(SystemDeleteReq systemDeleteReq){
-        BaseApiRespone<SystemRespone> respone = new BaseApiRespone<>();
-        if(!StringUtils.isBlank(systemDeleteReq.getSystemCode())){
+    public ResponseEntity<SystemRespone> deleteSystem(SystemDeleteReq systemDeleteReq){
+        SystemRespone respone = new SystemRespone();
 
             Optional<IamMsSystem> iamMsSystem = systemRepository.findBySystemCodeAndIsDeleted(systemDeleteReq.getSystemCode(),"N");
 
-            if(iamMsSystem != null){
+            if(iamMsSystem.isPresent()){
                 iamMsSystem.get().setIsDeleted("Y");
 
                 systemRepository.save(iamMsSystem.get());
 
-                respone.setResCode(HttpStatus.OK.toString());
-                respone.setMessage("delete " + iamMsSystem.get().getSystemCode() +" success" );
+                respone.setCode("S001");
+                respone.setMessage("success" );
 
-                return respone;
+                return new ResponseEntity<>(respone,HttpStatus.OK);
             }
-        }
 
-        return respone;
+
+        respone.setCode("E001");
+        respone.setMessage("data not found");
+
+        return new ResponseEntity<>(respone,HttpStatus.NOT_FOUND);
     }
 }

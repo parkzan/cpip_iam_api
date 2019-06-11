@@ -1,18 +1,16 @@
-package co.prior.iam.module.System.model.res;
+package co.prior.iam.module.object.model.res;
 
 
-import co.prior.iam.common.BaseApiRespone;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Getter;
 import lombok.Setter;
+import org.aspectj.apache.bcel.classfile.Code;
 
 @Getter
 @Setter
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class SystemRespone{
+public class ObjectRespone {
 
-    private String code;
     private String message;
-
-
+    private String Code ;
 }

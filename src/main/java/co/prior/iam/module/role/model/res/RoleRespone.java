@@ -10,5 +10,6 @@ import lombok.Setter;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class RoleRespone {
 
-    private String roleCode;
+    private String message;
+    private String code;
 }

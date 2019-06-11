@@ -19,27 +19,16 @@ public class RoleInqueryService {
     @Autowired
     RoleRepository roleRepository;
 
-    public BaseApiRespone<List<IamMsRole>> inqueryRole(GetRoleReq getRoleReq) throws  Exception{
+    public Optional<List<IamMsRole>> inqueryRole(GetRoleReq getRoleReq) throws Exception {
 
-        BaseApiRespone<List<IamMsRole>> respone = new BaseApiRespone<>();
-        if (!StringUtils.isBlank(getRoleReq.getSystemId())){
-             Optional<List<IamMsRole>> roleList = roleRepository.findBySystemIdAndIsDeleted(Long.parseLong(getRoleReq.getSystemId()),"N");
-                if(roleList.isPresent()){
 
-                    respone.setResCode(HttpStatus.OK.toString());
-                    respone.setMessage("success" );
-                    respone.setResult(roleList.get());
-                    return respone;
-                }else {
-                    respone.setResCode(HttpStatus.NOT_FOUND.toString());
-                    respone.setMessage("data not found");
-                    respone.setResult(roleList.get());
-                    return respone;
+        Optional<List<IamMsRole>> roleList = roleRepository.findBySystemIdAndIsDeleted(Long.parseLong(getRoleReq.getSystemId()), "N");
+        if (roleList.isPresent()) {
 
-                }
 
+            return roleList;
         }
-       throw new Exception("data not found");
-
+        return null;
     }
+
 }

@@ -9,6 +9,7 @@ import co.prior.iam.repository.RoleRepository;
 import io.micrometer.core.instrument.util.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,12 +23,12 @@ public class RoleEditService {
 
 
     @Transactional
-    public BaseApiRespone<RoleRespone> editRole(RoleEditReq roleEditReq) throws Exception{
-            BaseApiRespone<RoleRespone> respone = new BaseApiRespone<>();
-        if(!StringUtils.isBlank(roleEditReq.getSystemId()) && !StringUtils.isBlank(roleEditReq.getRoleCode())){
+    public ResponseEntity<RoleRespone> editRole(RoleEditReq roleEditReq) throws Exception{
+
+           RoleRespone respone = new RoleRespone();
 
 
-                Optional<IamMsRole> iamMsRole = roleRepository.findByRoleCodeAndSystemIdAndIsDeleted(roleEditReq.getRoleCode(),Long.parseLong(roleEditReq.getSystemId()),"N");
+                Optional<IamMsRole> iamMsRole = roleRepository.findByRoleCodeAndSystemIdAndIsDeleted(roleEditReq.getRoleCode(),roleEditReq.getSystemId(),"N");
 
                 if(iamMsRole.isPresent()) {
 
@@ -36,19 +37,17 @@ public class RoleEditService {
                     iamMsRole.get().setRoleIcon(roleEditReq.getNewIcon());
                     roleRepository.save(iamMsRole.get());
 
-                    respone.setResCode(HttpStatus.OK.toString());
-                    respone.setMessage("edit " + iamMsRole.get().getRoleCode() +" success" );
+                    respone.setCode("S001");
+                    respone.setMessage("success" );
 
 
-                    return respone;
-                }
-                else{
-                    throw new Exception("not found data");
+                    return new ResponseEntity<>(respone,HttpStatus.OK);
                 }
 
 
-        }
+        respone.setCode("E001");
+        respone.setMessage("data not found" );
 
-        return respone;
+        return  new ResponseEntity<>(respone,HttpStatus.NOT_FOUND);
     }
 }

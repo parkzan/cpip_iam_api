@@ -9,7 +9,7 @@ import lombok.Setter;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class RoleEditReq {
 
-    private String systemId;
+    private Long systemId;
     private String roleCode;
     private String newName;
     private String newIcon;

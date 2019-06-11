@@ -8,6 +8,7 @@ import co.prior.iam.reposity.SystemRepository;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,31 +22,30 @@ public class SystemEditService {
     SystemRepository systemRepository;
 
     @Transactional
-    public BaseApiRespone<SystemRespone> editSystem(SystemEditReq systemEditReq){
-               BaseApiRespone<SystemRespone> respone = new BaseApiRespone<>();
-        if(!StringUtils.isBlank(systemEditReq.getSystemCode())
-                && !StringUtils.isBlank(systemEditReq.getNewName())
-                && !StringUtils.isBlank(systemEditReq.getNewIcon())){
+    public ResponseEntity<SystemRespone> editSystem(SystemEditReq systemEditReq) {
+        SystemRespone respone = new SystemRespone();
 
-            Optional<IamMsSystem> iamMsSystem = systemRepository.findBySystemCodeAndIsDeleted(systemEditReq.getSystemCode(),"N");
 
-            if (iamMsSystem.isPresent()){
+        Optional<IamMsSystem> iamMsSystem = systemRepository.findBySystemCodeAndIsDeleted(systemEditReq.getSystemCode(), "N");
 
-                iamMsSystem.get().setSystemName(systemEditReq.getNewName());
-                iamMsSystem.get().setSystemIcon(systemEditReq.getNewIcon());
+        if (iamMsSystem.isPresent()) {
 
-                systemRepository.save(iamMsSystem.get());
+            iamMsSystem.get().setSystemName(systemEditReq.getNewName());
+            iamMsSystem.get().setSystemIcon(systemEditReq.getNewIcon());
 
-                respone.setResCode(HttpStatus.OK.toString());
-                respone.setMessage("edit " + iamMsSystem.get().getSystemCode() +" success" );
+            systemRepository.save(iamMsSystem.get());
 
-                return respone;
-            }
+            respone.setCode("S001");
+            respone.setMessage("success");
 
+            return new ResponseEntity<>(respone, HttpStatus.OK);
         }
 
-       return respone;
-    }
+        respone.setCode("E001");
+        respone.setMessage("data not found");
 
+        return new ResponseEntity<>(respone, HttpStatus.NOT_FOUND);
+
+    }
 
 }

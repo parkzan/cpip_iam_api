@@ -13,10 +13,12 @@ import co.prior.iam.module.role.service.RoleDeleteService;
 import co.prior.iam.module.role.service.RoleEditService;
 import co.prior.iam.module.role.service.RoleInqueryService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 public class RoleController {
@@ -34,26 +36,29 @@ public class RoleController {
 
 
     @PostMapping(path = "/role/createRole")
-    public BaseApiRespone<RoleRespone> createRole(@RequestBody RoleCreateReq roleCreateReq) throws Exception {
+    public ResponseEntity<RoleRespone> createRole(@RequestBody RoleCreateReq roleCreateReq) throws Exception {
         return roleCreateService.createRole(roleCreateReq);
 
     }
     @DeleteMapping(path = "/role/deleteRole")
-    public BaseApiRespone<RoleRespone> deleteRole(@RequestBody RoleDeleteReq roleDeleteReq)  throws Exception {
+    public ResponseEntity<RoleRespone> deleteRole(@RequestBody RoleDeleteReq roleDeleteReq)  throws Exception {
         return roleDeleteService.deleteRole(roleDeleteReq);
 
     }
 
     @PutMapping(path = "/role/editRole")
-    public BaseApiRespone<RoleRespone> editRole(@RequestBody RoleEditReq roleEditReq) throws Exception{
+    public ResponseEntity<RoleRespone> editRole(@RequestBody RoleEditReq roleEditReq) throws Exception{
         return roleEditService.editRole(roleEditReq);
 
     }
 
     @PostMapping(path = "/role/inqueryRole")
-    public BaseApiRespone<List<IamMsRole>> inqueryRole(@RequestBody GetRoleReq getRoleReq) throws Exception {
-        return roleInqueryService.inqueryRole(getRoleReq);
-
+    public ResponseEntity<List<IamMsRole>> inqueryRole(@RequestBody GetRoleReq getRoleReq) throws Exception {
+       Optional<List<IamMsRole>> list = roleInqueryService.inqueryRole(getRoleReq);
+       if (list.isPresent()){
+           return new ResponseEntity<>(list.get(), HttpStatus.OK);
+       }
+            return new ResponseEntity<>(list.get(), HttpStatus.NOT_FOUND);
     }
 
 }
