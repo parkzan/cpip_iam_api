@@ -1,15 +1,19 @@
 package co.prior.iam.module.System.service;
 
 
-import co.prior.iam.entity.SystemEntity;
-import co.prior.iam.module.System.model.req.SystemAddReq;
+import co.prior.iam.common.BaseApiRespone;
+import co.prior.iam.entity.IamMsSystem;
 import co.prior.iam.module.System.model.req.SystemDeleteReq;
+import co.prior.iam.module.System.model.res.SystemRespone;
 import co.prior.iam.reposity.SystemRepository;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.transaction.Transactional;
+
+import java.util.Optional;
 
 @Service
 public class SystemDeleteService {
@@ -18,21 +22,24 @@ public class SystemDeleteService {
     SystemRepository systemRepository;
 
     @Transactional
-    public  String deleteSystem(SystemDeleteReq systemDeleteReq){
-
+    public BaseApiRespone<SystemRespone> deleteSystem(SystemDeleteReq systemDeleteReq){
+        BaseApiRespone<SystemRespone> respone = new BaseApiRespone<>();
         if(!StringUtils.isBlank(systemDeleteReq.getSystemCode())){
 
-            SystemEntity systemEntity = systemRepository.findBySystemCodeAndIsDeleted(systemDeleteReq.getSystemCode(),"N");
+            Optional<IamMsSystem> iamMsSystem = systemRepository.findBySystemCodeAndIsDeleted(systemDeleteReq.getSystemCode(),"N");
 
-            if(systemEntity != null){
-                systemEntity.setIsDeleted("Y");
+            if(iamMsSystem != null){
+                iamMsSystem.get().setIsDeleted("Y");
 
-                systemRepository.save(systemEntity);
+                systemRepository.save(iamMsSystem.get());
 
-                return "success";
+                respone.setResCode(HttpStatus.OK.toString());
+                respone.setMessage("delete " + iamMsSystem.get().getSystemCode() +" success" );
+
+                return respone;
             }
         }
 
-        return "fail";
+        return respone;
     }
 }

@@ -1,16 +1,20 @@
 package co.prior.iam.module.System.service;
 
 
-import co.prior.iam.entity.SystemEntity;
-import co.prior.iam.module.System.model.SystemModel;
+import co.prior.iam.common.BaseApiRespone;
+import co.prior.iam.entity.IamMsSystem;
 import co.prior.iam.module.System.model.req.SystemAddReq;
+import co.prior.iam.module.System.model.res.SystemRespone;
 import co.prior.iam.reposity.SystemRepository;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.transaction.Transactional;
+
 import java.util.Date;
+import java.util.Optional;
 
 @Service
 public class SystemCreateService {
@@ -18,45 +22,38 @@ public class SystemCreateService {
     SystemRepository systemRepository;
 
     @Transactional
-    public  String createSystem(SystemAddReq systemAddReq){
-
-
+    public BaseApiRespone<SystemRespone> createSystem(SystemAddReq systemAddReq) throws Exception {
+        BaseApiRespone<SystemRespone> respone = new BaseApiRespone<>();
    if(!StringUtils.isBlank(systemAddReq.getSystemCode()) && !StringUtils.isBlank(systemAddReq.getSystemName()) ){
-       SystemEntity check = systemRepository.findBySystemCodeAndIsDeleted(systemAddReq.getSystemCode(),"N");
+       Optional<IamMsSystem> check = systemRepository.findBySystemCodeAndIsDeleted(systemAddReq.getSystemCode(),"N");
 
-if (check == null) {
-    SystemEntity systemEntity = new SystemEntity();
-    systemEntity.setSystemCode(systemAddReq.getSystemCode());
-    systemEntity.setSystemIcon(systemAddReq.getSystemIcon());
-    systemEntity.setSystemName(systemAddReq.getSystemName());
-    systemEntity.setCreatedBy("ADMIN");
-    systemEntity.setCreatedDate(new Date());
-    systemEntity.setIsDeleted("N");
+            if (!check.isPresent()) {
+                 IamMsSystem iamMsSystem = new IamMsSystem();
+                 iamMsSystem.setSystemCode(systemAddReq.getSystemCode());
+                 iamMsSystem.setSystemIcon(systemAddReq.getSystemIcon());
+                 iamMsSystem.setSystemName(systemAddReq.getSystemName());
+                 iamMsSystem.setCreatedBy("ADMIN");
+                 iamMsSystem.setCreatedDate(new Date());
+                 iamMsSystem.setIsDeleted("N");
+                 iamMsSystem.setUpdatedBy(null);
+                 iamMsSystem.setUpdatedDate(null);
 
-    systemRepository.save(systemEntity);
+                 systemRepository.save(iamMsSystem);
 
-    return "success";
-}
-else{
-    SystemEntity systemEntity = systemRepository.findBySystemCodeAndIsDeleted(systemAddReq.getSystemCode(),"Y");
-    if (systemEntity != null ){
-        //// upadte
 
-        systemEntity.setSystemIcon(systemAddReq.getSystemIcon());
-        systemEntity.setSystemName(systemAddReq.getSystemName());
-        systemEntity.setCreatedBy("ADMIN");
-        systemEntity.setCreatedDate(new Date());
-        systemEntity.setIsDeleted("N");
+                 respone.setResCode(HttpStatus.OK.toString());
+                respone.setMessage("create " + iamMsSystem.getSystemCode() +" success" );
 
-        systemRepository.save(systemEntity);
 
-        return "success";
-    }
+                return respone;
+             }
+            else {
+                throw new Exception("duplicate System Code");
+            }
 
-}
    }
 
-return "ok";
+return respone;
 
     }
 

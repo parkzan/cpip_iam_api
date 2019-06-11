@@ -1,3 +1,4 @@
+
 server:
   servlet:
     contextPath: "/iam/api/v2"
@@ -24,6 +25,3 @@ spring:
         default_schema: iam2
         temp:
           use_jdbc_metadata_defaults: false
-
-
-    

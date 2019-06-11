@@ -1,4 +1,5 @@
-package co.prior.iam.common;
+package co.prior.iam.module.role.model.req;
+
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Getter;
@@ -7,14 +8,8 @@ import lombok.Setter;
 @Getter
 @Setter
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class BaseApiRespone <T> {
+public class RoleDeleteReq {
 
-
-    private String resCode;
-    private String message;
-    private T result;
-
-
+    private String roleCode;
+    private String systemId;
 }
-
-
