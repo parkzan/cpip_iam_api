@@ -45,8 +45,7 @@ pipeline {
           sh "jx step git credentials"
 
           withSonarQubeEnv('sonarkube-sonarqube') {
-            // requires SonarQube Scanner for Maven 3.2+
-            sh 'mvn org.sonarsource.scanner.maven:sonar-maven-plugin:3.2:sonar'
+            sh 'mvn clean package sonar:sonar'
           }
 
           // so we can retrieve the version in later steps
