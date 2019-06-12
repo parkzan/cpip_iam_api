@@ -23,7 +23,8 @@ pipeline {
           sh "mvn versions:set -DnewVersion=$PREVIEW_VERSION"
 
           withSonarQubeEnv('sonarkube-sonarqube') {
-            sh "mvn clean install sonar:sonar"
+            sh "mvn clean org.jacoco:jacoco-maven-plugin:prepare-agent install -Dmaven.test.failure.ignore=false"
+            sh "mvn sonar:sonar"
           }
 
           timeout(time: 10, unit: 'MINUTES') {
@@ -58,7 +59,8 @@ pipeline {
           sh "jx step tag --version \$(cat VERSION)"
 
           withSonarQubeEnv('sonarkube-sonarqube') {
-            sh "mvn clean deploy sonar:sonar"
+            sh "mvn clean org.jacoco:jacoco-maven-plugin:prepare-agent deploy -Dmaven.test.failure.ignore=false"
+            sh "mvn sonar:sonar"
           }
 
           timeout(time: 10, unit: 'MINUTES') {
