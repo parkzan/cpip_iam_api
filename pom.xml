@@ -75,12 +75,12 @@
 			<version>3.8.1</version>
 		</dependency>
 
-		<!-- https://mvnrepository.com/artifact/org.springframework.cloud/spring-cloud-starter-security -->
-		<dependency>
-			<groupId>org.springframework.cloud</groupId>
-			<artifactId>spring-cloud-starter-security</artifactId>
-			<version>1.0.0.RELEASE</version>
-		</dependency>
+		<!--&lt;!&ndash; https://mvnrepository.com/artifact/org.springframework.cloud/spring-cloud-starter-security &ndash;&gt;-->
+		<!--<dependency>-->
+			<!--<groupId>org.springframework.cloud</groupId>-->
+			<!--<artifactId>spring-cloud-starter-security</artifactId>-->
+			<!--<version>1.0.0.RELEASE</version>-->
+		<!--</dependency>-->
 
 
 	</dependencies>
