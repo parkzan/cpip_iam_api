@@ -31,10 +31,10 @@ public class RoleCreateService {
     }
 
     @Transactional
-    public ResponseEntity<RoleRespone> createRole(RoleCreateReq roleCreateReq) throws Exception {
+    public void createRole(RoleCreateReq roleCreateReq) throws Exception {
 
             Optional<IamMsRole> iamMsRole = roleRepository.findByRoleCodeAndSystemIdAndIsDeleted(roleCreateReq.getRoleCode(),roleCreateReq.getSystemId(),"N");
-            RoleRespone respone = new RoleRespone();
+
             if (!iamMsRole.isPresent()){
                 IamMsRole model = new IamMsRole();
                 model.setRoleCode(roleCreateReq.getRoleCode());
@@ -48,14 +48,11 @@ public class RoleCreateService {
 
                 roleRepository.save(model);
 
-                respone.setCode("S001");
-                respone.setMessage("Success");
 
-                return new ResponseEntity<>(respone,HttpStatus.CREATED);
 
+            }else {
+                throw new Exception("data not found");
             }
-        respone.setCode("E001");
-        respone.setMessage("data not found");
-        return new ResponseEntity<>(respone,HttpStatus.NOT_FOUND);
+
     }
 }

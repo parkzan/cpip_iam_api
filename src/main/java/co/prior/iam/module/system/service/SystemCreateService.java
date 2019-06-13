@@ -27,8 +27,8 @@ public class SystemCreateService {
     }
 
     @Transactional
-    public ResponseEntity<SystemRespone> createSystem(SystemAddReq systemAddReq) throws Exception {
-        SystemRespone respone = new SystemRespone();
+    public void createSystem(SystemAddReq systemAddReq) throws Exception {
+
 
        Optional<IamMsSystem> check = systemRepository.findBySystemCodeAndIsDeleted(systemAddReq.getSystemCode(),"N");
 
@@ -46,18 +46,14 @@ public class SystemCreateService {
                  systemRepository.save(iamMsSystem);
 
 
-                 respone.setCode("S001");
-                respone.setMessage("success" );
 
-
-                return new ResponseEntity<>(respone,HttpStatus.CREATED);
              }
+            else {
 
+                 throw new Exception("data not found");
 
-        respone.setCode("E001");
-        respone.setMessage("data not found");
+            }
 
-        return new ResponseEntity<>(respone,HttpStatus.NOT_FOUND);
     }
 
 }

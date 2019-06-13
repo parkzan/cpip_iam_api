@@ -2,7 +2,6 @@ package co.prior.iam.module.object.service;
 
 
 import co.prior.iam.entity.IamMsObject;
-import co.prior.iam.module.object.model.request.GetObjectReq;
 import co.prior.iam.repository.ObjectRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,11 +21,11 @@ public class ObjectInqueryService {
    }
 
    @Transactional
-    public Optional<List<IamMsObject>> inqueryObject(GetObjectReq getObjectReq) throws Exception {
+    public Optional<List<IamMsObject>> inqueryObject(Long systemId) throws Exception {
 
 
 
-       Optional<List<IamMsObject>> listModel = objectRepository.findBySystemIdAndIsDeleted(getObjectReq.getSystemId(),"N");
+       Optional<List<IamMsObject>> listModel = objectRepository.findBySystemIdAndIsDeleted(systemId,"N");
 
        if(listModel.isPresent()){
 

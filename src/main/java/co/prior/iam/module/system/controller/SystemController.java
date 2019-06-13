@@ -11,7 +11,6 @@ import co.prior.iam.module.system.service.SystemCreateService;
 import co.prior.iam.module.system.service.SystemDeleteService;
 import co.prior.iam.module.system.service.SystemEditService;
 import co.prior.iam.module.system.service.SystemInquerySystem;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -23,33 +22,55 @@ import java.util.Optional;
 @RequestMapping(path = "/system")
 public class SystemController {
 
-    @Autowired
-    private SystemCreateService systemCreateService;
 
-    @Autowired
-    private SystemDeleteService systemDeleteService;
+    private final SystemCreateService systemCreateService;
 
-    @Autowired
-    private SystemEditService systemEditService;
 
-    @Autowired
-    private SystemInquerySystem systemInquerySystem;
+    private final SystemDeleteService systemDeleteService;
+
+
+    private final SystemEditService systemEditService;
+
+
+    private final SystemInquerySystem systemInquerySystem;
+
+    public SystemController(SystemCreateService systemCreateService, SystemDeleteService systemDeleteService, SystemEditService systemEditService, SystemInquerySystem systemInquerySystem) {
+        this.systemCreateService = systemCreateService;
+        this.systemDeleteService = systemDeleteService;
+        this.systemEditService = systemEditService;
+        this.systemInquerySystem = systemInquerySystem;
+    }
 
     @PostMapping
     public ResponseEntity<SystemRespone> createSystem(@RequestBody SystemAddReq systemAddReq) throws Exception {
-        return systemCreateService.createSystem(systemAddReq);
+
+        systemCreateService.createSystem(systemAddReq);
+        SystemRespone respone = new SystemRespone();
+        respone.setCode("S");
+        respone.setMessage("success");
+        return new ResponseEntity<>(respone,HttpStatus.CREATED);
 
     }
 
     @DeleteMapping
-    public ResponseEntity<SystemRespone> deleteSystem(@RequestBody SystemDeleteReq systemDeleteReq) {
-        return systemDeleteService.deleteSystem(systemDeleteReq);
+    public ResponseEntity<SystemRespone> deleteSystem(@RequestBody SystemDeleteReq systemDeleteReq) throws Exception  {
+
+        systemDeleteService.deleteSystem(systemDeleteReq);
+        SystemRespone respone = new SystemRespone();
+        respone.setCode("S");
+        respone.setMessage("success");
+        return new ResponseEntity<>(respone,HttpStatus.OK);
 
     }
 
     @PutMapping
-    public ResponseEntity<SystemRespone> editSystem(@RequestBody SystemEditReq systemEditReq) {
-        return systemEditService.editSystem(systemEditReq);
+    public ResponseEntity<SystemRespone> editSystem(@RequestBody SystemEditReq systemEditReq) throws Exception {
+
+        systemEditService.editSystem(systemEditReq);
+        SystemRespone respone = new SystemRespone();
+        respone.setCode("S");
+        respone.setMessage("success");
+        return new ResponseEntity<>(respone,HttpStatus.OK);
 
     }
 

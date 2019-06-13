@@ -29,24 +29,15 @@ public class ObjectEditService {
 
 
         Optional<IamMsObject> iamMsObject = objectRepository.findByObjectId(objectEditReq.getObjectId());
-        ObjectRespone respone = new ObjectRespone();
 
 
         if(iamMsObject.isPresent()){
 
             iamMsObject.get().setObjectName(objectEditReq.getNewName());
-            respone.setCode("S001");
-            respone.setMessage("Success");
 
             objectRepository.save(iamMsObject.get());
 
-            return new ResponseEntity<>(respone,HttpStatus.OK);
-        }
-
-            respone.setCode("E001");
-            respone.setMessage("data not found");
-
-            return new ResponseEntity<>(respone,HttpStatus.NOT_FOUND);
+        }throw new Exception("data not found");
 
 
     }

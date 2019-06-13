@@ -21,23 +21,21 @@ public class ObjectDeleteService {
     ObjectRepository objectRepository;
 
 
-    List<IamMsObject>  listObject  ;
 
-    Stack<IamMsObject> stack  ;
 
     public ObjectDeleteService(ObjectRepository objectRepository ){
 
         this.objectRepository = objectRepository;
-        listObject = new ArrayList<>();
-        stack  = new Stack<>() ;
+
     }
 
     @Transactional
-    public ResponseEntity<ObjectRespone> deleteObject(ObjectDeleteReq objectDeleteReq) throws Exception{
-        ObjectRespone respone = new ObjectRespone();
+    public void deleteObject(ObjectDeleteReq objectDeleteReq) throws Exception{
+
 
         Optional<IamMsObject> root = objectRepository.findBySystemIdAndObjectCodeAndIsDeleted(objectDeleteReq.getSystemId(), objectDeleteReq.getObjectCode(), "N");
-
+        List<IamMsObject> listObject = new ArrayList<>();
+        Stack<IamMsObject> stack  = new Stack<>() ;
         if (root.isPresent()){
 
             if(root.get() != null){
@@ -45,7 +43,7 @@ public class ObjectDeleteService {
                 listObject.add(root.get());
                 stack.push(root.get());
 
-                addChild(root.get());
+                addChild(root.get() , listObject , stack);
             }
 
 
@@ -54,21 +52,14 @@ public class ObjectDeleteService {
                 objectRepository.save(listObject.get(i));
             }
 
-            respone.setCode("S001");
-            respone.setMessage("Success");
-
-            return new ResponseEntity<>(respone, HttpStatus.OK);
 
 
-        }
 
-        respone.setCode("E001");
-        respone.setMessage("data not found");
-        return new ResponseEntity<>(respone,HttpStatus.NOT_FOUND);
+        }else throw new Exception("data not found");
 
     }
 
-    private  void addChild(IamMsObject root) throws Exception{
+    private  void addChild(IamMsObject root , List<IamMsObject> listObject , Stack<IamMsObject> stack) {
 
             Optional<List<IamMsObject>> listChild = objectRepository.findByIsDeleted("N");
              stack.pop();
@@ -87,7 +78,7 @@ public class ObjectDeleteService {
 
             if(!stack.empty()){
                 listObject.add(stack.peek());
-                addChild(stack.peek());
+                addChild(stack.peek() , listObject , stack);
 
         }
             

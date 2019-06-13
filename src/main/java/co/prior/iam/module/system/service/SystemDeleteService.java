@@ -24,8 +24,8 @@ public class SystemDeleteService {
     }
 
     @Transactional
-    public ResponseEntity<SystemRespone> deleteSystem(SystemDeleteReq systemDeleteReq){
-        SystemRespone respone = new SystemRespone();
+    public void deleteSystem(SystemDeleteReq systemDeleteReq) throws Exception{
+
 
             Optional<IamMsSystem> iamMsSystem = systemRepository.findBySystemCodeAndIsDeleted(systemDeleteReq.getSystemCode(),"N");
 
@@ -34,16 +34,13 @@ public class SystemDeleteService {
 
                 systemRepository.save(iamMsSystem.get());
 
-                respone.setCode("S001");
-                respone.setMessage("success" );
 
-                return new ResponseEntity<>(respone,HttpStatus.OK);
+            }
+            else {
+                throw new Exception("data not found");
             }
 
 
-        respone.setCode("E001");
-        respone.setMessage("data not found");
 
-        return new ResponseEntity<>(respone,HttpStatus.NOT_FOUND);
     }
 }

@@ -23,9 +23,9 @@ public class ObjectCreateService {
     }
 
     @Transactional
-    public ResponseEntity<ObjectRespone> createObject(ObjectCreateReq objectCreateReq) throws Exception{
+    public void createObject(ObjectCreateReq objectCreateReq) throws Exception{
 
-        ObjectRespone respone = new ObjectRespone();
+
 
         Optional<IamMsObject> iamMsObject = objectRepository.findBySystemIdAndObjectCodeAndIsDeleted(objectCreateReq.getSystemId(),objectCreateReq.getObjectCode(),"N");
 
@@ -41,16 +41,11 @@ public class ObjectCreateService {
             model.setCreatedDate(new Date());
             model.setIsDeleted("N");
 
-            respone.setCode("S001");
-            respone.setMessage("Success");
-
             objectRepository.save(model);
-            return new ResponseEntity<>(respone,HttpStatus.CREATED);
 
 
-        }
-        respone.setCode("E001");
-        respone.setMessage("data not found");
-        return new ResponseEntity<>(respone,HttpStatus.NOT_FOUND);
+
+        }else throw new Exception("data not found");
+
     }
 }

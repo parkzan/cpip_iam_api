@@ -20,8 +20,8 @@ public class SystemEditService {
     SystemRepository systemRepository;
 
     @Transactional
-    public ResponseEntity<SystemRespone> editSystem(SystemEditReq systemEditReq) {
-        SystemRespone respone = new SystemRespone();
+    public void editSystem(SystemEditReq systemEditReq) throws Exception{
+
 
 
         Optional<IamMsSystem> iamMsSystem = systemRepository.findBySystemCodeAndIsDeleted(systemEditReq.getSystemCode(), "N");
@@ -33,16 +33,13 @@ public class SystemEditService {
 
             systemRepository.save(iamMsSystem.get());
 
-            respone.setCode("S001");
-            respone.setMessage("success");
 
-            return new ResponseEntity<>(respone, HttpStatus.OK);
+        }
+        else{
+
+            throw new Exception("data not found");
         }
 
-        respone.setCode("E001");
-        respone.setMessage("data not found");
-
-        return new ResponseEntity<>(respone, HttpStatus.NOT_FOUND);
 
     }
 

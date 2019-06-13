@@ -25,8 +25,8 @@ public class RoleDeleteService {
 
 
     @Transactional
-    public ResponseEntity<RoleRespone> deleteRole(RoleDeleteReq roleDeleteReq) throws Exception{
-          RoleRespone respone = new RoleRespone();
+    public void deleteRole(RoleDeleteReq roleDeleteReq) throws Exception{
+
 
             Optional<IamMsRole> iamMsRole = roleRepository.findByRoleCodeAndSystemIdAndIsDeleted(roleDeleteReq.getRoleCode(),roleDeleteReq.getSystemId(),"N");
             if(iamMsRole.isPresent()){
@@ -35,16 +35,8 @@ public class RoleDeleteService {
 
                 roleRepository.save(iamMsRole.get());
 
-                respone.setCode("S001");
-                respone.setMessage("success" );
 
-                return  new ResponseEntity<>(respone,HttpStatus.OK);
-            }
-
-        respone.setCode("E001");
-        respone.setMessage("data not found" );
-
-        return  new ResponseEntity<>(respone,HttpStatus.NOT_FOUND);
+            }else throw new Exception("data not found");
     }
 
 

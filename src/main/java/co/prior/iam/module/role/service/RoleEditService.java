@@ -21,9 +21,7 @@ public class RoleEditService {
 
 
     @Transactional
-    public ResponseEntity<RoleRespone> editRole(RoleEditReq roleEditReq) throws Exception{
-
-           RoleRespone respone = new RoleRespone();
+    public void editRole(RoleEditReq roleEditReq) throws Exception{
 
 
                 Optional<IamMsRole> iamMsRole = roleRepository.findByRoleCodeAndSystemIdAndIsDeleted(roleEditReq.getRoleCode(),roleEditReq.getSystemId(),"N");
@@ -34,18 +32,6 @@ public class RoleEditService {
                     iamMsRole.get().setRoleName(roleEditReq.getNewName());
                     iamMsRole.get().setRoleIcon(roleEditReq.getNewIcon());
                     roleRepository.save(iamMsRole.get());
-
-                    respone.setCode("S001");
-                    respone.setMessage("success" );
-
-
-                    return new ResponseEntity<>(respone,HttpStatus.OK);
-                }
-
-
-        respone.setCode("E001");
-        respone.setMessage("data not found" );
-
-        return  new ResponseEntity<>(respone,HttpStatus.NOT_FOUND);
+                }else throw new Exception("data not found");
     }
 }

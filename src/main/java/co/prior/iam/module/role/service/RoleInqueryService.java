@@ -2,7 +2,6 @@ package co.prior.iam.module.role.service;
 
 
 import co.prior.iam.entity.IamMsRole;
-import co.prior.iam.module.role.model.request.GetRoleReq;
 import co.prior.iam.repository.RoleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,10 +15,10 @@ public class RoleInqueryService {
     @Autowired
     RoleRepository roleRepository;
 
-    public Optional<List<IamMsRole>> inqueryRole(GetRoleReq getRoleReq) throws Exception {
+    public Optional<List<IamMsRole>> inqueryRole(Long systemId) throws Exception {
 
 
-        Optional<List<IamMsRole>> roleList = roleRepository.findBySystemIdAndIsDeleted(Long.parseLong(getRoleReq.getSystemId()), "N");
+        Optional<List<IamMsRole>> roleList = roleRepository.findBySystemIdAndIsDeleted(systemId, "N");
         if (roleList.isPresent()) {
 
 
