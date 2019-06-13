@@ -52,7 +52,7 @@ public class RoleController {
     }
 
     @PostMapping(path = "/role/inqueryRole")
-    public ResponseEntity<List<IamMsRole>> inqueryRole(@RequestBody GetRoleReq getRoleReq) throws Exception {
+    public ResponseEntity<List<IamMsRole>> inqueryRole(@RequestParam GetRoleReq getRoleReq) throws Exception {
        Optional<List<IamMsRole>> list = roleInqueryService.inqueryRole(getRoleReq);
        if (list.isPresent()){
            return new ResponseEntity<>(list.get(), HttpStatus.OK);

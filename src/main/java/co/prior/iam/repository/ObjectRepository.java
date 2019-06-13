@@ -16,6 +16,4 @@ public interface ObjectRepository extends JpaRepository<IamMsObject,Long>  {
             Optional<List<IamMsObject>> findByIsDeleted(String isDelete);
 
 
-            Optional<List<IamMsObject>> findByObjectParentIdAndIsDeleted(Long parentId,String isDelete);
-
 }

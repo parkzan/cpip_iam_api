@@ -20,6 +20,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
+@RequestMapping(path = "/system")
 public class SystemController {
 
     @Autowired
@@ -34,25 +35,25 @@ public class SystemController {
     @Autowired
     private SystemInquerySystem systemInquerySystem;
 
-    @PostMapping(path = "/system/createSystem")
+    @PostMapping
     public ResponseEntity<SystemRespone> createSystem(@RequestBody SystemAddReq systemAddReq) throws Exception {
         return systemCreateService.createSystem(systemAddReq);
 
     }
 
-    @DeleteMapping(path = "/system/deleteSystem")
+    @DeleteMapping
     public ResponseEntity<SystemRespone> deleteSystem(@RequestBody SystemDeleteReq systemDeleteReq) {
         return systemDeleteService.deleteSystem(systemDeleteReq);
 
     }
 
-    @PutMapping(path = "/system/editSystem")
+    @PutMapping
     public ResponseEntity<SystemRespone> editSystem(@RequestBody SystemEditReq systemEditReq) {
         return systemEditService.editSystem(systemEditReq);
 
     }
 
-    @GetMapping(path = "/system/inquerySystem")
+    @GetMapping
     public ResponseEntity<List<IamMsSystem>> inquerySystem()  {
         Optional<List<IamMsSystem>> list = systemInquerySystem.inquerySystem();
 
