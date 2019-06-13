@@ -1,4 +1,4 @@
-package co.prior.iam.module.System.model.req;
+package co.prior.iam.module.system.model.request;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -8,7 +8,8 @@ import lombok.Setter;
 @Getter
 @Setter
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class SystemDeleteReq {
-
+public class SystemEditReq {
     private String systemCode;
+    private String newName;
+    private String newIcon;
 }

@@ -2,8 +2,8 @@ package co.prior.iam.module.object.service;
 
 
 import co.prior.iam.entity.IamMsObject;
-import co.prior.iam.module.object.model.req.ObjectEditReq;
-import co.prior.iam.module.object.model.res.ObjectRespone;
+import co.prior.iam.module.object.model.request.ObjectEditReq;
+import co.prior.iam.module.object.model.respone.ObjectRespone;
 import co.prior.iam.repository.ObjectRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

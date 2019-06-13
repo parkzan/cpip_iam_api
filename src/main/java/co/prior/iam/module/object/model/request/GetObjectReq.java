@@ -1,4 +1,4 @@
-package co.prior.iam.module.object.model.req;
+package co.prior.iam.module.object.model.request;
 
 
 

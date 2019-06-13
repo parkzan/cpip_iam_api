@@ -2,13 +2,9 @@ package co.prior.iam.module.object.service;
 
 
 import co.prior.iam.entity.IamMsObject;
-import co.prior.iam.entity.IamMsRole;
-import co.prior.iam.module.System.model.res.SystemRespone;
-import co.prior.iam.module.object.model.req.ObjectDeleteReq;
-import co.prior.iam.module.object.model.res.ObjectRespone;
+import co.prior.iam.module.object.model.request.ObjectDeleteReq;
+import co.prior.iam.module.object.model.respone.ObjectRespone;
 import co.prior.iam.repository.ObjectRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;

@@ -3,8 +3,8 @@ package co.prior.iam.module.role.service;
 
 
 import co.prior.iam.entity.IamMsRole;
-import co.prior.iam.module.role.model.req.RoleCreateReq;
-import co.prior.iam.module.role.model.res.RoleRespone;
+import co.prior.iam.module.role.model.request.RoleCreateReq;
+import co.prior.iam.module.role.model.respone.RoleRespone;
 import co.prior.iam.repository.RoleRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

@@ -2,13 +2,11 @@ package co.prior.iam.module.object.controller;
 
 
 import co.prior.iam.entity.IamMsObject;
-import co.prior.iam.module.System.model.req.SystemDeleteReq;
-import co.prior.iam.module.System.model.res.SystemRespone;
-import co.prior.iam.module.object.model.req.GetObjectReq;
-import co.prior.iam.module.object.model.req.ObjectCreateReq;
-import co.prior.iam.module.object.model.req.ObjectDeleteReq;
-import co.prior.iam.module.object.model.req.ObjectEditReq;
-import co.prior.iam.module.object.model.res.ObjectRespone;
+import co.prior.iam.module.object.model.request.GetObjectReq;
+import co.prior.iam.module.object.model.request.ObjectCreateReq;
+import co.prior.iam.module.object.model.request.ObjectDeleteReq;
+import co.prior.iam.module.object.model.request.ObjectEditReq;
+import co.prior.iam.module.object.model.respone.ObjectRespone;
 import co.prior.iam.module.object.service.ObjectCreateService;
 import co.prior.iam.module.object.service.ObjectDeleteService;
 import co.prior.iam.module.object.service.ObjectEditService;

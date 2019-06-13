@@ -1,13 +1,12 @@
 package co.prior.iam.module.role.controller;
 
 
-import co.prior.iam.common.BaseApiRespone;
 import co.prior.iam.entity.IamMsRole;
-import co.prior.iam.module.role.model.req.GetRoleReq;
-import co.prior.iam.module.role.model.req.RoleCreateReq;
-import co.prior.iam.module.role.model.req.RoleDeleteReq;
-import co.prior.iam.module.role.model.req.RoleEditReq;
-import co.prior.iam.module.role.model.res.RoleRespone;
+import co.prior.iam.module.role.model.request.GetRoleReq;
+import co.prior.iam.module.role.model.request.RoleCreateReq;
+import co.prior.iam.module.role.model.request.RoleDeleteReq;
+import co.prior.iam.module.role.model.request.RoleEditReq;
+import co.prior.iam.module.role.model.respone.RoleRespone;
 import co.prior.iam.module.role.service.RoleCreateService;
 import co.prior.iam.module.role.service.RoleDeleteService;
 import co.prior.iam.module.role.service.RoleEditService;

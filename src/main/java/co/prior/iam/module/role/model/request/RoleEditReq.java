@@ -1,4 +1,4 @@
-package co.prior.iam.module.object.model.req;
+package co.prior.iam.module.role.model.request;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Getter;
@@ -7,11 +7,12 @@ import lombok.Setter;
 @Getter
 @Setter
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class ObjectCreateReq {
+public class RoleEditReq {
 
-    private String objectCode;
-    private String objectName;
     private Long systemId;
-    private Long objectParentId;
+    private String roleCode;
+    private String newName;
+    private String newIcon;
+
 
 }
