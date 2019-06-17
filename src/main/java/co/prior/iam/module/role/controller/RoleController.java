@@ -54,7 +54,7 @@ public class RoleController {
         roleDeleteService.deleteRole(roleDeleteReq);
 
 
-        return ResponseEntity.accepted().build();
+        return ResponseEntity.noContent().build();
 
     }
 

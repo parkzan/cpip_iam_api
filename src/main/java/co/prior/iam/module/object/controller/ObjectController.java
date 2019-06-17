@@ -71,7 +71,7 @@ public class ObjectController {
 
         objectDeleteService.deleteObject(objectDeleteReq);
 
-        return ResponseEntity.accepted().build();
+        return ResponseEntity.noContent().build();
 
     }
 
@@ -81,7 +81,7 @@ public class ObjectController {
         List<IamMsObject> list = objectInqueryService.inqueryObject(systemId);
 
 
-            return ResponseEntity.ok().build();
+            return ResponseEntity.ok(list);
 
 
 

@@ -13,7 +13,7 @@ public interface ObjectRepository extends JpaRepository<IamMsObject,Long>  {
 
             List<IamMsObject> findBySystemIdAndIsDeleted(Long systemId , String isDelete);
 
-            Optional<List<IamMsObject>> findByIsDeleted(String isDelete);
+            List<IamMsObject> findByIsDeleted(String isDelete);
 
 
 }

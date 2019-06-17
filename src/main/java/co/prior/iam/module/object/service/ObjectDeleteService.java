@@ -37,13 +37,11 @@ public class ObjectDeleteService {
         Stack<IamMsObject> stack = new Stack<>();
 
 
-        if (root != null) {
-
             listObject.add(root);
             stack.push(root);
 
             addChild(root, listObject, stack);
-        }
+
 
 
         for (int i = 0; i < listObject.size(); i++) {
@@ -54,28 +52,31 @@ public class ObjectDeleteService {
 
     }
 
-    private void addChild(IamMsObject root, List<IamMsObject> listObject, Stack<IamMsObject> stack) throws Exception {
+    private void addChild(IamMsObject root, List<IamMsObject> listObject, Stack<IamMsObject> stack) {
 
-        List<IamMsObject> listChild = objectRepository.findByIsDeleted("N")
-                .orElseThrow(() -> new Exception("data not found"));
+        List<IamMsObject> listChild = objectRepository.findBySystemIdAndIsDeleted(root.getSystemId(),"N");
+
         stack.pop();
 
-        for (IamMsObject list : listChild) {
+        if(!listChild.isEmpty()) {
 
-            if (list != null) {
-                if (list.getObjectParentId() == root.getObjectId()) {
-                    stack.push(list);
+            for (IamMsObject list : listChild) {
+
+                if (list != null) {
+                    if (list.getObjectParentId() == root.getObjectId()) {
+                        stack.push(list);
+                    }
                 }
+
+
             }
 
 
-        }
+            if (!stack.empty()) {
+                listObject.add(stack.peek());
+                addChild(stack.peek(), listObject, stack);
 
-
-        if (!stack.empty()) {
-            listObject.add(stack.peek());
-            addChild(stack.peek(), listObject, stack);
-
+            }
         }
 
 
