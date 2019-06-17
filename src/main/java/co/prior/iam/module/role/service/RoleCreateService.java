@@ -49,7 +49,7 @@ public class RoleCreateService {
 
 
             }else {
-                throw new Exception("data not found");
+                throw new Exception("Role code duplicate");
             }
 
     }

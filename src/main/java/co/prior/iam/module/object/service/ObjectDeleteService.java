@@ -62,11 +62,10 @@ public class ObjectDeleteService {
 
             for (IamMsObject list : listChild) {
 
-                if (list != null) {
                     if (list.getObjectParentId() == root.getObjectId()) {
                         stack.push(list);
                     }
-                }
+
 
 
             }

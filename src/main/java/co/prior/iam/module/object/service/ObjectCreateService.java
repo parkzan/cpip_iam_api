@@ -43,7 +43,7 @@ public class ObjectCreateService {
 
 
 
-        }else throw new Exception("data not found");
+        }else throw new Exception("Object code duplicate");
 
     }
 }

@@ -45,7 +45,7 @@ public class SystemCreateService {
              }
             else {
 
-                 throw new Exception("data not found");
+                 throw new Exception("System code duplicate");
 
             }
 
