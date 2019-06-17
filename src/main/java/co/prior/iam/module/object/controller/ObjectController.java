@@ -45,12 +45,11 @@ public class ObjectController {
     @PostMapping
     public ResponseEntity<ObjectRespone> createObject(@RequestBody ObjectCreateReq objectCreateReq) throws Exception {
 
-        ObjectRespone respone = new ObjectRespone();
-        objectCreateService.createObject(objectCreateReq);
-        respone.setCode("S");
-        respone.setMessage("success");
 
-        return new ResponseEntity<>(respone,HttpStatus.CREATED);
+        objectCreateService.createObject(objectCreateReq);
+
+
+        return new ResponseEntity<>(HttpStatus.CREATED);
 
 
     }
@@ -58,36 +57,34 @@ public class ObjectController {
     @PutMapping
     public ResponseEntity<ObjectRespone> editObject(@RequestBody ObjectEditReq objectEditReq) throws Exception {
 
-        ObjectRespone respone = new ObjectRespone();
-        objectEditService.editObject(objectEditReq);
-        respone.setCode("S");
-        respone.setMessage("success");
 
-        return new ResponseEntity<>(respone,HttpStatus.OK);
+        objectEditService.editObject(objectEditReq);
+
+
+        return new ResponseEntity<>(HttpStatus.OK);
 
     }
 
     @DeleteMapping
     public ResponseEntity<ObjectRespone> deleteObject(@RequestBody ObjectDeleteReq objectDeleteReq) throws  Exception {
 
-        ObjectRespone respone = new ObjectRespone();
-        objectDeleteService.deleteObject(objectDeleteReq);
-        respone.setCode("S");
-        respone.setMessage("success");
 
-        return new ResponseEntity<>(respone,HttpStatus.OK);
+        objectDeleteService.deleteObject(objectDeleteReq);
+
+        return new ResponseEntity<>(HttpStatus.OK);
 
     }
 
     @GetMapping
-    public ResponseEntity<List<IamMsObject>> inqueryObject(@RequestParam Long systemId) throws Exception {
+    @RequestMapping(path = "/{systemId}")
+    public ResponseEntity<List<IamMsObject>> inqueryObject(@PathVariable Long systemId) throws Exception {
         Optional<List<IamMsObject>> list = objectInqueryService.inqueryObject(systemId);
 
         if(list.isPresent()){
             return new ResponseEntity<>(list.get(),HttpStatus.OK);
         }
 
-        return new ResponseEntity<>(null,HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(list.get(),HttpStatus.NOT_FOUND);
 
     }
 }

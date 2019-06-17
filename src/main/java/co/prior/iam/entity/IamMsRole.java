@@ -8,6 +8,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Entity
@@ -39,12 +40,12 @@ public class IamMsRole{
     protected String isDeleted = "N";
     @CreationTimestamp
     @JsonIgnore
-    protected Date createdDate;
+    protected LocalDateTime createdDate = LocalDateTime.now();
     @UpdateTimestamp
     @JsonIgnore
-    protected Date updatedDate;
+    protected LocalDateTime updatedDate;
     @JsonIgnore
-    protected String createdBy;
+    protected String createdBy = "ADMIN";
     @JsonIgnore
     protected String updatedBy;
 

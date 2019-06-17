@@ -7,7 +7,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
-import java.util.Date;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "iam_ms_object")
@@ -28,12 +28,12 @@ public class IamMsObject {
     protected String isDeleted = "N";
     @CreationTimestamp
     @JsonIgnore
-    protected Date createdDate;
+    protected LocalDateTime createdDate = LocalDateTime.now();
     @UpdateTimestamp
     @JsonIgnore
-    protected Date updatedDate;
+    protected LocalDateTime updatedDate;
     @JsonIgnore
-    protected String createdBy;
+    protected String createdBy ="ADMIN";
     @JsonIgnore
     protected String updatedBy;
 

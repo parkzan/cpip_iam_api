@@ -44,21 +44,17 @@ public class RoleController {
     public ResponseEntity<RoleRespone> createRole(@RequestBody RoleCreateReq roleCreateReq) throws Exception {
 
         roleCreateService.createRole(roleCreateReq);
-        RoleRespone respone = new RoleRespone();
-        respone.setCode("S");
-        respone.setMessage("Success");
-        return new ResponseEntity<>(respone,HttpStatus.CREATED);
+
+        return new ResponseEntity<>(HttpStatus.CREATED);
 
     }
     @DeleteMapping
     public ResponseEntity<RoleRespone> deleteRole(@RequestBody RoleDeleteReq roleDeleteReq)  throws Exception {
 
         roleDeleteService.deleteRole(roleDeleteReq);
-        RoleRespone respone = new RoleRespone();
-        respone.setCode("S");
-        respone.setMessage("Success");
 
-        return new ResponseEntity<>(respone,HttpStatus.OK);
+
+        return new ResponseEntity<>(HttpStatus.OK);
 
     }
 
@@ -66,17 +62,16 @@ public class RoleController {
     public ResponseEntity<RoleRespone> editRole(@RequestBody RoleEditReq roleEditReq) throws Exception{
 
         roleEditService.editRole(roleEditReq);
-        RoleRespone respone = new RoleRespone();
-        respone.setCode("S");
-        respone.setMessage("Success");
 
-        return new ResponseEntity<>(respone,HttpStatus.OK);
+
+        return new ResponseEntity<>(HttpStatus.OK);
 
 
     }
 
     @GetMapping
-    public ResponseEntity<List<IamMsRole>> inqueryRole(@RequestParam Long systemId) throws Exception {
+    @RequestMapping(path = "/{systemId}")
+    public ResponseEntity<List<IamMsRole>> inqueryRole(@PathVariable Long systemId) throws Exception {
        Optional<List<IamMsRole>> list = roleInqueryService.inqueryRole(systemId);
        if (list.isPresent()){
            return new ResponseEntity<>(list.get(), HttpStatus.OK);

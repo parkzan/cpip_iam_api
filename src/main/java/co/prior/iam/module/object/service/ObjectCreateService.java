@@ -37,9 +37,7 @@ public class ObjectCreateService {
             model.setObjectName(objectCreateReq.getObjectName());
             model.setSystemId(objectCreateReq.getSystemId());
             model.setObjectParentId(objectCreateReq.getObjectParentId());
-            model.setCreatedBy("ADMIN");
-            model.setCreatedDate(new Date());
-            model.setIsDeleted("N");
+
 
             objectRepository.save(model);
 

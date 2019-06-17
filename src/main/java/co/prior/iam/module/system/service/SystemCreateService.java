@@ -33,16 +33,11 @@ public class SystemCreateService {
        Optional<IamMsSystem> check = systemRepository.findBySystemCodeAndIsDeleted(systemAddReq.getSystemCode(),"N");
 
             if (!check.isPresent()) {
+
                  IamMsSystem iamMsSystem = new IamMsSystem();
                  iamMsSystem.setSystemCode(systemAddReq.getSystemCode());
                  iamMsSystem.setSystemIcon(systemAddReq.getSystemIcon());
                  iamMsSystem.setSystemName(systemAddReq.getSystemName());
-                 iamMsSystem.setCreatedBy("ADMIN");
-                 iamMsSystem.setCreatedDate(new Date());
-                 iamMsSystem.setIsDeleted("N");
-                 iamMsSystem.setUpdatedBy(null);
-                 iamMsSystem.setUpdatedDate(null);
-
                  systemRepository.save(iamMsSystem);
 
 

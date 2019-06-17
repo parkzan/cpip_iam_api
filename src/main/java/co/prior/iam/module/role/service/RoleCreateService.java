@@ -38,12 +38,10 @@ public class RoleCreateService {
             if (!iamMsRole.isPresent()){
                 IamMsRole model = new IamMsRole();
                 model.setRoleCode(roleCreateReq.getRoleCode());
-                model.setIsDeleted("N");
                 model.setRoleName(roleCreateReq.getRoleName());
                 model.setRoleIcon(roleCreateReq.getRoleIcon());
                 model.setSystemId(roleCreateReq.getSystemId());
-                model.setCreatedBy("ADMIN");
-                model.setCreatedDate(new Date());
+
 
 
                 roleRepository.save(model);

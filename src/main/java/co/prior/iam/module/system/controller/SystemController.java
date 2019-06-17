@@ -45,10 +45,8 @@ public class SystemController {
     public ResponseEntity<SystemRespone> createSystem(@RequestBody SystemAddReq systemAddReq) throws Exception {
 
         systemCreateService.createSystem(systemAddReq);
-        SystemRespone respone = new SystemRespone();
-        respone.setCode("S");
-        respone.setMessage("success");
-        return new ResponseEntity<>(respone,HttpStatus.CREATED);
+
+        return new ResponseEntity<>(HttpStatus.CREATED);
 
     }
 
@@ -56,10 +54,8 @@ public class SystemController {
     public ResponseEntity<SystemRespone> deleteSystem(@RequestBody SystemDeleteReq systemDeleteReq) throws Exception  {
 
         systemDeleteService.deleteSystem(systemDeleteReq);
-        SystemRespone respone = new SystemRespone();
-        respone.setCode("S");
-        respone.setMessage("success");
-        return new ResponseEntity<>(respone,HttpStatus.OK);
+
+        return new ResponseEntity<>(HttpStatus.OK);
 
     }
 
@@ -67,10 +63,8 @@ public class SystemController {
     public ResponseEntity<SystemRespone> editSystem(@RequestBody SystemEditReq systemEditReq) throws Exception {
 
         systemEditService.editSystem(systemEditReq);
-        SystemRespone respone = new SystemRespone();
-        respone.setCode("S");
-        respone.setMessage("success");
-        return new ResponseEntity<>(respone,HttpStatus.OK);
+
+        return new ResponseEntity<>(HttpStatus.OK);
 
     }
 
