@@ -78,13 +78,13 @@ public class ObjectController {
     @GetMapping
     @RequestMapping(path = "/{systemId}")
     public ResponseEntity<List<IamMsObject>> inqueryObject(@PathVariable Long systemId) throws Exception {
-        Optional<List<IamMsObject>> list = objectInqueryService.inqueryObject(systemId);
+        List<IamMsObject> list = objectInqueryService.inqueryObject(systemId);
 
-        if(list.isPresent()){
-            return new ResponseEntity<>(list.get(),HttpStatus.OK);
-        }
 
-        return new ResponseEntity<>(list.get(),HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(list,HttpStatus.OK);
+
+
+
 
     }
 }

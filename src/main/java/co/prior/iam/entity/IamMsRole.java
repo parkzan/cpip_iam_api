@@ -15,7 +15,7 @@ import java.util.Date;
 @Table (name = "iam_ms_role")
 @Getter
 @Setter
-public class IamMsRole{
+public class IamMsRole extends BaseEntity{
 
     @Id
     @SequenceGenerator(name = "role_id_seq", sequenceName = "iam_ms_role_role_id_seq",allocationSize = 1)
@@ -35,19 +35,6 @@ public class IamMsRole{
     private Long systemId;
 
 
-
-    @JsonIgnore
-    protected String isDeleted = "N";
-    @CreationTimestamp
-    @JsonIgnore
-    protected LocalDateTime createdDate = LocalDateTime.now();
-    @UpdateTimestamp
-    @JsonIgnore
-    protected LocalDateTime updatedDate;
-    @JsonIgnore
-    protected String createdBy = "ADMIN";
-    @JsonIgnore
-    protected String updatedBy;
 
 
 }

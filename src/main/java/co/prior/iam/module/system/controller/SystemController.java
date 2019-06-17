@@ -69,14 +69,14 @@ public class SystemController {
     }
 
     @GetMapping
-    public ResponseEntity<List<IamMsSystem>> inquerySystem()  {
-        Optional<List<IamMsSystem>> list = systemInquerySystem.inquerySystem();
+    public ResponseEntity<List<IamMsSystem>> inquerySystem() throws Exception  {
+        List<IamMsSystem> list = systemInquerySystem.inquerySystem();
 
-        if (list.isPresent()){
-            return new ResponseEntity<>(list.get(), HttpStatus.OK);
-        }
 
-        return new ResponseEntity<>(list.get(),HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(list, HttpStatus.OK);
+
+
+
     }
 
 

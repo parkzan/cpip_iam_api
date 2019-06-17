@@ -21,18 +21,18 @@ public class ObjectInqueryService {
    }
 
    @Transactional
-    public Optional<List<IamMsObject>> inqueryObject(Long systemId) throws Exception {
+    public List<IamMsObject> inqueryObject(Long systemId) throws Exception {
 
 
 
-       Optional<List<IamMsObject>> listModel = objectRepository.findBySystemIdAndIsDeleted(systemId,"N");
+       List<IamMsObject> listModel = objectRepository.findBySystemIdAndIsDeleted(systemId,"N");
 
-       if(listModel.isPresent()){
+       if(!listModel.isEmpty()){
 
            return listModel;
 
        }
-       return null;
+       throw new Exception("data not found");
 
    }
 

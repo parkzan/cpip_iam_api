@@ -15,16 +15,16 @@ public class RoleInqueryService {
     @Autowired
     RoleRepository roleRepository;
 
-    public Optional<List<IamMsRole>> inqueryRole(Long systemId) throws Exception {
+    public List<IamMsRole> inqueryRole(Long systemId) throws Exception {
 
 
-        Optional<List<IamMsRole>> roleList = roleRepository.findBySystemIdAndIsDeleted(systemId, "N");
-        if (roleList.isPresent()) {
+        List<IamMsRole> roleList = roleRepository.findBySystemIdAndIsDeleted(systemId, "N");
+        if (!roleList.isEmpty()) {
 
 
             return roleList;
         }
-        return null;
+        throw new Exception("data not found");
     }
 
 }

@@ -15,16 +15,14 @@ public class SystemInquerySystem {
     @Autowired
     SystemRepository systemRepository;
 
-    public Optional<List<IamMsSystem>> inquerySystem(){
+    public List<IamMsSystem> inquerySystem() throws Exception{
 
-        Optional<List<IamMsSystem>> iamMsSystemList = systemRepository.findByIsDeleted("N");
+        List<IamMsSystem> iamMsSystemList = systemRepository.findByIsDeleted("N");
 
-        if(iamMsSystemList.isPresent()){
+        if(!iamMsSystemList.isEmpty()){
 
             return iamMsSystemList ;
         }
-
-
-        return null;
+        throw new Exception("data not found");
     }
 }

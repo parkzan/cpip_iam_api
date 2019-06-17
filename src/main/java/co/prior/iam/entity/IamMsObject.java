@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 @Table(name = "iam_ms_object")
 @Getter
 @Setter
-public class IamMsObject {
+public class IamMsObject extends  BaseEntity {
 
     @Id
     @SequenceGenerator(name = "object_id_seq", sequenceName = "iam_ms_object_object_id_seq",allocationSize = 1)
@@ -24,18 +24,6 @@ public class IamMsObject {
     private Long systemId;
     private Long objectParentId;
 
-    @JsonIgnore
-    protected String isDeleted = "N";
-    @CreationTimestamp
-    @JsonIgnore
-    protected LocalDateTime createdDate = LocalDateTime.now();
-    @UpdateTimestamp
-    @JsonIgnore
-    protected LocalDateTime updatedDate;
-    @JsonIgnore
-    protected String createdBy ="ADMIN";
-    @JsonIgnore
-    protected String updatedBy;
 
 
 
