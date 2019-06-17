@@ -21,67 +21,64 @@ public class ObjectDeleteService {
     ObjectRepository objectRepository;
 
 
-
-
-    public ObjectDeleteService(ObjectRepository objectRepository ){
+    public ObjectDeleteService(ObjectRepository objectRepository) {
 
         this.objectRepository = objectRepository;
 
     }
 
     @Transactional
-    public void deleteObject(ObjectDeleteReq objectDeleteReq) throws Exception{
+    public void deleteObject(ObjectDeleteReq objectDeleteReq) throws Exception {
 
 
-        Optional<IamMsObject> root = objectRepository.findBySystemIdAndObjectCodeAndIsDeleted(objectDeleteReq.getSystemId(), objectDeleteReq.getObjectCode(), "N");
+        IamMsObject root = objectRepository.findBySystemIdAndObjectCodeAndIsDeleted(objectDeleteReq.getSystemId(), objectDeleteReq.getObjectCode(), "N")
+                .orElseThrow(() -> new Exception("data not found"));
         List<IamMsObject> listObject = new ArrayList<>();
-        Stack<IamMsObject> stack  = new Stack<>() ;
-        if (root.isPresent()){
-
-            if(root.get() != null){
-
-                listObject.add(root.get());
-                stack.push(root.get());
-
-                addChild(root.get() , listObject , stack);
-            }
+        Stack<IamMsObject> stack = new Stack<>();
 
 
-            for (int i = 0 ; i<listObject.size() ; i++){
-                listObject.get(i).setIsDeleted("Y");
-                objectRepository.save(listObject.get(i));
-            }
+        if (root != null) {
+
+            listObject.add(root);
+            stack.push(root);
+
+            addChild(root, listObject, stack);
+        }
 
 
+        for (int i = 0; i < listObject.size(); i++) {
+            listObject.get(i).setIsDeleted("Y");
+            objectRepository.save(listObject.get(i));
+        }
 
-
-        }else throw new Exception("data not found");
 
     }
 
-    private  void addChild(IamMsObject root , List<IamMsObject> listObject , Stack<IamMsObject> stack) {
+    private void addChild(IamMsObject root, List<IamMsObject> listObject, Stack<IamMsObject> stack) throws Exception {
 
-            Optional<List<IamMsObject>> listChild = objectRepository.findByIsDeleted("N");
-             stack.pop();
-            if(listChild.isPresent()){
-                for (IamMsObject list: listChild.get()) {
+        List<IamMsObject> listChild = objectRepository.findByIsDeleted("N")
+                .orElseThrow(() -> new Exception("data not found"));
+        stack.pop();
 
-                        if (list != null){
-                            if(list.getObjectParentId() == root.getObjectId()){
-                                stack.push(list);
-                            }
-                        }
+        for (IamMsObject list : listChild) {
 
-
+            if (list != null) {
+                if (list.getObjectParentId() == root.getObjectId()) {
+                    stack.push(list);
                 }
             }
 
-            if(!stack.empty()){
-                listObject.add(stack.peek());
-                addChild(stack.peek() , listObject , stack);
 
         }
-            
+
+
+        if (!stack.empty()) {
+            listObject.add(stack.peek());
+            addChild(stack.peek(), listObject, stack);
+
         }
+
+
     }
+}
 

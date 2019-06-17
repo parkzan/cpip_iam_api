@@ -27,18 +27,16 @@ public class SystemDeleteService {
     public void deleteSystem(SystemDeleteReq systemDeleteReq) throws Exception{
 
 
-            Optional<IamMsSystem> iamMsSystem = systemRepository.findBySystemCodeAndIsDeleted(systemDeleteReq.getSystemCode(),"N");
-
-            if(iamMsSystem.isPresent()){
-                iamMsSystem.get().setIsDeleted("Y");
-
-                systemRepository.save(iamMsSystem.get());
+            IamMsSystem iamMsSystem = systemRepository.findBySystemCodeAndIsDeleted(systemDeleteReq.getSystemCode(),"N")
+                    .orElseThrow(() -> new Exception("data not found"));
 
 
-            }
-            else {
-                throw new Exception("data not found");
-            }
+                iamMsSystem.setIsDeleted("Y");
+
+                systemRepository.save(iamMsSystem);
+
+
+
 
 
 

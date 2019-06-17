@@ -41,30 +41,30 @@ public class RoleController {
 
 
     @PostMapping
-    public ResponseEntity<RoleRespone> createRole(@RequestBody RoleCreateReq roleCreateReq) throws Exception {
+    public ResponseEntity<Void> createRole(@RequestBody RoleCreateReq roleCreateReq) throws Exception {
 
         roleCreateService.createRole(roleCreateReq);
 
-        return new ResponseEntity<>(HttpStatus.CREATED);
+        return ResponseEntity.created(null).build();
 
     }
     @DeleteMapping
-    public ResponseEntity<RoleRespone> deleteRole(@RequestBody RoleDeleteReq roleDeleteReq)  throws Exception {
+    public ResponseEntity<Void> deleteRole(@RequestBody RoleDeleteReq roleDeleteReq)  throws Exception {
 
         roleDeleteService.deleteRole(roleDeleteReq);
 
 
-        return new ResponseEntity<>(HttpStatus.OK);
+        return ResponseEntity.accepted().build();
 
     }
 
     @PutMapping
-    public ResponseEntity<RoleRespone> editRole(@RequestBody RoleEditReq roleEditReq) throws Exception{
+    public ResponseEntity<Void> editRole(@RequestBody RoleEditReq roleEditReq) throws Exception{
 
         roleEditService.editRole(roleEditReq);
 
 
-        return new ResponseEntity<>(HttpStatus.OK);
+        return ResponseEntity.noContent().build();
 
 
     }
@@ -74,7 +74,7 @@ public class RoleController {
     public ResponseEntity<List<IamMsRole>> inqueryRole(@PathVariable Long systemId) throws Exception {
        List<IamMsRole> list = roleInqueryService.inqueryRole(systemId);
 
-           return new ResponseEntity<>(list, HttpStatus.OK);
+           return ResponseEntity.ok(list);
 
 
     }

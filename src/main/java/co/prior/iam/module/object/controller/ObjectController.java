@@ -43,35 +43,35 @@ public class ObjectController {
 
 
     @PostMapping
-    public ResponseEntity<ObjectRespone> createObject(@RequestBody ObjectCreateReq objectCreateReq) throws Exception {
+    public ResponseEntity<Void> createObject(@RequestBody ObjectCreateReq objectCreateReq) throws Exception {
 
 
         objectCreateService.createObject(objectCreateReq);
 
 
-        return new ResponseEntity<>(HttpStatus.CREATED);
+        return ResponseEntity.created(null).build();
 
 
     }
 
     @PutMapping
-    public ResponseEntity<ObjectRespone> editObject(@RequestBody ObjectEditReq objectEditReq) throws Exception {
+    public ResponseEntity<Void> editObject(@RequestBody ObjectEditReq objectEditReq) throws Exception {
 
 
         objectEditService.editObject(objectEditReq);
 
 
-        return new ResponseEntity<>(HttpStatus.OK);
+        return ResponseEntity.noContent().build();
 
     }
 
     @DeleteMapping
-    public ResponseEntity<ObjectRespone> deleteObject(@RequestBody ObjectDeleteReq objectDeleteReq) throws  Exception {
+    public ResponseEntity<Void> deleteObject(@RequestBody ObjectDeleteReq objectDeleteReq) throws  Exception {
 
 
         objectDeleteService.deleteObject(objectDeleteReq);
 
-        return new ResponseEntity<>(HttpStatus.OK);
+        return ResponseEntity.accepted().build();
 
     }
 
@@ -81,7 +81,7 @@ public class ObjectController {
         List<IamMsObject> list = objectInqueryService.inqueryObject(systemId);
 
 
-            return new ResponseEntity<>(list,HttpStatus.OK);
+            return ResponseEntity.ok().build();
 
 
 

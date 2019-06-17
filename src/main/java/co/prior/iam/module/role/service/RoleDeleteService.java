@@ -28,17 +28,17 @@ public class RoleDeleteService {
     public void deleteRole(RoleDeleteReq roleDeleteReq) throws Exception{
 
 
-            Optional<IamMsRole> iamMsRole = roleRepository.findByRoleCodeAndSystemIdAndIsDeleted(roleDeleteReq.getRoleCode(),roleDeleteReq.getSystemId(),"N");
-            if(iamMsRole.isPresent()){
+            IamMsRole iamMsRole = roleRepository.findByRoleCodeAndSystemIdAndIsDeleted(roleDeleteReq.getRoleCode(),roleDeleteReq.getSystemId(),"N")
+                    .orElseThrow(() -> new Exception("data not found"));
 
-                iamMsRole.get().setIsDeleted("Y");
+                iamMsRole.setIsDeleted("Y");
 
-                roleRepository.save(iamMsRole.get());
+                roleRepository.save(iamMsRole);
 
 
-            }else throw new Exception("data not found");
+            }
     }
 
 
 
-}
+

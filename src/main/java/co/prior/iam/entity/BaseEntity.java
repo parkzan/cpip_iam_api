@@ -18,8 +18,8 @@ public  class BaseEntity {
     protected String isDeleted = "N";
     @CreationTimestamp
     @JsonIgnore
-    protected LocalDateTime createdDate = LocalDateTime.now();
-    @UpdateTimestamp
+    protected LocalDateTime createdDate;
+
     @JsonIgnore
     protected LocalDateTime updatedDate;
     @JsonIgnore

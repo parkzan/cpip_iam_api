@@ -24,21 +24,14 @@ public class SystemEditService {
 
 
 
-        Optional<IamMsSystem> iamMsSystem = systemRepository.findBySystemCodeAndIsDeleted(systemEditReq.getSystemCode(), "N");
-
-        if (iamMsSystem.isPresent()) {
-
-            iamMsSystem.get().setSystemName(systemEditReq.getNewName());
-            iamMsSystem.get().setSystemIcon(systemEditReq.getNewIcon());
-
-            systemRepository.save(iamMsSystem.get());
+        IamMsSystem iamMsSystem = systemRepository.findBySystemCodeAndIsDeleted(systemEditReq.getSystemCode(), "N")
+                .orElseThrow(() -> new Exception("data not found"));
 
 
-        }
-        else{
+            iamMsSystem.setSystemName(systemEditReq.getNewName());
+            iamMsSystem.setSystemIcon(systemEditReq.getNewIcon());
 
-            throw new Exception("data not found");
-        }
+            systemRepository.save(iamMsSystem);
 
 
     }

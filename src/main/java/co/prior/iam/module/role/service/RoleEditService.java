@@ -24,14 +24,13 @@ public class RoleEditService {
     public void editRole(RoleEditReq roleEditReq) throws Exception{
 
 
-                Optional<IamMsRole> iamMsRole = roleRepository.findByRoleCodeAndSystemIdAndIsDeleted(roleEditReq.getRoleCode(),roleEditReq.getSystemId(),"N");
+                IamMsRole iamMsRole = roleRepository.findByRoleCodeAndSystemIdAndIsDeleted(roleEditReq.getRoleCode(),roleEditReq.getSystemId(),"N")
+                        .orElseThrow(() -> new Exception("data not found"));
 
-                if(iamMsRole.isPresent()) {
 
+                    iamMsRole.setRoleName(roleEditReq.getNewName());
+                    iamMsRole.setRoleIcon(roleEditReq.getNewIcon());
+                    roleRepository.save(iamMsRole);
 
-                    iamMsRole.get().setRoleName(roleEditReq.getNewName());
-                    iamMsRole.get().setRoleIcon(roleEditReq.getNewIcon());
-                    roleRepository.save(iamMsRole.get());
-                }else throw new Exception("data not found");
     }
 }

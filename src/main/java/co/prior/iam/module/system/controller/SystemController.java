@@ -42,29 +42,29 @@ public class SystemController {
     }
 
     @PostMapping
-    public ResponseEntity<SystemRespone> createSystem(@RequestBody SystemAddReq systemAddReq) throws Exception {
+    public ResponseEntity<Void> createSystem(@RequestBody SystemAddReq systemAddReq) throws Exception {
 
         systemCreateService.createSystem(systemAddReq);
 
-        return new ResponseEntity<>(HttpStatus.CREATED);
+        return ResponseEntity.created(null).build();
 
     }
 
     @DeleteMapping
-    public ResponseEntity<SystemRespone> deleteSystem(@RequestBody SystemDeleteReq systemDeleteReq) throws Exception  {
+    public ResponseEntity<Void> deleteSystem(@RequestBody SystemDeleteReq systemDeleteReq) throws Exception  {
 
         systemDeleteService.deleteSystem(systemDeleteReq);
 
-        return new ResponseEntity<>(HttpStatus.OK);
+        return ResponseEntity.accepted().build();
 
     }
 
     @PutMapping
-    public ResponseEntity<SystemRespone> editSystem(@RequestBody SystemEditReq systemEditReq) throws Exception {
+    public ResponseEntity<Void> editSystem(@RequestBody SystemEditReq systemEditReq) throws Exception {
 
         systemEditService.editSystem(systemEditReq);
 
-        return new ResponseEntity<>(HttpStatus.OK);
+        return  ResponseEntity.noContent().build();
 
     }
 
@@ -73,7 +73,7 @@ public class SystemController {
         List<IamMsSystem> list = systemInquerySystem.inquerySystem();
 
 
-            return new ResponseEntity<>(list, HttpStatus.OK);
+            return ResponseEntity.ok(list);
 
 
 

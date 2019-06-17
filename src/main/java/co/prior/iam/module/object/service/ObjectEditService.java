@@ -18,27 +18,25 @@ public class ObjectEditService {
 
     ObjectRepository objectRepository;
 
-    public ObjectEditService(ObjectRepository objectRepository){
+    public ObjectEditService(ObjectRepository objectRepository) {
 
         this.objectRepository = objectRepository;
     }
 
 
     @Transactional
-    public ResponseEntity<ObjectRespone> editObject(ObjectEditReq objectEditReq) throws Exception {
+    public void editObject(ObjectEditReq objectEditReq) throws Exception {
 
 
-        Optional<IamMsObject> iamMsObject = objectRepository.findByObjectId(objectEditReq.getObjectId());
+        IamMsObject iamMsObject = objectRepository.findByObjectId(objectEditReq.getObjectId())
+                .orElseThrow(() -> new Exception("data not found"));
 
 
-        if(iamMsObject.isPresent()){
+        iamMsObject.setObjectName(objectEditReq.getNewName());
 
-            iamMsObject.get().setObjectName(objectEditReq.getNewName());
-
-            objectRepository.save(iamMsObject.get());
-
-        }throw new Exception("data not found");
+        objectRepository.save(iamMsObject);
 
 
     }
+
 }
