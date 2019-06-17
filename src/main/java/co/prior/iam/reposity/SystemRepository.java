@@ -14,5 +14,5 @@ public interface SystemRepository  extends JpaRepository<IamMsSystem,Long>{
 
    Optional<IamMsSystem>  findBySystemCodeAndIsDeleted(String sysCode , String isDelete);
 
-   Optional<List<IamMsSystem> > findByIsDeleted(String isDelete);
+   List<IamMsSystem>  findByIsDeleted(String isDelete);
 }

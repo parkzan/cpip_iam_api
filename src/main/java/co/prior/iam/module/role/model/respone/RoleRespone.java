@@ -1,4 +1,4 @@
-package co.prior.iam.module.System.model.req;
+package co.prior.iam.module.role.model.respone;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -8,9 +8,8 @@ import lombok.Setter;
 @Getter
 @Setter
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class SystemAddReq {
+public class RoleRespone {
 
-    private String systemCode;
-    private String systemName;
-    private String systemIcon;
+    private String message;
+    private String code;
 }

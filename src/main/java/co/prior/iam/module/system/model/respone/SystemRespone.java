@@ -1,7 +1,6 @@
-package co.prior.iam.module.System.model.res;
+package co.prior.iam.module.system.model.respone;
 
 
-import co.prior.iam.common.BaseApiRespone;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Getter;
 import lombok.Setter;
@@ -11,7 +10,8 @@ import lombok.Setter;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class SystemRespone{
 
-    private String systemCode;
+    private String code;
+    private String message;
 
 
 }

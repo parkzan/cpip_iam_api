@@ -9,11 +9,10 @@ import java.util.Optional;
 
 public interface RoleRepository extends JpaRepository<IamMsRole,Long>{
 
-    Optional<IamMsRole> findByRoleCodeAndIsDeleted(String roleCode , String isDelete);
+
 
    Optional<IamMsRole>  findByRoleCodeAndSystemIdAndIsDeleted(String roleCode , Long systemId , String isDelete);
 
-    Optional<IamMsRole> findByRoleIdAndIsDeleted(Long roleId , String isDelete);
 
-    Optional<List<IamMsRole>> findBySystemIdAndIsDeleted(Long systemId, String isDelete);
+    List<IamMsRole> findBySystemIdAndIsDeleted(Long systemId, String isDelete);
 }

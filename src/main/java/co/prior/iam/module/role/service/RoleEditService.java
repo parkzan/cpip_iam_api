@@ -1,14 +1,13 @@
 package co.prior.iam.module.role.service;
 
 
-import co.prior.iam.common.BaseApiRespone;
 import co.prior.iam.entity.IamMsRole;
-import co.prior.iam.module.role.model.req.RoleEditReq;
-import co.prior.iam.module.role.model.res.RoleRespone;
+import co.prior.iam.module.role.model.request.RoleEditReq;
+import co.prior.iam.module.role.model.respone.RoleRespone;
 import co.prior.iam.repository.RoleRepository;
-import io.micrometer.core.instrument.util.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,33 +21,16 @@ public class RoleEditService {
 
 
     @Transactional
-    public BaseApiRespone<RoleRespone> editRole(RoleEditReq roleEditReq) throws Exception{
-            BaseApiRespone<RoleRespone> respone = new BaseApiRespone<>();
-        if(!StringUtils.isBlank(roleEditReq.getSystemId()) && !StringUtils.isBlank(roleEditReq.getRoleCode())){
+    public void editRole(RoleEditReq roleEditReq) throws Exception{
 
 
-                Optional<IamMsRole> iamMsRole = roleRepository.findByRoleCodeAndSystemIdAndIsDeleted(roleEditReq.getRoleCode(),Long.parseLong(roleEditReq.getSystemId()),"N");
-
-                if(iamMsRole.isPresent()) {
-
-
-                    iamMsRole.get().setRoleName(roleEditReq.getNewName());
-                    iamMsRole.get().setRoleIcon(roleEditReq.getNewIcon());
-                    roleRepository.save(iamMsRole.get());
-
-                    respone.setResCode(HttpStatus.OK.toString());
-                    respone.setMessage("edit " + iamMsRole.get().getRoleCode() +" success" );
+                IamMsRole iamMsRole = roleRepository.findByRoleCodeAndSystemIdAndIsDeleted(roleEditReq.getRoleCode(),roleEditReq.getSystemId(),"N")
+                        .orElseThrow(() -> new Exception("data not found"));
 
 
-                    return respone;
-                }
-                else{
-                    throw new Exception("not found data");
-                }
+                    iamMsRole.setRoleName(roleEditReq.getNewName());
+                    iamMsRole.setRoleIcon(roleEditReq.getNewIcon());
+                    roleRepository.save(iamMsRole);
 
-
-        }
-
-        return respone;
     }
 }

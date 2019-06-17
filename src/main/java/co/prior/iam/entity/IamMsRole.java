@@ -8,13 +8,14 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Entity
 @Table (name = "iam_ms_role")
 @Getter
 @Setter
-public class IamMsRole{
+public class IamMsRole extends BaseEntity{
 
     @Id
     @SequenceGenerator(name = "role_id_seq", sequenceName = "iam_ms_role_role_id_seq",allocationSize = 1)
@@ -34,19 +35,6 @@ public class IamMsRole{
     private Long systemId;
 
 
-
-    @JsonIgnore
-    protected String isDeleted = "N";
-    @CreationTimestamp
-    @JsonIgnore
-    protected Date createdDate;
-    @UpdateTimestamp
-    @JsonIgnore
-    protected Date updatedDate;
-    @JsonIgnore
-    protected String createdBy;
-    @JsonIgnore
-    protected String updatedBy;
 
 
 }

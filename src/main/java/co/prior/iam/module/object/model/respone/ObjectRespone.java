@@ -1,4 +1,4 @@
-package co.prior.iam.module.role.model.res;
+package co.prior.iam.module.object.model.respone;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -8,7 +8,8 @@ import lombok.Setter;
 @Getter
 @Setter
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class RoleRespone {
+public class ObjectRespone {
 
-    private String roleCode;
+    private String message;
+    private String Code ;
 }

@@ -1,14 +1,12 @@
 package co.prior.iam.module.role.service;
 
 
-import co.prior.iam.common.BaseApiRespone;
 import co.prior.iam.entity.IamMsRole;
-import co.prior.iam.module.role.model.req.RoleDeleteReq;
-import co.prior.iam.module.role.model.res.RoleRespone;
+import co.prior.iam.module.role.model.request.RoleDeleteReq;
+import co.prior.iam.module.role.model.respone.RoleRespone;
 import co.prior.iam.repository.RoleRepository;
-import io.micrometer.core.instrument.util.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,37 +15,30 @@ import java.util.Optional;
 @Service
 public class RoleDeleteService {
 
-    @Autowired
+
     RoleRepository roleRepository;
+
+    public  RoleDeleteService(RoleRepository roleRepository){
+
+        this.roleRepository = roleRepository;
+    }
 
 
     @Transactional
-    public BaseApiRespone<RoleRespone> deleteRole(RoleDeleteReq roleDeleteReq) throws Exception{
-          BaseApiRespone<RoleRespone> respone = new BaseApiRespone<>();
-        if (!StringUtils.isBlank(roleDeleteReq.getRoleCode()) && !StringUtils.isBlank(roleDeleteReq.getSystemId())){
-            Optional<IamMsRole> iamMsRole = roleRepository.findByRoleCodeAndSystemIdAndIsDeleted(roleDeleteReq.getRoleCode(),Long.parseLong(roleDeleteReq.getSystemId()),"N");
-            if(iamMsRole.isPresent()){
+    public void deleteRole(RoleDeleteReq roleDeleteReq) throws Exception{
 
-                iamMsRole.get().setIsDeleted("Y");
 
-                roleRepository.save(iamMsRole.get());
+            IamMsRole iamMsRole = roleRepository.findByRoleCodeAndSystemIdAndIsDeleted(roleDeleteReq.getRoleCode(),roleDeleteReq.getSystemId(),"N")
+                    .orElseThrow(() -> new Exception("data not found"));
 
-                respone.setResCode(HttpStatus.OK.toString());
-                respone.setMessage("delete  " + iamMsRole.get().getRoleCode() +" success" );
+                iamMsRole.setIsDeleted("Y");
 
-                return  respone;
+                roleRepository.save(iamMsRole);
+
+
             }
-            else {
-                throw new Exception("not found data");
-            }
-
-
-        }
-
-
-        return  respone;
     }
 
 
 
-}
+

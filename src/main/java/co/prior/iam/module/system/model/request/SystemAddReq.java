@@ -1,13 +1,14 @@
-package co.prior.iam.module.System.model;
+package co.prior.iam.module.system.model.request;
+
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Getter;
 import lombok.Setter;
 
-@Setter
 @Getter
+@Setter
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class SystemModel {
+public class SystemAddReq {
 
     private String systemCode;
     private String systemName;
