@@ -1,6 +1,7 @@
 package co.prior.iam.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
@@ -11,8 +12,7 @@ import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "iam_ms_object")
-@Getter
-@Setter
+@Data
 public class IamMsObject extends  BaseEntity {
 
     @Id
@@ -21,8 +21,13 @@ public class IamMsObject extends  BaseEntity {
     private Long objectId;
     private String objectCode;
     private String objectName;
+
+
     private Long systemId;
+
     private Long objectParentId;
+
+
 
 
 

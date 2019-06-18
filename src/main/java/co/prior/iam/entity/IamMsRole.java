@@ -2,6 +2,7 @@ package co.prior.iam.entity;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
@@ -13,8 +14,7 @@ import java.util.Date;
 
 @Entity
 @Table (name = "iam_ms_role")
-@Getter
-@Setter
+@Data
 public class IamMsRole extends BaseEntity{
 
     @Id
@@ -30,7 +30,6 @@ public class IamMsRole extends BaseEntity{
 
 
     private String roleIcon;
-
 
     private Long systemId;
 
