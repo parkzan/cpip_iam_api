@@ -58,14 +58,7 @@ pipeline {
           sh "mvn versions:set -DnewVersion=\$(cat VERSION)"
           sh "jx step tag --version \$(cat VERSION)"
 
-          //withSonarQubeEnv('sonarkube-sonarqube') {
-            //sh "mvn clean org.jacoco:jacoco-maven-plugin:prepare-agent deploy -Dmaven.test.failure.ignore=false"
-            //sh "mvn sonar:sonar"
-          //}
-
-          //timeout(time: 10, unit: 'MINUTES') {
-            //waitForQualityGate abortPipeline: true
-          //}
+		  sh "mvn clean deploy"
 
           sh "skaffold version"
           sh "export VERSION=`cat VERSION` && skaffold build -f skaffold.yaml"
