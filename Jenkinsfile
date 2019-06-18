@@ -57,8 +57,17 @@ pipeline {
           sh "echo \$(jx-release-version) > VERSION"
           sh "mvn versions:set -DnewVersion=\$(cat VERSION)"
           sh "jx step tag --version \$(cat VERSION)"
-
+		  
 		  sh "mvn clean deploy"
+		  
+          //withSonarQubeEnv('sonarkube-sonarqube') {
+            //sh "mvn clean org.jacoco:jacoco-maven-plugin:prepare-agent deploy -Dmaven.test.failure.ignore=false"
+            //sh "mvn sonar:sonar"
+          //}
+
+          //timeout(time: 10, unit: 'MINUTES') {
+            //waitForQualityGate abortPipeline: true
+          //}
 
           sh "skaffold version"
           sh "export VERSION=`cat VERSION` && skaffold build -f skaffold.yaml"
@@ -87,7 +96,7 @@ pipeline {
   }
   post {
         always {
-          junit 'target/surefire-reports/*.xml'
+          //junit 'target/surefire-reports/*.xml'
           cleanWs()
         }
   }
