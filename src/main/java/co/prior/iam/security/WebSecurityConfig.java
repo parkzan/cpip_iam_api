@@ -1,6 +1,8 @@
-package co.prior.iam.config;
+package co.prior.iam.security;
 
 
+
+import java.util.Arrays;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -20,6 +22,7 @@ public class WebSecurityConfig  extends WebSecurityConfigurerAdapter {
         final UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         final CorsConfiguration configuration = new CorsConfiguration().applyPermitDefaultValues();
         configuration.setAllowCredentials(Boolean.TRUE);
+        configuration.setAllowedMethods(Arrays.asList("*"));
         source.registerCorsConfiguration("/**", configuration);
         return source;
     }

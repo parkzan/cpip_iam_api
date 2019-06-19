@@ -1,7 +1,6 @@
-
 server:
   servlet:
-    contextPath: "/iam/api/v2"
+    contextPath: "/auth/api/v2"
   port: 8080
 spring:
   profiles:
@@ -14,9 +13,6 @@ spring:
     url: jdbc:postgresql://prod-db.droppointcrm.com:15432/prior_db_iam
     username: prior_iam
     password: priorP@ssw0rdIAM
-
-
-
   jpa:
     database: POSTGRESQL
     show-sql: true
