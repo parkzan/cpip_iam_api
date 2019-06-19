@@ -1,6 +1,7 @@
 package co.prior.iam.repository;
 
 import co.prior.iam.entity.IamMsObject;
+import co.prior.iam.entity.IamMsSystem;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
@@ -14,6 +15,10 @@ public interface ObjectRepository extends JpaRepository<IamMsObject,Long>  {
             List<IamMsObject> findBySystemIdAndIsDeleted(Long systemId , String isDelete);
 
             List<IamMsObject> findByIsDeleted(String isDelete);
+
+            Optional<IamMsSystem> findByIamMsSystem(IamMsSystem iamMsSystem);
+
+
 
 
 }

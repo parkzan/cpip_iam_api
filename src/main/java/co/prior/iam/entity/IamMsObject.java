@@ -22,12 +22,14 @@ public class IamMsObject extends  BaseEntity {
     private String objectCode;
     private String objectName;
 
+
+//    private Long systemId;
+
     private Long objectParentId;
 
     @ManyToOne
     @JoinColumn(name = "system_id")
     private IamMsSystem iamMsSystem;
-
 
 
 
