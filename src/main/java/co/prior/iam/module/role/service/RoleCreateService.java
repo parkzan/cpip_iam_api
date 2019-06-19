@@ -3,9 +3,11 @@ package co.prior.iam.module.role.service;
 
 
 import co.prior.iam.entity.IamMsRole;
+import co.prior.iam.entity.IamMsSystem;
 import co.prior.iam.module.role.model.request.RoleCreateReq;
 import co.prior.iam.module.role.model.respone.RoleRespone;
 import co.prior.iam.repository.RoleRepository;
+import co.prior.iam.repository.SystemRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -24,8 +26,11 @@ public class RoleCreateService {
 
     RoleRepository roleRepository;
 
-    public RoleCreateService(RoleRepository roleRepository){
+    SystemRepository systemRepository;
+
+    public RoleCreateService(RoleRepository roleRepository , SystemRepository systemRepository){
         this.roleRepository = roleRepository ;
+        this.systemRepository = systemRepository;
 
 
     }
@@ -33,14 +38,19 @@ public class RoleCreateService {
     @Transactional
     public void createRole(RoleCreateReq roleCreateReq) throws Exception {
 
-            Optional<IamMsRole> iamMsRole = roleRepository.findByRoleCodeAndSystemIdAndIsDeleted(roleCreateReq.getRoleCode(),roleCreateReq.getSystemId(),"N");
+            IamMsSystem iamMsSystem = systemRepository.findBySystemIdAndIsDeleted(roleCreateReq.getSystemId(),"N")
+                .orElseThrow(() -> new Exception("data not found"));
 
+            System.out.println(iamMsSystem.getSystemId());
+
+            Optional<IamMsRole> iamMsRole = roleRepository.findByRoleCodeAndIamMsSystemAndIsDeleted(roleCreateReq.getRoleCode(),iamMsSystem,"N");
+        System.out.println(iamMsRole.isPresent());
             if (!iamMsRole.isPresent()){
                 IamMsRole model = new IamMsRole();
                 model.setRoleCode(roleCreateReq.getRoleCode());
                 model.setRoleName(roleCreateReq.getRoleName());
                 model.setRoleIcon(roleCreateReq.getRoleIcon());
-                model.setSystemId(roleCreateReq.getSystemId());
+                model.setIamMsSystem(iamMsSystem);
 
 
 

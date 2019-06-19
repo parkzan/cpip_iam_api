@@ -31,7 +31,9 @@ public class IamMsRole extends BaseEntity{
 
     private String roleIcon;
 
-    private Long systemId;
+    @ManyToOne
+    @JoinColumn(name = "system_id")
+    private IamMsSystem iamMsSystem;
 
 
 

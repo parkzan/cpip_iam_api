@@ -69,8 +69,8 @@ public class SystemController {
     }
 
     @GetMapping
-    public ResponseEntity<List<IamMsSystem>> inquerySystem() throws Exception  {
-        List<IamMsSystem> list = systemInquerySystem.inquerySystem();
+    public ResponseEntity<List<SystemRespone>> inquerySystem() throws Exception  {
+        List<SystemRespone> list = systemInquerySystem.inquerySystem();
 
 
             return ResponseEntity.ok(list);

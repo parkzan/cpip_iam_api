@@ -31,9 +31,8 @@ public class IamMsSystem extends BaseEntity{
 
     private String systemIcon;
 
-    @ManyToOne
-    @JoinColumn(name = "system_id")
-    private List<IamMsObject> iamMsObjects;
+    @OneToMany(mappedBy = "iamMsSystem" , cascade = CascadeType.ALL)
+    private List<IamMsRole> iamMsRoles ;
 
 
 }

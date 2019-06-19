@@ -10,8 +10,10 @@ import lombok.Setter;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class SystemRespone{
 
-    private String code;
-    private String message;
+    private Long systemId;
+    private String systemCode;
+    private String systemName;
+    private String systemIcon;
 
 
 }
