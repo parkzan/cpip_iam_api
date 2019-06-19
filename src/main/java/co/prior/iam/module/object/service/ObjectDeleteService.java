@@ -54,7 +54,7 @@ public class ObjectDeleteService {
 
     private void addChild(IamMsObject root, List<IamMsObject> listObject, Stack<IamMsObject> stack) {
 
-        List<IamMsObject> listChild = objectRepository.findBySystemIdAndIsDeleted(root.getSystemId(),"N");
+        List<IamMsObject> listChild = objectRepository.findBySystemIdAndIsDeleted(root.,"N");
 
         stack.pop();
 

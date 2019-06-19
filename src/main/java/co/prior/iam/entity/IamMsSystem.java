@@ -11,6 +11,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Table(name = "iam_ms_system")
@@ -29,6 +30,10 @@ public class IamMsSystem extends BaseEntity{
 
 
     private String systemIcon;
+
+    @ManyToOne
+    @JoinColumn(name = "system_id")
+    private List<IamMsObject> iamMsObjects;
 
 
 }
