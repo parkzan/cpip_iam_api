@@ -2,7 +2,9 @@ package co.prior.iam.aop;
 
 import java.lang.reflect.Field;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
@@ -36,29 +38,32 @@ public class RepositoryListenerAspect {
 	public void postSave(Object currentState) {
 		log.info("currentState: {}", currentState);
 		
-		int runningNo = 1;
-		long primaryKey = 1;
-		
 		Class<?> clazz = currentState.getClass();
 		Object previousState = ReflectionUtils.invokeMethod(
 				ReflectionUtils.findMethod(clazz, "getPreviousState"), currentState);
 		log.info("previousState: {}", previousState);
 		
-		for (Field field : Arrays.asList((clazz.getDeclaredFields()))) {
-			if (field.getAnnotation(Id.class) != null) {
-				ReflectionUtils.makeAccessible(field);
-				primaryKey = (long) ReflectionUtils.getField(field, currentState);
-						
-			} else {
+		Optional<Field> primaryField = Arrays.stream(clazz.getDeclaredFields())
+				.filter(field -> field.getAnnotation(Id.class) != null)
+				.findFirst();
+		
+		if (primaryField.isPresent()) {
+			int runningNo = 1;
+			long primaryKey = (long) ReflectionUtils.getField(primaryField.get(), currentState);
+			
+			List<Field> fields = Arrays.stream(clazz.getDeclaredFields())
+					.filter(field -> field.getAnnotation(Id.class) == null)
+					.collect(Collectors.toList());
+			for (Field field : fields) {
 				if (this.saveAuditTrail(clazz, field, previousState, currentState, 
 						runningNo, primaryKey).isPresent()) {
 					runningNo++;
 				}
 			}
+			
+			Field isDeletedField = ReflectionUtils.findField(clazz, "isDeleted");
+			this.saveAuditTrail(clazz, isDeletedField, previousState, currentState, runningNo, primaryKey);
 		}
-		
-		Field isDeletedField = ReflectionUtils.findField(clazz, "isDeleted");
-		this.saveAuditTrail(clazz, isDeletedField, previousState, currentState, runningNo, primaryKey);
 	}
 	
 	private Optional<IamAuditTrail> saveAuditTrail(Class<?> clazz, Field field, Object previousState, Object currentState, 
