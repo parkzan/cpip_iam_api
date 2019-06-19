@@ -1,13 +1,12 @@
 package co.prior.iam.module.system.service;
 
+import java.util.List;
 
-import co.prior.iam.entity.IamMsSystem;
-import co.prior.iam.reposity.SystemRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Optional;
+import co.prior.iam.entity.IamMsSystem;
+import co.prior.iam.repository.SystemRepository;
 
 @Service
 public class SystemInquerySystem {
