@@ -9,7 +9,8 @@ import lombok.Setter;
 @Setter
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ObjectEditReq {
-    private Long ObjectId;
+    private Long systemId;
+    private Long objectId;
     private String newName;
 
 

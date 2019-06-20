@@ -1,9 +1,15 @@
 package co.prior.iam.module.role_object.service;
 
 
+import co.prior.iam.entity.IamMsObject;
+import co.prior.iam.entity.IamMsRole;
 import co.prior.iam.entity.IamMsRoleObject;
+import co.prior.iam.entity.IamMsSystem;
 import co.prior.iam.module.role_object.model.request.RoleObjectEditReq;
+import co.prior.iam.repository.ObjectRepository;
 import co.prior.iam.repository.RoleObjectRepository;
+import co.prior.iam.repository.RoleRepository;
+import co.prior.iam.repository.SystemRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -14,25 +20,37 @@ import java.util.Optional;
 public class RoleObjectEditService {
 
     RoleObjectRepository roleObjectRepository;
+    RoleRepository roleRepository;
+    SystemRepository systemRepository;
+    ObjectRepository objectRepository;
 
 
-    public RoleObjectEditService(RoleObjectRepository roleObjectRepository) {
+    public RoleObjectEditService(RoleObjectRepository roleObjectRepository , RoleRepository roleRepository,SystemRepository systemRepository , ObjectRepository objectRepository) {
 
 
         this.roleObjectRepository = roleObjectRepository;
+        this.roleRepository = roleRepository ;
+        this.objectRepository = objectRepository;
+        this.systemRepository = systemRepository;
 
     }
 
     @Transactional
     public void editRoleObject(RoleObjectEditReq roleObjectEditReq) throws Exception {
 
+        IamMsRole iamMsRole = roleRepository.findByRoleIdAndIsDeleted(roleObjectEditReq.getRoleId(),"N")
+                .orElseThrow(() -> new Exception("data not found"));
 
-        List<IamMsRoleObject> objectsList = roleObjectRepository.findByRoleIdAndIsDeleted(roleObjectEditReq.getRoleId(),"N");
+        IamMsSystem iamMsSystem = systemRepository.findBySystemIdAndIsDeleted(roleObjectEditReq.getSystemId() , "N")
+                .orElseThrow(() -> new Exception("data not found"));
+
+        List<IamMsRoleObject> objectsList = roleObjectRepository.findByIamMsRoleAndIsDeleted(iamMsRole,"N");
 
         if (!objectsList.isEmpty()){
             for (IamMsRoleObject obj : objectsList) {
 
-                IamMsRoleObject iamMsRoleObject = roleObjectRepository.findByRoleIdAndObjectId(roleObjectEditReq.getRoleId(),obj.getObjectId())
+
+                IamMsRoleObject iamMsRoleObject = roleObjectRepository.findByIamMsRoleAndIamMsObject(iamMsRole,obj.getIamMsObject())
                         .orElseThrow(() -> new Exception("data not found"));
 
                 iamMsRoleObject.setIsDeleted("Y");
@@ -44,7 +62,9 @@ public class RoleObjectEditService {
 
         if(roleObjectEditReq.getNewObjectId()!=null){
         for (Long newObj : roleObjectEditReq.getNewObjectId()){
-            Optional<IamMsRoleObject> iamMsRoleObject = roleObjectRepository.findByRoleIdAndObjectId(roleObjectEditReq.getRoleId(), newObj);
+            IamMsObject iamMsObject = objectRepository.findByObjectIdAndIsDeleted(newObj,"N")
+                    .orElseThrow(() -> new Exception("data not found"));
+            Optional<IamMsRoleObject> iamMsRoleObject = roleObjectRepository.findByIamMsRoleAndIamMsObject(iamMsRole, iamMsObject);
 
             if (iamMsRoleObject.isPresent()){
                 if (iamMsRoleObject.get().getIsDeleted().equals("Y")){
@@ -56,9 +76,9 @@ public class RoleObjectEditService {
             }
             else {
                 IamMsRoleObject newModel = new IamMsRoleObject();
-                newModel.setRoleId(roleObjectEditReq.getRoleId());
-                newModel.setSystemId(roleObjectEditReq.getSystemId());
-                newModel.setObjectId(newObj);
+                newModel.setIamMsRole(iamMsRole);
+                newModel.setIamMsSystem(iamMsSystem);
+                newModel.setIamMsObject(iamMsObject);
 
                 roleObjectRepository.save(newModel);
             }

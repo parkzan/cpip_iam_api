@@ -11,7 +11,7 @@ import co.prior.iam.entity.IamMsSystem;
 @Repository
 public interface SystemRepository  extends JpaRepository<IamMsSystem,Long> {
 
-   Optional<IamMsSystem>  findBySystemCodeAndIsDeleted(String sysCode , String isDelete);
+   Optional<IamMsSystem>  findBySystemCodeAndIsDeleted(String systeamCode , String isDelete);
 
    List<IamMsSystem>  findByIsDeleted(String isDelete);
 

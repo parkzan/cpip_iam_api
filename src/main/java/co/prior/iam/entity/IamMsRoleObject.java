@@ -1,6 +1,7 @@
 package co.prior.iam.entity;
 
 
+import com.fasterxml.jackson.annotation.JacksonInject;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
@@ -18,9 +19,15 @@ public class IamMsRoleObject extends BaseEntity{
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "role_object_id_seq")
     private Long roleObjectId;
 
-    private Long systemId;
+    @ManyToOne
+    @JoinColumn(name = "system_id")
+    private IamMsSystem iamMsSystem;
 
-    private Long roleId;
+    @ManyToOne
+    @JoinColumn(name = "role_id")
+    private IamMsRole iamMsRole;
 
-    private Long objectId;
+    @ManyToOne
+    @JoinColumn(name = "object_id")
+    private IamMsObject iamMsObject;
 }

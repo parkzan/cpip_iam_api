@@ -6,6 +6,7 @@ import co.prior.iam.entity.IamMsRole;
 import co.prior.iam.entity.IamMsSystem;
 import co.prior.iam.module.role.model.request.RoleCreateReq;
 import co.prior.iam.module.role.model.respone.RoleRespone;
+import co.prior.iam.repository.ObjectRepository;
 import co.prior.iam.repository.RoleRepository;
 import co.prior.iam.repository.SystemRepository;
 import org.slf4j.Logger;
@@ -28,6 +29,10 @@ public class RoleCreateService {
 
     SystemRepository systemRepository;
 
+    ObjectRepository objectRepository;
+
+
+
     public RoleCreateService(RoleRepository roleRepository , SystemRepository systemRepository){
         this.roleRepository = roleRepository ;
         this.systemRepository = systemRepository;
@@ -41,10 +46,9 @@ public class RoleCreateService {
             IamMsSystem iamMsSystem = systemRepository.findBySystemIdAndIsDeleted(roleCreateReq.getSystemId(),"N")
                 .orElseThrow(() -> new Exception("data not found"));
 
-            System.out.println(iamMsSystem.getSystemId());
 
             Optional<IamMsRole> iamMsRole = roleRepository.findByRoleCodeAndIamMsSystemAndIsDeleted(roleCreateReq.getRoleCode(),iamMsSystem,"N");
-        System.out.println(iamMsRole.isPresent());
+
             if (!iamMsRole.isPresent()){
                 IamMsRole model = new IamMsRole();
                 model.setRoleCode(roleCreateReq.getRoleCode());

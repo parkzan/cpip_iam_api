@@ -11,8 +11,15 @@ import co.prior.iam.repository.SystemRepository;
 @Service
 public class SystemEditService {
 
-    @Autowired
+
     SystemRepository systemRepository;
+
+    public SystemEditService(SystemRepository systemRepository){
+
+        this.systemRepository =systemRepository;
+
+    }
+
 
     @Transactional
     public void editSystem(SystemEditReq systemEditReq) throws Exception{

@@ -11,6 +11,8 @@ import org.hibernate.annotations.UpdateTimestamp;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.Date;
+import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table (name = "iam_ms_role")
@@ -35,6 +37,9 @@ public class IamMsRole extends BaseEntity{
     @JoinColumn(name = "system_id")
     private IamMsSystem iamMsSystem;
 
+    @OneToMany(mappedBy = "iamMsRole",cascade = CascadeType.ALL ,fetch = FetchType.LAZY)
+    @JsonIgnore
+    private Set<IamMsRoleObject> iamMsRoleObjects ;
 
 
 

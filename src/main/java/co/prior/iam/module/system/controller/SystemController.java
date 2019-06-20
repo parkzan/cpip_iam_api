@@ -10,13 +10,11 @@ import co.prior.iam.module.system.model.respone.SystemRespone;
 import co.prior.iam.module.system.service.SystemCreateService;
 import co.prior.iam.module.system.service.SystemDeleteService;
 import co.prior.iam.module.system.service.SystemEditService;
-import co.prior.iam.module.system.service.SystemInquerySystem;
-import org.springframework.http.HttpStatus;
+import co.prior.iam.module.system.service.SystemInqueryService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping(path = "/system")
@@ -32,13 +30,13 @@ public class SystemController {
     private final SystemEditService systemEditService;
 
 
-    private final SystemInquerySystem systemInquerySystem;
+    private final SystemInqueryService systemInqueryService;
 
-    public SystemController(SystemCreateService systemCreateService, SystemDeleteService systemDeleteService, SystemEditService systemEditService, SystemInquerySystem systemInquerySystem) {
+    public SystemController(SystemCreateService systemCreateService, SystemDeleteService systemDeleteService, SystemEditService systemEditService, SystemInqueryService systemInqueryService) {
         this.systemCreateService = systemCreateService;
         this.systemDeleteService = systemDeleteService;
         this.systemEditService = systemEditService;
-        this.systemInquerySystem = systemInquerySystem;
+        this.systemInqueryService = systemInqueryService;
     }
 
     @PostMapping
@@ -69,8 +67,8 @@ public class SystemController {
     }
 
     @GetMapping
-    public ResponseEntity<List<SystemRespone>> inquerySystem() throws Exception  {
-        List<SystemRespone> list = systemInquerySystem.inquerySystem();
+    public ResponseEntity<List<IamMsSystem>> inquerySystem() throws Exception  {
+        List<IamMsSystem> list = systemInqueryService.inquerySystem();
 
 
             return ResponseEntity.ok(list);

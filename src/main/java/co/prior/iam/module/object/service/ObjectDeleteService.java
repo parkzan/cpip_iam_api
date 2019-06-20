@@ -2,9 +2,11 @@ package co.prior.iam.module.object.service;
 
 
 import co.prior.iam.entity.IamMsObject;
+import co.prior.iam.entity.IamMsSystem;
 import co.prior.iam.module.object.model.request.ObjectDeleteReq;
 import co.prior.iam.module.object.model.respone.ObjectRespone;
 import co.prior.iam.repository.ObjectRepository;
+import co.prior.iam.repository.SystemRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -19,19 +21,22 @@ import java.util.Stack;
 public class ObjectDeleteService {
 
     ObjectRepository objectRepository;
+    SystemRepository systemRepository;
 
 
-    public ObjectDeleteService(ObjectRepository objectRepository) {
+    public ObjectDeleteService(ObjectRepository objectRepository , SystemRepository systemRepository) {
 
         this.objectRepository = objectRepository;
+        this.systemRepository = systemRepository;
 
     }
 
     @Transactional
     public void deleteObject(ObjectDeleteReq objectDeleteReq) throws Exception {
+        IamMsSystem iamMsSystem = systemRepository.findBySystemIdAndIsDeleted(objectDeleteReq.getSystemId(),"N")
+                .orElseThrow(() -> new Exception("data not found"));
 
-
-        IamMsObject root = objectRepository.findBySystemIdAndObjectCodeAndIsDeleted(objectDeleteReq.getSystemId(), objectDeleteReq.getObjectCode(), "N")
+        IamMsObject root = objectRepository.findByIamMsSystemAndObjectCodeAndIsDeleted(iamMsSystem, objectDeleteReq.getObjectCode(), "N")
                 .orElseThrow(() -> new Exception("data not found"));
         List<IamMsObject> listObject = new ArrayList<>();
         Stack<IamMsObject> stack = new Stack<>();
@@ -54,7 +59,7 @@ public class ObjectDeleteService {
 
     private void addChild(IamMsObject root, List<IamMsObject> listObject, Stack<IamMsObject> stack) {
 
-        List<IamMsObject> listChild = objectRepository.findBySystemIdAndIsDeleted(root.getSystemId(),"N");
+        List<IamMsObject> listChild = objectRepository.findByIamMsSystemAndIsDeleted(root.getIamMsSystem(),"N");
 
         stack.pop();
 
