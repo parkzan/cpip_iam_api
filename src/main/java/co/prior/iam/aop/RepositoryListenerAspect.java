@@ -43,13 +43,16 @@ public class RepositoryListenerAspect {
 				ReflectionUtils.findMethod(clazz, "getPreviousState"), currentState);
 		log.info("previousState: {}", previousState);
 		
-		Optional<Field> primaryField = Arrays.stream(clazz.getDeclaredFields())
+		Optional<Field> primaryFieldOpt = Arrays.stream(clazz.getDeclaredFields())
 				.filter(field -> field.getAnnotation(Id.class) != null)
 				.findFirst();
 		
-		if (primaryField.isPresent()) {
+		if (primaryFieldOpt.isPresent()) {
 			int runningNo = 1;
-			long primaryKey = (long) ReflectionUtils.getField(primaryField.get(), currentState);
+			
+			Field primaryField = primaryFieldOpt.get();
+			ReflectionUtils.makeAccessible(primaryField);
+			long primaryKey = (long) ReflectionUtils.getField(primaryField, currentState);
 			
 			List<Field> fields = Arrays.stream(clazz.getDeclaredFields())
 					.filter(field -> field.getAnnotation(Id.class) == null)
@@ -85,8 +88,8 @@ public class RepositoryListenerAspect {
 			iamAuditTrail.setTableName(tableName);
 			iamAuditTrail.setPrimaryKey(primaryKey);
 			iamAuditTrail.setColumnName(field.getName().replaceAll("(.)(\\p{Upper})", "$1_$2").toLowerCase());
-			iamAuditTrail.setOldValue((String) oldValue);
-			iamAuditTrail.setNewValue((String) newValue);
+			iamAuditTrail.setOldValue(oldValue == null? null : String.valueOf(oldValue));
+			iamAuditTrail.setNewValue(newValue == null? null : String.valueOf(newValue));
 			iamAuditTrail.setIsNew(oldValue == null? "Y" : "N");
 			iamAuditTrail.setIsFk(field.getAnnotation(ManyToOne.class) == null? "N" : "Y");
 			
