@@ -36,6 +36,8 @@ public class RoleEditService {
                 IamMsSystem iamMsSystem = systemRepository.findBySystemIdAndIsDeleted(roleEditReq.getSystemId(),"N")
                         .orElseThrow(()-> new Exception("data not found"));
 
+
+
                 IamMsRole iamMsRole = roleRepository.findByRoleCodeAndIamMsSystemAndIsDeleted(roleEditReq.getRoleCode(),iamMsSystem,"N")
                         .orElseThrow(() -> new Exception("data not found"));
 

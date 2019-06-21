@@ -16,7 +16,8 @@ import java.util.Set;
 
 @Entity
 @Table (name = "iam_ms_role")
-@Data
+@Getter
+@Setter
 public class IamMsRole extends BaseEntity{
 
     @Id
@@ -35,6 +36,7 @@ public class IamMsRole extends BaseEntity{
 
     @ManyToOne
     @JoinColumn(name = "system_id")
+    @JsonIgnore
     private IamMsSystem iamMsSystem;
 
     @OneToMany(mappedBy = "iamMsRole",cascade = CascadeType.ALL ,fetch = FetchType.LAZY)

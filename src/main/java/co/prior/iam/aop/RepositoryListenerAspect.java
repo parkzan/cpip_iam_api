@@ -93,7 +93,7 @@ public class RepositoryListenerAspect {
 			iamAuditTrail.setIsNew(oldValue == null? "Y" : "N");
 			iamAuditTrail.setIsFk(field.getAnnotation(ManyToOne.class) == null? "N" : "Y");
 			
-			return Optional.of(this.iamAuditTrailRepository.save(iamAuditTrail));
+//			return Optional.of(this.iamAuditTrailRepository.save(iamAuditTrail));
 		}
 		
 		return Optional.empty();

@@ -4,6 +4,7 @@ package co.prior.iam.module.role_object.controller;
 import co.prior.iam.entity.IamMsRoleObject;
 import co.prior.iam.module.role_object.model.request.RoleMapObjectCreateReq;
 import co.prior.iam.module.role_object.model.request.RoleObjectEditReq;
+import co.prior.iam.module.role_object.model.respone.RoleMapObjectRespone;
 import co.prior.iam.module.role_object.service.GetRoleObjectService;
 import co.prior.iam.module.role_object.service.RoleObjectCreateService;
 import co.prior.iam.module.role_object.service.RoleObjectEditService;
@@ -39,8 +40,8 @@ public class RoleObjectController {
 
     @GetMapping
     @RequestMapping(path = "/{roleId}")
-    public ResponseEntity<List<IamMsRoleObject>> getRoleObject(@PathVariable Long roleId) throws Exception {
-        List<IamMsRoleObject> list = getRoleObjectService.getRoleObject(roleId);
+    public ResponseEntity<RoleMapObjectRespone> getRoleObject(@PathVariable Long roleId) throws Exception {
+        RoleMapObjectRespone list = getRoleObjectService.getRoleObject(roleId);
 
         return ResponseEntity.ok(list);
 

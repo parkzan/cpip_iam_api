@@ -6,10 +6,7 @@ import co.prior.iam.module.object.model.request.ObjectCreateReq;
 import co.prior.iam.module.object.model.request.ObjectDeleteReq;
 import co.prior.iam.module.object.model.request.ObjectEditReq;
 import co.prior.iam.module.object.model.respone.ObjectRespone;
-import co.prior.iam.module.object.service.ObjectCreateService;
-import co.prior.iam.module.object.service.ObjectDeleteService;
-import co.prior.iam.module.object.service.ObjectEditService;
-import co.prior.iam.module.object.service.ObjectInqueryService;
+import co.prior.iam.module.object.service.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -34,11 +31,14 @@ public class ObjectController {
 
     private final ObjectDeleteService objectDeleteService;
 
-    public ObjectController(ObjectCreateService objectCreateService, ObjectEditService objectEditService, ObjectInqueryService objectInqueryService, ObjectDeleteService objectDeleteService) {
+    private final ObjectChildInqueryService objectChildInqueryService;
+
+    public ObjectController(ObjectCreateService objectCreateService, ObjectEditService objectEditService, ObjectInqueryService objectInqueryService, ObjectDeleteService objectDeleteService, ObjectChildInqueryService objectChildInqueryService) {
         this.objectCreateService = objectCreateService;
         this.objectEditService = objectEditService;
         this.objectInqueryService = objectInqueryService;
         this.objectDeleteService = objectDeleteService;
+        this.objectChildInqueryService = objectChildInqueryService;
     }
 
 
@@ -82,6 +82,18 @@ public class ObjectController {
 
 
             return ResponseEntity.ok(list);
+
+
+
+
+    }
+    @GetMapping
+    @RequestMapping(path = "/{systemId}/{objectId}")
+    public ResponseEntity<List<IamMsObject>> inqueryChildObject(@PathVariable Long systemId ,@PathVariable  Long objectId) throws Exception {
+        List<IamMsObject> list = objectChildInqueryService.inqueryChildObject(systemId ,objectId);
+
+
+        return ResponseEntity.ok(list);
 
 
 

@@ -2,6 +2,7 @@ package co.prior.iam.entity;
 
 
 import com.fasterxml.jackson.annotation.JacksonInject;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
@@ -10,7 +11,8 @@ import javax.persistence.*;
 
 @Entity
 @Table(name = "iam_ms_role_object")
-@Data
+@Getter
+@Setter
 public class IamMsRoleObject extends BaseEntity{
 
 
@@ -21,13 +23,16 @@ public class IamMsRoleObject extends BaseEntity{
 
     @ManyToOne
     @JoinColumn(name = "system_id")
+    @JsonIgnore
     private IamMsSystem iamMsSystem;
 
     @ManyToOne
     @JoinColumn(name = "role_id")
+    @JsonIgnore
     private IamMsRole iamMsRole;
 
     @ManyToOne
     @JoinColumn(name = "object_id")
+    @JsonIgnore
     private IamMsObject iamMsObject;
 }

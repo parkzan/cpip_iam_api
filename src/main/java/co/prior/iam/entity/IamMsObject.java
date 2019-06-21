@@ -24,11 +24,12 @@ public class IamMsObject extends  BaseEntity {
     private String objectCode;
     private String objectName;
 
-
+    @JsonIgnore
     private Long objectParentId;
 
     @ManyToOne
     @JoinColumn(name = "system_id")
+    @JsonIgnore
     private IamMsSystem iamMsSystem;
 
     @OneToMany(mappedBy = "iamMsObject",cascade = CascadeType.ALL ,fetch = FetchType.LAZY)

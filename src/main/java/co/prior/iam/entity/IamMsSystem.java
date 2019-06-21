@@ -3,6 +3,8 @@ package co.prior.iam.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.*;
 
@@ -11,7 +13,8 @@ import java.util.Set;
 
 @Entity
 @Table(name = "iam_ms_system")
-@Data
+@Getter
+@Setter
 public class IamMsSystem extends BaseEntity{
     @Id
     @SequenceGenerator(name = "system_id_seq", sequenceName = "iam_ms_system_system_id_seq",allocationSize = 1)
