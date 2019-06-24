@@ -33,7 +33,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 	private JwtTokenProvider jwtTokenProvider;
 
 	@Autowired
-	private UserDetailsServiceImpl userDetailsService;
+	private CustomDetailsService userDetailsService;
     
 	@Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws IOException, ServletException {
@@ -63,7 +63,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private String getAuthentication(ResettableStreamHttpServletRequest request) {
     	String token = request.getHeader(JwtConstants.HEADER_STRING.value());
         if (StringUtils.hasText(token) && token.startsWith(JwtConstants.TOKEN_PREFIX.value())) {
-            return token;
+            return token.substring(7);
         }
         
         return null;
@@ -80,7 +80,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     		this.servletStream = new ResettableServletInputStream();
     	}
     	
-    	public void resetInputStream() {
+    	@SuppressWarnings("unused")
+		public void resetInputStream() {
     		servletStream.stream = new ByteArrayInputStream(byteArr);
     	}
     	

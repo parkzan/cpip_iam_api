@@ -27,61 +27,64 @@ import co.prior.iam.security.JwtAuthenticationFilter;
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
+	private final JwtAuthenticationFilter jwtAuthenticationFilter;
 	private final UserDetailsService userDetailsService;
 	private final JwtAuthenticationEntryPoint unauthorizedHandler;
 	private final PasswordEncoder passwordEncoder;
-	
-	public WebSecurityConfig(UserDetailsService userDetailsService, JwtAuthenticationEntryPoint unauthorizedHandler, 
-			PasswordEncoder passwordEncoder) {
-		
+
+	public WebSecurityConfig(JwtAuthenticationFilter jwtAuthenticationFilter, UserDetailsService userDetailsService, 
+			JwtAuthenticationEntryPoint unauthorizedHandler, PasswordEncoder passwordEncoder) {
+
+		this.jwtAuthenticationFilter = jwtAuthenticationFilter;
 		this.userDetailsService = userDetailsService;
 		this.unauthorizedHandler = unauthorizedHandler;
 		this.passwordEncoder = passwordEncoder;
 	}
-	
+
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 		http.cors().and()
-			.csrf().disable()
-			.exceptionHandling()
-            .authenticationEntryPoint(unauthorizedHandler)
-            .and()
-            .authorizeRequests()
-			.antMatchers("/v2/api-docs", "/configuration/ui", "/swagger-resources", "/configuration/security", 
-					"/swagger-ui.html", "/webjars/**", "/swagger-resources/configuration/ui", "/swagger-resources/configuration/security")
-			.permitAll()
-			.antMatchers("/auth/**")
-            .permitAll()
-            .antMatchers(HttpMethod.GET, "/users/**")
-            .permitAll()
-			.anyRequest().authenticated()
-			.and()
-			.sessionManagement()
-			.sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-		
-		http.addFilterBefore(new JwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
+				.csrf().disable()
+				.exceptionHandling()
+				.authenticationEntryPoint(unauthorizedHandler)
+				.and()
+				.authorizeRequests()
+				.antMatchers(HttpMethod.GET, 
+						"/v2/api-docs", 
+						"/swagger-resources/**", 
+						"/swagger-ui.html**",
+						"/webjars/**")
+				.permitAll()
+				.antMatchers("/auth/**")
+				.permitAll()
+				.anyRequest().authenticated()
+				.and()
+				.sessionManagement()
+				.sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+
+		http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 	}
-	
-    @Override
-    public void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder);
-    }
-    
-    @Bean(BeanIds.AUTHENTICATION_MANAGER)
-    @Override
-    public AuthenticationManager authenticationManagerBean() throws Exception {
-    	return super.authenticationManagerBean();
-    }
-    
-    @Bean
-    public CorsConfigurationSource corsConfigurationSource() {
-        final UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        final CorsConfiguration configuration = new CorsConfiguration().applyPermitDefaultValues();
-        configuration.setAllowCredentials(Boolean.TRUE);
-        configuration.addExposedHeader(JwtConstants.HEADER_STRING.value());
-        configuration.setAllowedMethods(Arrays.asList("*"));
-        source.registerCorsConfiguration("/**", configuration);
-        return source;
-    }
+
+	@Override
+	public void configure(AuthenticationManagerBuilder auth) throws Exception {
+		auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder);
+	}
+
+	@Bean(BeanIds.AUTHENTICATION_MANAGER)
+	@Override
+	public AuthenticationManager authenticationManagerBean() throws Exception {
+		return super.authenticationManagerBean();
+	}
+
+	@Bean
+	public CorsConfigurationSource corsConfigurationSource() {
+		final UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+		final CorsConfiguration configuration = new CorsConfiguration().applyPermitDefaultValues();
+		configuration.setAllowCredentials(Boolean.TRUE);
+		configuration.addExposedHeader(JwtConstants.HEADER_STRING.value());
+		configuration.setAllowedMethods(Arrays.asList("*"));
+		source.registerCorsConfiguration("/**", configuration);
+		return source;
+	}
 
 }

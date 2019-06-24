@@ -14,11 +14,11 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Service
-public class UserDetailsServiceImpl implements UserDetailsService {
+public class CustomDetailsService implements UserDetailsService {
 	
     private final IamMsUserRepository iamMsUserRepository;
 
-    public UserDetailsServiceImpl(IamMsUserRepository iamMsUserRepository) {
+    public CustomDetailsService(IamMsUserRepository iamMsUserRepository) {
     	this.iamMsUserRepository = iamMsUserRepository;
     }
 
@@ -29,10 +29,12 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     	IamMsUser iamMsUser = this.iamMsUserRepository.findByUserCodeAndIsDeleted(userCode, "N")
     			.orElseThrow(() -> new UsernameNotFoundException("user not found with code: " + userCode));
     	
-    	boolean isAccountNonLocked = iamMsUser.getNoOfFailTimes() > 3? Boolean.FALSE : Boolean.TRUE;
-    	boolean isEnabled = "Y".equalsIgnoreCase(iamMsUser.getDisableFlag())? Boolean.FALSE : Boolean.TRUE;
+    	boolean isAccountNonLocked = iamMsUser.getNoOfFailTimes() >= 3? Boolean.FALSE : Boolean.TRUE;
+    	boolean isEnabled = "Y".equalsIgnoreCase(iamMsUser.getFirstTimeLogin())
+    			|| "Y".equalsIgnoreCase(iamMsUser.getDisableFlag())? Boolean.FALSE : Boolean.TRUE;
     	
         return UserPrincipal.builder()
+        		.userId(iamMsUser.getUserId())
         		.userCode(iamMsUser.getUserCode())
         		.userPassword(iamMsUser.getUserPassword())
         		.localFirstName(iamMsUser.getLocalFirstName())
@@ -53,6 +55,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         		.orElseThrow(() -> new UsernameNotFoundException("user not found with id: " + userId));
 
         return UserPrincipal.builder()
+        		.userId(iamMsUser.getUserId())
         		.userCode(iamMsUser.getUserCode())
         		.userPassword(iamMsUser.getUserPassword())
         		.localFirstName(iamMsUser.getLocalFirstName())

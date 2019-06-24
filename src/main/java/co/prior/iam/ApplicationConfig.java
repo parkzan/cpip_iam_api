@@ -41,12 +41,12 @@ public class ApplicationConfig {
 	    	Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
 	        if (authentication == null || !authentication.isAuthenticated() || authentication instanceof AnonymousAuthenticationToken) {
-	            return Optional.empty();
+	            return Optional.of("ADMIN");
 	        }
 
 	        UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
 	        
-	        return Optional.ofNullable(userPrincipal.getUserCode());
+	        return Optional.of(userPrincipal.getUserCode());
 	    }
 	}
 	

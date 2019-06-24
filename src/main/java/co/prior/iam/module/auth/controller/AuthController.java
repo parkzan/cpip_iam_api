@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import co.prior.iam.entity.IamMsUser;
+import co.prior.iam.module.auth.model.request.ActivateUserRequest;
 import co.prior.iam.module.auth.model.request.SignInRequest;
 import co.prior.iam.module.auth.model.request.SignUpRequest;
 import co.prior.iam.module.auth.model.response.SignInResponse;
@@ -20,7 +21,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @RestController
-@RequestMapping(path = "/")
+@RequestMapping(path = "/auth")
 public class AuthController {
 
 	private final AuthService authService;
@@ -30,7 +31,7 @@ public class AuthController {
 	}
     
 	@PostMapping("/sign-in")
-    public ResponseEntity<SignInResponse> signIn(@Valid @RequestBody SignInRequest request) {
+    public ResponseEntity<SignInResponse> signIn(@Valid @RequestBody SignInRequest request) throws Exception {
 		log.info("Controller signIn userCode: {}", request.getUserCode());
 		
         return ResponseEntity.ok(SignInResponse.builder()
@@ -49,6 +50,15 @@ public class AuthController {
                 .buildAndExpand(iamMsUser.getUserId()).toUri();
 
         return ResponseEntity.created(location).build();
+    }
+    
+    @PostMapping("/activate")
+    public ResponseEntity<Void> activateUser(@Valid @RequestBody ActivateUserRequest request) throws Exception {
+    	log.info("Controller activateUser userCode: {}", request.getUserCode());
+    	
+    	this.authService.activateUser(request);
+    	
+        return ResponseEntity.noContent().build();
     }
     
 }

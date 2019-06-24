@@ -1,6 +1,6 @@
 server:
   servlet:
-    contextPath: "/auth/api/v2"
+    contextPath: "/iam/v2"
   port: 8080
 spring:
   profiles:

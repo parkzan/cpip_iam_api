@@ -41,10 +41,10 @@ public class IamAuditTrail {
 	
 	@JsonIgnore
     @CreationTimestamp
-    protected LocalDateTime createdDate;
+    private LocalDateTime createdDate;
 
     @JsonIgnore
     @CreatedBy
-    protected String createdBy;
+    private String createdBy;
     
 }

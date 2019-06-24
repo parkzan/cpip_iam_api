@@ -16,6 +16,8 @@ public interface IamMsUserRepository extends JpaRepository<IamMsUser, Long> {
 	Optional<IamMsUser> findByUserIdAndIsDeleted(Long userId, String isDeleted);
 	
     Optional<IamMsUser> findByUserCodeAndIsDeleted(String userCode, String isDeleted);
+    
+    Optional<IamMsUser> findByUserCodeAndUserPasswordAndIsDeleted(String userCode, String userPassword, String isDeleted);
 
     Boolean existsByUserCodeAndDisableFlagAndIsDeleted(String userCode, String disableFlag, String isDeleted);
 }
