@@ -12,10 +12,13 @@ import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
+
 
 
 @EqualsAndHashCode(callSuper = false)
@@ -37,6 +40,7 @@ public class IamMsSystem extends BaseEntity{
     private String systemIcon;
 
 
+
     @OneToMany(mappedBy = "iamMsSystem",cascade = CascadeType.ALL ,fetch = FetchType.LAZY)
     @JsonIgnore
     private Set<IamMsRole> iamMsRoles ;
@@ -48,6 +52,11 @@ public class IamMsSystem extends BaseEntity{
     @OneToMany(mappedBy = "iamMsSystem",cascade = CascadeType.ALL ,fetch = FetchType.LAZY)
     @JsonIgnore
     private Set<IamMsRoleObject> iamMsRoleObjects ;
+
+
+    @JsonIgnore
+	@OneToMany(mappedBy = "iamMsSystem", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	private Set<IamMsUserRole> iamMsUserRoleSet;
 
 
 }

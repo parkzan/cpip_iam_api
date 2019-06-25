@@ -10,6 +10,7 @@ import co.prior.iam.repository.ObjectRepository;
 import co.prior.iam.repository.RoleObjectRepository;
 import co.prior.iam.repository.RoleRepository;
 import co.prior.iam.repository.SystemRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,6 +19,7 @@ import java.util.List;
 import java.util.Stack;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+@Slf4j
 @Service
 public class GetRoleObjectService {
 
@@ -36,11 +38,10 @@ public class GetRoleObjectService {
 
     @Transactional
     public RoleMapObjectRespone getRoleObject(Long systemId ,Long roleId) throws Exception{
+        log.info("Service getRoleObject: {}", roleId);
 
-        IamMsSystem system = systemRepository.findBySystemIdAndIsDeleted(systemId,"N")
-                .orElseThrow(() -> new Exception("data not found"));
 
-        IamMsRole iamMsRole = roleRepository.findByIamMsSystemAndRoleIdAndIsDeleted(system,roleId,"N")
+        IamMsRole iamMsRole = roleRepository.findByIamMsSystem_SystemIdAndRoleIdAndIsDeleted(systemId,roleId,"N")
                 .orElseThrow(() -> new Exception("data not found"));
 
 
@@ -58,7 +59,7 @@ public class GetRoleObjectService {
 
                 ObjectModel objectModel = new ObjectModel();
 
-                if (obj.getIamMsObject().getObjectParentId() == null) {
+                if (obj.getIamMsObject().getObjectParent() == null) {
 
                     objectModel.setObjectId(obj.getIamMsObject().getObjectId());
                     objectModel.setObjectName(obj.getIamMsObject().getObjectName());
@@ -77,10 +78,9 @@ public class GetRoleObjectService {
 
     @Transactional
     public List<RoleMapObjectRespone> allRoleMapObject(long systemId) throws Exception{
-        IamMsSystem system = systemRepository.findBySystemIdAndIsDeleted(systemId,"N")
-                .orElseThrow(() -> new Exception("data not found"));
 
-        List<IamMsRole> listRole = roleRepository.findByIamMsSystemAndIsDeleted(system,"N");
+
+        List<IamMsRole> listRole = roleRepository.findByIamMsSystem_SystemIdAndIsDeleted(systemId,"N");
         List<RoleMapObjectRespone> listRespone = new ArrayList<>();
 
         if (!listRole.isEmpty()){
@@ -98,7 +98,7 @@ public class GetRoleObjectService {
 
                         ObjectModel objectModel = new ObjectModel();
 
-                        if (obj.getIamMsObject().getObjectParentId() == null) {
+                        if (obj.getIamMsObject().getObjectParent() == null) {
 
                             objectModel.setObjectId(obj.getIamMsObject().getObjectId());
                             objectModel.setObjectName(obj.getIamMsObject().getObjectName());
@@ -125,7 +125,7 @@ public class GetRoleObjectService {
             ObjectModel childObjectModel = new ObjectModel();
 
             for (IamMsRoleObject obj : list) {
-                if (obj.getIamMsObject().getObjectParentId() == root.getIamMsObject().getObjectId()) {
+                if (obj.getIamMsObject().getObjectParent() == root.getIamMsObject()) {
                     childObjectModel.setObjectId(obj.getIamMsObject().getObjectId());
                     childObjectModel.setObjectName(obj.getIamMsObject().getObjectName());
                     listChild.add(childObjectModel);

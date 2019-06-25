@@ -3,6 +3,7 @@ package co.prior.iam.entity;
 import java.time.LocalDateTime;
 
 import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -10,6 +11,8 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.CreationTimestamp;
+import org.springframework.data.annotation.CreatedBy;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -17,6 +20,7 @@ import lombok.Data;
 
 @Data
 @Entity
+@EntityListeners(AuditingEntityListener.class)
 @Table(name = "iam_audit_trail")
 public class IamAuditTrail {
 
@@ -37,9 +41,10 @@ public class IamAuditTrail {
 	
 	@JsonIgnore
     @CreationTimestamp
-    protected LocalDateTime createdDate;
+    private LocalDateTime createdDate;
 
     @JsonIgnore
-    protected String createdBy = "ADMIN";
+    @CreatedBy
+    private String createdBy;
     
 }

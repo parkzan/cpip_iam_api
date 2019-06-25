@@ -24,8 +24,6 @@ public class IamMsObject extends  BaseEntity {
     private String objectCode;
     private String objectName;
 
-    @JsonIgnore
-    private Long objectParentId;
 
     @ManyToOne
     @JoinColumn(name = "system_id")
@@ -36,6 +34,13 @@ public class IamMsObject extends  BaseEntity {
     @JsonIgnore
     private Set<IamMsRoleObject> iamMsRoleObjects ;
 
+    @JsonIgnore
+    @ManyToOne
+    @JoinColumn(name = "object_parent_id")
+    private IamMsObject objectParent;
 
+    @OneToMany(mappedBy = "objectParent",cascade = CascadeType.ALL ,fetch = FetchType.LAZY)
+    @JsonIgnore
+    private Set<IamMsObject>  objects;
 
 }

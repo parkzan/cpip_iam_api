@@ -5,6 +5,7 @@ import co.prior.iam.entity.IamMsObject;
 import co.prior.iam.entity.IamMsSystem;
 import co.prior.iam.repository.ObjectRepository;
 import co.prior.iam.repository.SystemRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -12,6 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+@Slf4j
 @Service
 public class ObjectInqueryService {
 
@@ -29,12 +31,12 @@ public class ObjectInqueryService {
    @Transactional
     public List<IamMsObject> inqueryObject(Long systemId) throws Exception {
 
-
-       IamMsSystem iamMsSystem = systemRepository.findBySystemIdAndIsDeleted(systemId,"N")
-               .orElseThrow(() -> new Exception("data not found"));
+       log.info("Service inqueryObject: {}", systemId);
 
 
-       List<IamMsObject> listModel = objectRepository.findByIamMsSystemAndIsDeleted(iamMsSystem,"N");
+
+
+       List<IamMsObject> listModel = objectRepository.findByIamMsSystem_SystemIdAndIsDeleted(systemId,"N");
        List<IamMsObject> list = new ArrayList<>() ;
 
 
@@ -42,7 +44,7 @@ public class ObjectInqueryService {
 
            for (IamMsObject object : listModel){
 
-               if(object.getObjectParentId() == null){
+               if(object.getObjectParent() == null){
                    list.add(object);
                }
            }

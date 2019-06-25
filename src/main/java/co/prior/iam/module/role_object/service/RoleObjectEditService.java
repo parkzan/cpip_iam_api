@@ -10,12 +10,14 @@ import co.prior.iam.repository.ObjectRepository;
 import co.prior.iam.repository.RoleObjectRepository;
 import co.prior.iam.repository.RoleRepository;
 import co.prior.iam.repository.SystemRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
 
+@Slf4j
 @Service
 public class RoleObjectEditService {
 
@@ -37,7 +39,7 @@ public class RoleObjectEditService {
 
     @Transactional
     public void editRoleObject(RoleObjectEditReq roleObjectEditReq) throws Exception {
-
+        log.info("Service editRoleObject: {}", roleObjectEditReq);
         IamMsRole iamMsRole = roleRepository.findByRoleIdAndIsDeleted(roleObjectEditReq.getRoleId(),"N")
                 .orElseThrow(() -> new Exception("data not found"));
 

@@ -7,6 +7,7 @@ import co.prior.iam.module.role.model.request.RoleEditReq;
 import co.prior.iam.module.role.model.respone.RoleRespone;
 import co.prior.iam.repository.RoleRepository;
 import co.prior.iam.repository.SystemRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
+@Slf4j
 @Service
 public class RoleEditService {
 
@@ -33,12 +35,12 @@ public class RoleEditService {
     @Transactional
     public void editRole(RoleEditReq roleEditReq) throws Exception{
 
-                IamMsSystem iamMsSystem = systemRepository.findBySystemIdAndIsDeleted(roleEditReq.getSystemId(),"N")
-                        .orElseThrow(()-> new Exception("data not found"));
+        log.info("Service editRole: {}", roleEditReq);
 
 
 
-                IamMsRole iamMsRole = roleRepository.findByRoleCodeAndIamMsSystemAndIsDeleted(roleEditReq.getRoleCode(),iamMsSystem,"N")
+
+                IamMsRole iamMsRole = roleRepository.findByRoleCodeAndIamMsSystem_SystemIdAndIsDeleted(roleEditReq.getRoleCode(),roleEditReq.getSystemId(),"N")
                         .orElseThrow(() -> new Exception("data not found"));
 
 

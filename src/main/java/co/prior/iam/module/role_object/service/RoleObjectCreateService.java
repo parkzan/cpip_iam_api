@@ -9,11 +9,13 @@ import co.prior.iam.repository.ObjectRepository;
 import co.prior.iam.repository.RoleObjectRepository;
 import co.prior.iam.repository.RoleRepository;
 import co.prior.iam.repository.SystemRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
+@Slf4j
 @Service
 public class RoleObjectCreateService {
 
@@ -33,7 +35,7 @@ public class RoleObjectCreateService {
 
     @Transactional
     public void createRoleMapObject(RoleMapObjectCreateReq roleMapObjectCreateReq) throws Exception{
-
+        log.info("Service createRoleMapObject: {}", roleMapObjectCreateReq);
         IamMsSystem iamMsSystem = systemRepository.findBySystemIdAndIsDeleted(roleMapObjectCreateReq.getSystemId(),"N")
                 .orElseThrow(() -> new Exception("data not found"));
 

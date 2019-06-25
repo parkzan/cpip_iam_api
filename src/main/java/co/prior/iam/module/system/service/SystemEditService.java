@@ -1,5 +1,6 @@
 package co.prior.iam.module.system.service;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -8,6 +9,7 @@ import co.prior.iam.entity.IamMsSystem;
 import co.prior.iam.module.system.model.request.SystemEditReq;
 import co.prior.iam.repository.SystemRepository;
 
+@Slf4j
 @Service
 public class SystemEditService {
 
@@ -25,7 +27,7 @@ public class SystemEditService {
     public void editSystem(SystemEditReq systemEditReq) throws Exception{
 
 
-
+        log.info("Service editSystem: {}", systemEditReq);
         IamMsSystem iamMsSystem = systemRepository.findBySystemCodeAndIsDeleted(systemEditReq.getSystemCode(), "N")
                 .orElseThrow(() -> new Exception("data not found"));
 

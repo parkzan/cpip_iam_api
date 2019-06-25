@@ -1,6 +1,6 @@
 server:
   servlet:
-    contextPath: "/auth/api/v2"
+    contextPath: "/iam/v2"
   port: 8080
 spring:
   profiles:
@@ -22,3 +22,8 @@ spring:
         default_schema: iam2
         temp:
           use_jdbc_metadata_defaults: false
+          
+security:
+   jwt:
+      secret: jwt-secret
+      expirationTime: 3600 # second(s)

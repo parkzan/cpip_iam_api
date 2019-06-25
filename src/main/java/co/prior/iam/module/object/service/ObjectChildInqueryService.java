@@ -5,12 +5,14 @@ import co.prior.iam.entity.IamMsObject;
 import co.prior.iam.entity.IamMsSystem;
 import co.prior.iam.repository.ObjectRepository;
 import co.prior.iam.repository.SystemRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Slf4j
 @Service
 public class ObjectChildInqueryService {
 
@@ -27,29 +29,20 @@ public class ObjectChildInqueryService {
 
     @Transactional
     public  List<IamMsObject> inqueryChildObject(Long systemId , Long objectId) throws Exception{
+        log.info("Service inqueryChildObject: {}", objectId);
 
-        IamMsSystem iamMsSystem = systemRepository.findBySystemIdAndIsDeleted(systemId,"N")
-                .orElseThrow(() -> new Exception("data not found"));
-
-        List<IamMsObject> listObject = objectRepository.findByIamMsSystemAndIsDeleted(iamMsSystem,"N");
-
-        List<IamMsObject> list = new ArrayList<>();
+        List<IamMsObject> listObject = objectRepository.findByIamMsSystem_SystemIdAndObjectParent_ObjectIdAndIsDeleted(systemId,objectId,"N");
 
 
-        if (!listObject.isEmpty()){
-            for (IamMsObject obj : listObject){
-                if (obj.getObjectParentId() == objectId){
-                    list.add(obj);
-                }
-            }
 
-            if(!list.isEmpty())
-            return list;
-            else throw new Exception(objectId + " does't have child");
+
+        if (listObject.isEmpty()){
+
+            throw new Exception("data not found");
         }
-        else throw new Exception("data not found");
 
 
+       return  listObject;
 
     }
 }

@@ -1,5 +1,6 @@
 package co.prior.iam.entity;
 
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
@@ -7,6 +8,18 @@ import java.util.Set;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
+
+
+
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
 
 
 @EqualsAndHashCode(callSuper = false)
@@ -31,10 +44,17 @@ public class IamMsRole extends BaseEntity {
     @ManyToOne
     @JoinColumn(name = "system_id")
     @JsonIgnore
-    private IamMsSystem.IamMsSystem iamMsSystem;
+    private IamMsSystem iamMsSystem;
+
 
     @OneToMany(mappedBy = "iamMsRole",cascade = CascadeType.ALL ,fetch = FetchType.LAZY)
     @JsonIgnore
     private Set<IamMsRoleObject> iamMsRoleObjects ;
+
+
+    @JsonIgnore
+	@OneToMany(mappedBy = "iamMsRole", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	private Set<IamMsUserRole> iamMsUserRoleSet;
+
 
 }

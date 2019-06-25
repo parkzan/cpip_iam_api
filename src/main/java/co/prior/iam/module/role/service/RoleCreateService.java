@@ -9,6 +9,7 @@ import co.prior.iam.module.role.model.respone.RoleRespone;
 import co.prior.iam.repository.ObjectRepository;
 import co.prior.iam.repository.RoleRepository;
 import co.prior.iam.repository.SystemRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -20,16 +21,16 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Date;
 import java.util.Optional;
 
+@Slf4j
 @Service
 public class RoleCreateService {
-    protected final Logger log = LoggerFactory.getLogger(getClass());
 
 
     RoleRepository roleRepository;
 
     SystemRepository systemRepository;
 
-    ObjectRepository objectRepository;
+
 
 
 
@@ -42,7 +43,7 @@ public class RoleCreateService {
 
     @Transactional
     public void createRole(RoleCreateReq roleCreateReq) throws Exception {
-
+        log.info("Service createRole: {}", roleCreateReq);
             IamMsSystem iamMsSystem = systemRepository.findBySystemIdAndIsDeleted(roleCreateReq.getSystemId(),"N")
                 .orElseThrow(() -> new Exception("data not found"));
 

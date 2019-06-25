@@ -6,6 +6,7 @@ import co.prior.iam.module.object.model.request.ObjectCreateReq;
 import co.prior.iam.module.object.model.respone.ObjectRespone;
 import co.prior.iam.repository.ObjectRepository;
 import co.prior.iam.repository.SystemRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -14,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Date;
 import java.util.Optional;
 
+@Slf4j
 @Service
 public class ObjectCreateService {
 
@@ -29,7 +31,7 @@ public class ObjectCreateService {
 
     @Transactional
     public void createObject(ObjectCreateReq objectCreateReq) throws Exception{
-
+        log.info("Service createObject: {}", objectCreateReq);
         IamMsSystem iamMsSystem = systemRepository.findBySystemIdAndIsDeleted(objectCreateReq.getSystemId(),"N")
                 .orElseThrow(() -> new Exception("data not found"));
 
@@ -42,7 +44,7 @@ public class ObjectCreateService {
             model.setObjectCode(objectCreateReq.getObjectCode());
             model.setObjectName(objectCreateReq.getObjectName());
             model.setIamMsSystem(iamMsSystem);
-            model.setObjectParentId(objectCreateReq.getObjectParentId());
+            model.setObjectParent(iamMsObject.get());
 
 
             objectRepository.save(model);

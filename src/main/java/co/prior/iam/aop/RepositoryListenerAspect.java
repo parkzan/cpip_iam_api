@@ -55,11 +55,10 @@ public class RepositoryListenerAspect {
 			long primaryKey = (long) ReflectionUtils.getField(primaryField, currentState);
 			
 			List<Field> fields = Arrays.stream(clazz.getDeclaredFields())
-					.filter(field -> field.getAnnotation(Id.class) == null)
+					.filter(field -> field.getAnnotation(Id.class) == null && field.getAnnotation(ManyToOne.class) == null)
 					.collect(Collectors.toList());
 			for (Field field : fields) {
-				if (this.saveAuditTrail(clazz, field, previousState, currentState, 
-						runningNo, primaryKey).isPresent()) {
+				if (this.saveAuditTrail(clazz, field, previousState, currentState, runningNo, primaryKey).isPresent()) {
 					runningNo++;
 				}
 			}
@@ -75,13 +74,23 @@ public class RepositoryListenerAspect {
 		ReflectionUtils.makeAccessible(field);
 		Object oldValue = previousState == null? null : ReflectionUtils.getField(field, previousState);
 		Object newValue = ReflectionUtils.getField(field, currentState);
+		if (field.getAnnotation(ManyToOne.class) != null) {
+			Optional<Field> fkFieldOpt = Arrays.stream(newValue.getClass().getDeclaredFields())
+					.filter(fkField -> field.getAnnotation(Id.class) != null)
+					.findFirst();
+			if (fkFieldOpt.isPresent()) {
+				Field fkField = fkFieldOpt.get();
+				oldValue = oldValue == null? null : ReflectionUtils.getField(fkField, oldValue);
+				newValue = ReflectionUtils.getField(fkField, newValue);
+			}
+		}
 		
 		log.info("running no: {}", runningNo);
 		log.info("field name: {}", field.getName());
 		log.info("old value: {}", oldValue);
 		log.info("new value: {}", newValue);
 		
-		if (oldValue == null || !oldValue.equals(newValue)) {
+		if ((oldValue == null && newValue != null) || (oldValue != null && !oldValue.equals(newValue))) {
 			IamAuditTrail iamAuditTrail = new IamAuditTrail();
 			String tableName = clazz.getAnnotation(Table.class).name();
 			iamAuditTrail.setRunningNo(runningNo);
@@ -90,7 +99,7 @@ public class RepositoryListenerAspect {
 			iamAuditTrail.setColumnName(field.getName().replaceAll("(.)(\\p{Upper})", "$1_$2").toLowerCase());
 			iamAuditTrail.setOldValue(oldValue == null? null : String.valueOf(oldValue));
 			iamAuditTrail.setNewValue(newValue == null? null : String.valueOf(newValue));
-			iamAuditTrail.setIsNew(oldValue == null? "Y" : "N");
+			iamAuditTrail.setIsNew(previousState == null? "Y" : "N");
 			iamAuditTrail.setIsFk(field.getAnnotation(ManyToOne.class) == null? "N" : "Y");
 			
 //			return Optional.of(this.iamAuditTrailRepository.save(iamAuditTrail));
