@@ -8,6 +8,7 @@ import co.prior.iam.repository.SystemRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -34,10 +35,18 @@ public class ObjectInqueryService {
 
 
        List<IamMsObject> listModel = objectRepository.findByIamMsSystemAndIsDeleted(iamMsSystem,"N");
+       List<IamMsObject> list = new ArrayList<>() ;
+
 
        if(!listModel.isEmpty()){
 
-           return listModel;
+           for (IamMsObject object : listModel){
+
+               if(object.getObjectParentId() == null){
+                   list.add(object);
+               }
+           }
+           return list;
 
        }
        throw new Exception("data not found");
