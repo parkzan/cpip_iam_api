@@ -76,8 +76,12 @@ public class RepositoryListenerAspect {
 		ReflectionUtils.makeAccessible(field);
 		Object oldValue = previousState == null? null : ReflectionUtils.getField(field, previousState);
 		Object newValue = ReflectionUtils.getField(field, currentState);
-		if (field.getAnnotation(ManyToOne.class) != null) {
-			Optional<Field> fkFieldOpt = Arrays.stream(newValue.getClass().getDeclaredFields())
+		if ((oldValue != null || newValue != null) && field.getAnnotation(ManyToOne.class) != null) {
+			Class<?> fkClazz = newValue == null? null : newValue.getClass();
+			if (newValue == null) {
+				fkClazz = oldValue.getClass();
+			}
+			Optional<Field> fkFieldOpt = Arrays.stream(fkClazz.getDeclaredFields())
 					.filter(fkField -> fkField.getAnnotation(Id.class) != null)
 					.findFirst();
 			if (fkFieldOpt.isPresent()) {

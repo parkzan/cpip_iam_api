@@ -1,5 +1,6 @@
 package co.prior.iam.module.user.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.data.domain.Page;
@@ -13,6 +14,8 @@ import co.prior.iam.entity.IamMsUser;
 import co.prior.iam.model.PageableRequest;
 import co.prior.iam.model.SortedModel;
 import co.prior.iam.module.user.model.request.GetUsersRequest;
+import co.prior.iam.module.user.model.response.GetUserResponse;
+import co.prior.iam.module.user.model.response.IamMsUserPage;
 import co.prior.iam.repository.IamMsUserRepository;
 import lombok.extern.slf4j.Slf4j;
 
@@ -26,7 +29,7 @@ public class UserService {
 		this.iamMsUserRepository = iamMsUserRepository;
 	}
 	
-	public Page<IamMsUser> getUsers(GetUsersRequest request) {
+	public IamMsUserPage getUsers(GetUsersRequest request) {
 		log.info("Service getUsers systemId: {}", request.getSystemId());
 		
 		PageableRequest pageableRequest = request.getPageable();
@@ -40,16 +43,55 @@ public class UserService {
 				sort.and(Sort.by(sortedModel.getDirection(), sortedModel.getField()));
 			}
 		}
-		Pageable records = PageRequest.of(page, size, sort);
 		
-		return this.iamMsUserRepository.findPageableByIamMsSystem_SystemIdAndIsDeleted(request.getSystemId(), "N", records);
+		Pageable records = PageRequest.of(page, size, sort);
+		Page<IamMsUser> userPage = this.iamMsUserRepository.findPageableByIamMsSystem_SystemIdAndIsDeleted(
+				request.getSystemId(), "N", records);
+		List<GetUserResponse> data = new ArrayList<>();
+		for (IamMsUser user : userPage.getContent()) {
+			data.add(GetUserResponse.builder()
+					.systemId(user.getIamMsSystem().getSystemId())
+					.userId(user.getUserId())
+					.userCode(user.getUserCode())
+					.localFirstName(user.getLocalFirstName())
+					.localMiddleName(user.getLocalMiddleName())
+					.localLastName(user.getLocalLastName())
+					.engFirstName(user.getEngFirstName())
+					.engMiddleName(user.getEngMiddleName())
+					.engLastName(user.getEngLastName())
+					.isIamAdmin(user.getIsIamAdmin())
+					.build());
+		}
+		
+		return IamMsUserPage.builder()
+				.page(userPage.getNumber() + 1)
+				.size(userPage.getSize())
+				.totalPages(userPage.getTotalPages())
+				.totalRecords(userPage.getTotalElements())
+				.isFirst(userPage.isFirst())
+				.isLast(userPage.isLast())
+				.data(data)
+				.build();
 	}
 	
-	public IamMsUser getUser(long userId) throws Exception {
+	public GetUserResponse getUser(long userId) throws Exception {
 		log.info("Service getUser userId: {}", userId);
 		
-		return this.iamMsUserRepository.findByUserIdAndIsDeleted(userId, "N")
+		IamMsUser iamMsUser = this.iamMsUserRepository.findByUserIdAndIsDeleted(userId, "N")
 				.orElseThrow(() -> new Exception("user not found"));
+		
+		return GetUserResponse.builder()
+				.systemId(iamMsUser.getIamMsSystem().getSystemId())
+				.userId(iamMsUser.getUserId())
+				.userCode(iamMsUser.getUserCode())
+				.localFirstName(iamMsUser.getLocalFirstName())
+				.localMiddleName(iamMsUser.getLocalMiddleName())
+				.localLastName(iamMsUser.getLocalLastName())
+				.engFirstName(iamMsUser.getEngFirstName())
+				.engMiddleName(iamMsUser.getEngMiddleName())
+				.engLastName(iamMsUser.getEngLastName())
+				.isIamAdmin(iamMsUser.getIsIamAdmin())
+				.build();
 	}
 	
 	@Transactional

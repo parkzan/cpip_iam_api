@@ -14,15 +14,13 @@ import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
 
+@Data
+@EqualsAndHashCode(callSuper = false)
 @Entity
 @Table(name = "iam_ms_system")
-@Getter
-@Setter
-@EqualsAndHashCode(callSuper=false)
 public class IamMsSystem extends BaseEntity<IamMsSystem> {
 
     @Id
@@ -33,16 +31,16 @@ public class IamMsSystem extends BaseEntity<IamMsSystem> {
     private String systemName;
     private String systemIcon;
 
-    @OneToMany(mappedBy = "iamMsSystem",cascade = CascadeType.ALL ,fetch = FetchType.LAZY)
     @JsonIgnore
+    @OneToMany(mappedBy = "iamMsSystem",cascade = CascadeType.ALL ,fetch = FetchType.LAZY)
     private Set<IamMsRole> iamMsRoles ;
 
-    @OneToMany(mappedBy = "iamMsSystem",cascade = CascadeType.ALL ,fetch = FetchType.LAZY)
     @JsonIgnore
+    @OneToMany(mappedBy = "iamMsSystem",cascade = CascadeType.ALL ,fetch = FetchType.LAZY)
     private Set<IamMsObject> iamMsObjects ;
 
-    @OneToMany(mappedBy = "iamMsSystem",cascade = CascadeType.ALL ,fetch = FetchType.LAZY)
     @JsonIgnore
+    @OneToMany(mappedBy = "iamMsSystem",cascade = CascadeType.ALL ,fetch = FetchType.LAZY)
     private Set<IamMsRoleObject> iamMsRoleObjects ;
 
     @JsonIgnore

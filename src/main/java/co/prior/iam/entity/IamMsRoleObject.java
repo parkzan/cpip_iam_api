@@ -1,20 +1,22 @@
 package co.prior.iam.entity;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
 
-import com.fasterxml.jackson.annotation.JacksonInject;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.EqualsAndHashCode;
 
-import javax.persistence.*;
-
+@Data
+@EqualsAndHashCode(callSuper = false)
 @Entity
 @Table(name = "iam_ms_role_object")
-@Getter
-@Setter
-public class IamMsRoleObject extends BaseEntity{
-
+public class IamMsRoleObject extends BaseEntity<IamMsRoleObject> {
 
     @Id
     @SequenceGenerator(name = "role_object_id_seq", sequenceName = "iam_ms_role_object_role_object_id_seq",allocationSize = 1)
@@ -23,16 +25,14 @@ public class IamMsRoleObject extends BaseEntity{
 
     @ManyToOne
     @JoinColumn(name = "system_id")
-    @JsonIgnore
     private IamMsSystem iamMsSystem;
 
     @ManyToOne
     @JoinColumn(name = "role_id")
-    @JsonIgnore
     private IamMsRole iamMsRole;
 
     @ManyToOne
     @JoinColumn(name = "object_id")
-    @JsonIgnore
     private IamMsObject iamMsObject;
+    
 }
