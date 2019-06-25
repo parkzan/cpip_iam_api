@@ -64,7 +64,7 @@ public class CustomDetailsService implements UserDetailsService {
         		.engFirstName(iamMsUser.getEngFirstName())
         		.engMiddleName(iamMsUser.getEngMiddleName())
         		.engLastName(iamMsUser.getEngLastName())
-        		.authorities("Y".equals(iamMsUser.getIsIamAdmin())? Arrays.asList(new SimpleGrantedAuthority("IAM_ADMIN")) : null)
+        		.authorities("Y".equals(iamMsUser.getIsIamAdmin())? Arrays.asList(new SimpleGrantedAuthority("ROLE_IAM_ADMIN")) : null)
         		.build();
     }
     

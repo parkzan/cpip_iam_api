@@ -36,7 +36,7 @@ public class UserController {
     }
 	
 	@PostMapping("/users")
-//    @PreAuthorize("hasRole('IAM_ADMIN')")
+    @PreAuthorize("hasRole('ROLE_IAM_ADMIN')")
     public ResponseEntity<Page<IamMsUser>> getUsers(@RequestBody PageableRequest request) {
 		log.info("Controller getUsers page: {}, size: {}", request.getPage(), request.getSize());
 		
@@ -46,7 +46,7 @@ public class UserController {
     }
 	
 	@GetMapping("/user/{user_id}")
-//    @PreAuthorize("hasRole('IAM_ADMIN')")
+    @PreAuthorize("hasRole('ROLE_IAM_ADMIN')")
     public ResponseEntity<IamMsUser> getUser(@PathVariable(value = "user_id") long userId) throws Exception {
 		log.info("Controller getUser userId: {}", userId);
 		

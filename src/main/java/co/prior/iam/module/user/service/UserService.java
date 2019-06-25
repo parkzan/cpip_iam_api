@@ -34,12 +34,7 @@ public class UserService {
 		List<SortedModel> sortedList = request.getSortedList();
 		if (sortedList != null) {
 			for (SortedModel sortedModel : sortedList) {
-				if ("ASC".equalsIgnoreCase(sortedModel.getDirection())) {
-					sort.and(Sort.by(sortedModel.getField()).ascending());
-					
-				} else if ("DESC".equalsIgnoreCase(sortedModel.getDirection())) {
-					sort.and(Sort.by(sortedModel.getField()).descending());
-				}
+				sort.and(Sort.by(sortedModel.getDirection(), sortedModel.getField()));
 			}
 		}
 		Pageable records = PageRequest.of(page, size, sort);
