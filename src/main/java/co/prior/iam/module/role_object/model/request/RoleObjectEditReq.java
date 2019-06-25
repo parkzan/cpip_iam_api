@@ -1,19 +1,18 @@
-package co.prior.iam.module.system.model.respone;
-
+package co.prior.iam.module.role_object.model.request;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.List;
+
 @Getter
 @Setter
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class SystemRespone{
+public class RoleObjectEditReq {
 
     private Long systemId;
-    private String systemCode;
-    private String systemName;
-    private String systemIcon;
-
+    private Long roleId;
+    private List<Long> newObjectId;
 
 }

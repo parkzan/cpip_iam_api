@@ -1,4 +1,4 @@
-package co.prior.iam.module.system.model.respone;
+package co.prior.iam.module.role_object.model.request;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -8,12 +8,10 @@ import lombok.Setter;
 @Getter
 @Setter
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class SystemRespone{
+public class RoleMapObjectCreateReq {
 
     private Long systemId;
-    private String systemCode;
-    private String systemName;
-    private String systemIcon;
-
+    private Long roleId;
+    private Long[] objectId;
 
 }

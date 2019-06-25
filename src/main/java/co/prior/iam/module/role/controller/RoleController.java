@@ -10,15 +10,18 @@ import co.prior.iam.module.role.service.RoleCreateService;
 import co.prior.iam.module.role.service.RoleDeleteService;
 import co.prior.iam.module.role.service.RoleEditService;
 import co.prior.iam.module.role.service.RoleInqueryService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
 
+@Slf4j
 @RestController
-@RequestMapping(path = "/role")
+@RequestMapping(path = "/api/role")
 public class RoleController {
 
     private final RoleCreateService roleCreateService;
@@ -42,7 +45,7 @@ public class RoleController {
 
     @PostMapping
     public ResponseEntity<Void> createRole(@RequestBody RoleCreateReq roleCreateReq) throws Exception {
-
+        log.info("Controller createRole: {}", roleCreateReq );
         roleCreateService.createRole(roleCreateReq);
 
         return ResponseEntity.created(null).build();
@@ -50,7 +53,7 @@ public class RoleController {
     }
     @DeleteMapping
     public ResponseEntity<Void> deleteRole(@RequestBody RoleDeleteReq roleDeleteReq)  throws Exception {
-
+        log.info("Controller deleteRole: {}", roleDeleteReq );
         roleDeleteService.deleteRole(roleDeleteReq);
 
 
@@ -60,7 +63,7 @@ public class RoleController {
 
     @PutMapping
     public ResponseEntity<Void> editRole(@RequestBody RoleEditReq roleEditReq) throws Exception{
-
+        log.info("Controller editRole: {}", roleEditReq );
         roleEditService.editRole(roleEditReq);
 
 
@@ -72,6 +75,7 @@ public class RoleController {
     @GetMapping
     @RequestMapping(path = "/{systemId}")
     public ResponseEntity<List<IamMsRole>> inqueryRole(@PathVariable Long systemId) throws Exception {
+        log.info("Controller inqueryRole: {}", systemId );
        List<IamMsRole> list = roleInqueryService.inqueryRole(systemId);
 
            return ResponseEntity.ok(list);
