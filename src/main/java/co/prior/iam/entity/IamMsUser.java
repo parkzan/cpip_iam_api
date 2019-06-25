@@ -13,6 +13,8 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonProperty.Access;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -40,10 +42,19 @@ public class IamMsUser extends BaseEntity<IamMsUser> {
 	private String engFirstName;
 	private String engMiddleName;
 	private String engLastName;
+	
+	@JsonProperty(access = Access.WRITE_ONLY)
 	private String userPassword;
+	
+	@JsonProperty(access = Access.WRITE_ONLY)
 	private String firstTimeLogin;
+	
 	private String isIamAdmin;
+	
+	@JsonProperty(access = Access.WRITE_ONLY)
 	private Integer noOfFailTimes;
+	
+	@JsonProperty(access = Access.WRITE_ONLY)
 	private String disableFlag;
 	
 	@JsonIgnore

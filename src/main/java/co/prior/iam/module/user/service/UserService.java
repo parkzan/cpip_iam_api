@@ -1,10 +1,16 @@
 package co.prior.iam.module.user.service;
 
-import java.util.Collection;
+import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import co.prior.iam.entity.IamMsUser;
+import co.prior.iam.model.PageableRequest;
+import co.prior.iam.model.SortedModel;
 import co.prior.iam.repository.IamMsUserRepository;
 import lombok.extern.slf4j.Slf4j;
 
@@ -18,10 +24,27 @@ public class UserService {
 		this.iamMsUserRepository = iamMsUserRepository;
 	}
 	
-	public Collection<IamMsUser> getUsers() {
-		log.info("Service getUsers");
+	public Page<IamMsUser> getUsers(PageableRequest request) {
+		log.info("Service getUsers page: {}, size: {}", request.getPage(), request.getSize());
 		
-		return this.iamMsUserRepository.findByIsDeleted("N");
+		int page = request.getPage() - 1;
+		int size = request.getSize();
+		Sort sort = Sort.unsorted();
+		
+		List<SortedModel> sortedList = request.getSortedList();
+		if (sortedList != null) {
+			for (SortedModel sortedModel : sortedList) {
+				if ("ASC".equalsIgnoreCase(sortedModel.getDirection())) {
+					sort.and(Sort.by(sortedModel.getField()).ascending());
+					
+				} else if ("DESC".equalsIgnoreCase(sortedModel.getDirection())) {
+					sort.and(Sort.by(sortedModel.getField()).descending());
+				}
+			}
+		}
+		Pageable records = PageRequest.of(page, size, sort);
+		
+		return this.iamMsUserRepository.findByIsDeleted("N", records);
 	}
 	
 	public IamMsUser getUser(long userId) throws Exception {
