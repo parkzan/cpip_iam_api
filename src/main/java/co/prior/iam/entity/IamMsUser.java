@@ -8,6 +8,8 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
@@ -60,5 +62,10 @@ public class IamMsUser extends BaseEntity<IamMsUser> {
 	@JsonIgnore
 	@OneToMany(mappedBy = "iamMsUser", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	private Set<IamMsUserRole> iamMsUserRoleSet;
+	
+	@JsonIgnore
+	@ManyToOne
+	@JoinColumn(name = "system_id")
+    private IamMsSystem iamMsSystem;
 	
 }

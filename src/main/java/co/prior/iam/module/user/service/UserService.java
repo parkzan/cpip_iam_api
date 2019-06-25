@@ -7,10 +7,12 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import co.prior.iam.entity.IamMsUser;
 import co.prior.iam.model.PageableRequest;
 import co.prior.iam.model.SortedModel;
+import co.prior.iam.module.user.model.request.GetUsersRequest;
 import co.prior.iam.repository.IamMsUserRepository;
 import lombok.extern.slf4j.Slf4j;
 
@@ -24,14 +26,15 @@ public class UserService {
 		this.iamMsUserRepository = iamMsUserRepository;
 	}
 	
-	public Page<IamMsUser> getUsers(PageableRequest request) {
-		log.info("Service getUsers page: {}, size: {}", request.getPage(), request.getSize());
+	public Page<IamMsUser> getUsers(GetUsersRequest request) {
+		log.info("Service getUsers systemId: {}", request.getSystemId());
 		
-		int page = request.getPage() - 1;
-		int size = request.getSize();
+		PageableRequest pageableRequest = request.getPageable();
+		int page = pageableRequest.getPage() - 1;
+		int size = pageableRequest.getSize();
 		Sort sort = Sort.unsorted();
 		
-		List<SortedModel> sortedList = request.getSortedList();
+		List<SortedModel> sortedList = pageableRequest.getSortedList();
 		if (sortedList != null) {
 			for (SortedModel sortedModel : sortedList) {
 				sort.and(Sort.by(sortedModel.getDirection(), sortedModel.getField()));
@@ -39,7 +42,7 @@ public class UserService {
 		}
 		Pageable records = PageRequest.of(page, size, sort);
 		
-		return this.iamMsUserRepository.findByIsDeleted("N", records);
+		return this.iamMsUserRepository.findPageableByIamMsSystem_SystemIdAndIsDeleted(request.getSystemId(), "N", records);
 	}
 	
 	public IamMsUser getUser(long userId) throws Exception {
@@ -47,6 +50,17 @@ public class UserService {
 		
 		return this.iamMsUserRepository.findByUserIdAndIsDeleted(userId, "N")
 				.orElseThrow(() -> new Exception("user not found"));
+	}
+	
+	@Transactional
+	public void deleteUser(long userId) throws Exception {
+		log.info("Service deleteUser userId: {}", userId);
+		
+		IamMsUser iamMsUser = this.iamMsUserRepository.findByUserIdAndIsDeleted(userId, "N")
+				.orElseThrow(() -> new Exception("user not found"));
+		
+		iamMsUser.setIsDeleted("Y");
+		this.iamMsUserRepository.save(iamMsUser);
 	}
 	
 }

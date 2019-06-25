@@ -7,6 +7,8 @@ import lombok.Data;
 @Data
 public class SignUpRequest {
 
+	private long systemId;
+	
 	@NotBlank
 	private String userCode;
 	

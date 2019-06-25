@@ -41,7 +41,7 @@ public class AuthController {
 
     @PostMapping("/sign-up")
     public ResponseEntity<Void> signUp(@Valid @RequestBody SignUpRequest request) throws Exception {
-    	log.info("Controller signUp userCode: {}", request.getUserCode());
+    	log.info("Controller signUp systemId: {}, userCode: {}", request.getSystemId(), request.getUserCode());
     	
     	IamMsUser iamMsUser = this.authService.signUp(request);
     	
@@ -54,7 +54,7 @@ public class AuthController {
     
     @PostMapping("/activate")
     public ResponseEntity<Void> activateUser(@Valid @RequestBody ActivateUserRequest request) throws Exception {
-    	log.info("Controller activateUser userCode: {}", request.getUserCode());
+    	log.info("Controller activateUser systemId: {}, userCode: {}", request.getSystemId(), request.getUserCode());
     	
     	this.authService.activateUser(request);
     	

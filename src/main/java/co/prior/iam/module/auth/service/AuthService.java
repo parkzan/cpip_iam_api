@@ -11,10 +11,12 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import co.prior.iam.entity.IamMsSystem;
 import co.prior.iam.entity.IamMsUser;
 import co.prior.iam.module.auth.model.request.ActivateUserRequest;
 import co.prior.iam.module.auth.model.request.SignUpRequest;
 import co.prior.iam.repository.IamMsUserRepository;
+import co.prior.iam.repository.SystemRepository;
 import co.prior.iam.security.JwtTokenProvider;
 import lombok.extern.slf4j.Slf4j;
 
@@ -25,14 +27,16 @@ public class AuthService {
 	private final AuthenticationManager authenticationManager;
 	private final PasswordEncoder passwordEncoder;
 	private final JwtTokenProvider jwtTokenProvider;
+	private final SystemRepository iamMsSystemRepository;
     private final IamMsUserRepository iamMsUserRepository;
     
-    public AuthService(AuthenticationManager authenticationManager, PasswordEncoder passwordEncoder, 
-    		JwtTokenProvider jwtTokenProvider, IamMsUserRepository iamMsUserRepository) {
+    public AuthService(AuthenticationManager authenticationManager, PasswordEncoder passwordEncoder, JwtTokenProvider jwtTokenProvider, 
+    		SystemRepository iamMsSystemRepository, IamMsUserRepository iamMsUserRepository) {
     	
     	this.authenticationManager = authenticationManager;
     	this.passwordEncoder = passwordEncoder;
     	this.jwtTokenProvider = jwtTokenProvider;
+    	this.iamMsSystemRepository = iamMsSystemRepository;
     	this.iamMsUserRepository = iamMsUserRepository;
     }
     
@@ -70,12 +74,17 @@ public class AuthService {
     
     @Transactional
     public IamMsUser signUp(SignUpRequest request) throws Exception {
-    	log.info("Service signUp userCode: {}", request.getUserCode());
+    	log.info("Service signUp systemId: {}, userCode: {}", request.getSystemId(), request.getUserCode());
     	
-    	if(this.iamMsUserRepository.existsByUserCodeAndDisableFlagAndIsDeleted(request.getUserCode(), "N", "N")) {
+    	if(this.iamMsUserRepository.existsByIamMsSystem_SystemIdAndUserCodeAndIsDeleted(
+    			request.getSystemId(), request.getUserCode(), "N")) {
+    		
             throw new Exception("user code is already exist");
         }
 
+    	IamMsSystem iamMsSystem = this.iamMsSystemRepository.findBySystemIdAndIsDeleted(request.getSystemId(), "N")
+    			.orElseThrow(() -> new Exception("system not found"));
+    			
     	String isIamAdmin = request.getIsIamAdmin();
         IamMsUser iamMsUser = IamMsUser.builder()
         		.userCode(request.getUserCode())
@@ -89,6 +98,7 @@ public class AuthService {
         		.isIamAdmin(isIamAdmin)
         		.noOfFailTimes(0)
         		.disableFlag("N")
+        		.iamMsSystem(iamMsSystem)
         		.build();
         
         iamMsUser.setUserPassword(passwordEncoder.encode(request.getPassword()));
@@ -100,8 +110,8 @@ public class AuthService {
     public void activateUser(ActivateUserRequest request) throws Exception {
     	log.info("Service activateUser userCode: {}", request.getUserCode());
     	
-    	IamMsUser iamMsUser = this.iamMsUserRepository.findByUserCodeAndUserPasswordAndIsDeleted(
-    			request.getUserCode(), passwordEncoder.encode(request.getOldPassword()), "N")
+    	IamMsUser iamMsUser = this.iamMsUserRepository.findByIamMsSystem_SystemIdAndUserCodeAndUserPasswordAndIsDeleted(
+    			request.getSystemId(), request.getUserCode(), passwordEncoder.encode(request.getOldPassword()), "N")
     			.orElseThrow(() -> new Exception("password incorrect"));
     	
     	iamMsUser.setUserPassword(passwordEncoder.encode(request.getNewPassword()));

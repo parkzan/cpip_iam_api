@@ -7,6 +7,8 @@ import lombok.Data;
 @Data
 public class ActivateUserRequest {
 	
+	private long systemId;
+	
 	@NotBlank
 	private String userCode;
 	

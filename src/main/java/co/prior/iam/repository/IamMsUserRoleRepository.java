@@ -1,5 +1,8 @@
 package co.prior.iam.repository;
 
+import java.util.List;
+import java.util.Optional;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -8,4 +11,7 @@ import co.prior.iam.entity.IamMsUserRole;
 @Repository
 public interface IamMsUserRoleRepository extends JpaRepository<IamMsUserRole, Long> {
 
+	Optional<IamMsUserRole> findByUserRoleIdAndIsDeleted(long userRoleId, String isDeleted);
+	
+	List<IamMsUserRole> findByIamMsUser_UserIdAndIsDeleted(long userId, String isDeleted);
 }
