@@ -11,6 +11,7 @@ import javax.persistence.Table;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 @Data
 @EqualsAndHashCode(callSuper = false)
@@ -23,14 +24,17 @@ public class IamMsRoleObject extends BaseEntity<IamMsRoleObject> {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "role_object_id_seq")
     private Long roleObjectId;
 
+    @ToString.Exclude
     @ManyToOne
     @JoinColumn(name = "system_id")
     private IamMsSystem iamMsSystem;
 
+    @ToString.Exclude
     @ManyToOne
     @JoinColumn(name = "role_id")
     private IamMsRole iamMsRole;
 
+    @ToString.Exclude
     @ManyToOne
     @JoinColumn(name = "object_id")
     private IamMsObject iamMsObject;

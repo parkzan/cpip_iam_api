@@ -18,6 +18,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 @Data
 @EqualsAndHashCode(callSuper = false)
@@ -33,14 +34,17 @@ public class IamMsRole extends BaseEntity<IamMsRole> {
     private String roleName;
     private String roleIcon;
 
+    @ToString.Exclude
     @ManyToOne
     @JoinColumn(name = "system_id")
     private IamMsSystem iamMsSystem;
 
+    @ToString.Exclude
     @JsonIgnore
     @OneToMany(mappedBy = "iamMsRole",cascade = CascadeType.ALL ,fetch = FetchType.LAZY)
     private Set<IamMsRoleObject> iamMsRoleObjects ;
 
+    @ToString.Exclude
     @JsonIgnore
 	@OneToMany(mappedBy = "iamMsRole", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	private Set<IamMsUserRole> iamMsUserRoleSet;

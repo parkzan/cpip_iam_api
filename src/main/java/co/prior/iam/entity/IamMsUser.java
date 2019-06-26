@@ -21,6 +21,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @Data
 @Builder
@@ -48,10 +49,12 @@ public class IamMsUser extends BaseEntity<IamMsUser> {
 	private Integer noOfFailTimes;
 	private String disableFlag;
 	
+	@ToString.Exclude
 	@JsonIgnore
 	@OneToMany(mappedBy = "iamMsUser", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	private Set<IamMsUserRole> iamMsUserRoleSet;
 	
+	@ToString.Exclude
 	@ManyToOne
 	@JoinColumn(name = "system_id")
     private IamMsSystem iamMsSystem;

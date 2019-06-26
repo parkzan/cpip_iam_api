@@ -9,11 +9,10 @@ import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 @Data
 @Builder
@@ -27,17 +26,17 @@ public class IamMsUserRole extends BaseEntity<IamMsUserRole> {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user_role_id_seq")
 	private Long userRoleId;
 	
-	@JsonIgnore
+	@ToString.Exclude
     @ManyToOne
     @JoinColumn(name = "user_id")
 	private IamMsUser iamMsUser;
 	
-	@JsonIgnore
+	@ToString.Exclude
     @ManyToOne
     @JoinColumn(name = "system_id")
 	private IamMsSystem iamMsSystem;
 	
-	@JsonIgnore
+	@ToString.Exclude
     @ManyToOne
     @JoinColumn(name = "role_id")
 	private IamMsRole iamMsRole;
