@@ -3,6 +3,7 @@ package co.prior.iam.module.role.service;
 
 import co.prior.iam.entity.IamMsRole;
 import co.prior.iam.entity.IamMsSystem;
+import co.prior.iam.error.DataNotFoundException;
 import co.prior.iam.module.role.model.request.RoleEditReq;
 import co.prior.iam.module.role.model.respone.RoleRespone;
 import co.prior.iam.repository.RoleRepository;
@@ -41,7 +42,7 @@ public class RoleEditService {
 
 
                 IamMsRole iamMsRole = roleRepository.findByRoleCodeAndIamMsSystem_SystemIdAndIsDeleted(roleEditReq.getRoleCode(),roleEditReq.getSystemId(),"N")
-                        .orElseThrow(() -> new Exception("data not found"));
+                        .orElseThrow(() -> new DataNotFoundException("data not found"));
 
 
                     iamMsRole.setRoleName(roleEditReq.getNewName());

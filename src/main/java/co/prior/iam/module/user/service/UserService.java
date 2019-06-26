@@ -2,6 +2,7 @@ package co.prior.iam.module.user.service;
 
 import java.util.List;
 
+import co.prior.iam.error.DataNotFoundException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -46,7 +47,7 @@ public class UserService {
 		log.info("Service getUser userId: {}", userId);
 		
 		return this.iamMsUserRepository.findByUserIdAndIsDeleted(userId, "N")
-				.orElseThrow(() -> new Exception("user not found"));
+				.orElseThrow(() -> new DataNotFoundException("user not found"));
 	}
 	
 }

@@ -2,6 +2,7 @@ package co.prior.iam.module.system.service;
 
 import java.util.Optional;
 
+import co.prior.iam.error.DataDuplicateException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -41,7 +42,7 @@ public class SystemCreateService {
              }
             else {
 
-                 throw new Exception("System code duplicate");
+                 throw new DataDuplicateException("System code duplicate");
 
             }
 

@@ -4,6 +4,7 @@ package co.prior.iam.module.role_object.service;
 import co.prior.iam.entity.IamMsRole;
 import co.prior.iam.entity.IamMsRoleObject;
 import co.prior.iam.entity.IamMsSystem;
+import co.prior.iam.error.DataNotFoundException;
 import co.prior.iam.module.role_object.model.respone.ObjectModel;
 import co.prior.iam.module.role_object.model.respone.RoleMapObjectRespone;
 import co.prior.iam.repository.ObjectRepository;
@@ -42,7 +43,7 @@ public class GetRoleObjectService {
 
 
         IamMsRole iamMsRole = roleRepository.findByIamMsSystem_SystemIdAndRoleIdAndIsDeleted(systemId,roleId,"N")
-                .orElseThrow(() -> new Exception("data not found"));
+                .orElseThrow(() -> new DataNotFoundException("data not found"));
 
 
 
@@ -72,7 +73,7 @@ public class GetRoleObjectService {
 
             return  respone ;
         }
-        else throw new Exception("data not found");
+        else throw new DataNotFoundException("data not found");
 
     }
 
@@ -116,7 +117,7 @@ public class GetRoleObjectService {
             }
             return listRespone;
         }
-        else throw  new Exception("data not found");
+        else throw  new DataNotFoundException("data not found");
 
     }
 
