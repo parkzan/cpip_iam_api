@@ -18,6 +18,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 @Data
 @EqualsAndHashCode(callSuper=false)
@@ -32,20 +33,22 @@ public class IamMsObject extends BaseEntity<IamMsObject> {
     private String objectCode;
     private String objectName;
 
+    @ToString.Exclude
     @ManyToOne
     @JoinColumn(name = "system_id")
-    @JsonIgnore
     private IamMsSystem iamMsSystem;
 
+    @ToString.Exclude
     @JsonIgnore
     @OneToMany(mappedBy = "iamMsObject",cascade = CascadeType.ALL ,fetch = FetchType.LAZY)
     private Set<IamMsRoleObject> iamMsRoleObjects ;
 
+    @ToString.Exclude
     @ManyToOne
     @JoinColumn(name = "object_parent_id")
-    @JsonIgnore
     private IamMsObject objectParent;
 
+    @ToString.Exclude
     @JsonIgnore
     @OneToMany(mappedBy = "objectParent",cascade = CascadeType.ALL ,fetch = FetchType.LAZY)
     private Set<IamMsObject>  objects;

@@ -9,9 +9,9 @@ import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 @Data
 @EqualsAndHashCode(callSuper = false)
@@ -24,19 +24,19 @@ public class IamMsRoleObject extends BaseEntity<IamMsRoleObject> {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "role_object_id_seq")
     private Long roleObjectId;
 
+    @ToString.Exclude
     @ManyToOne
     @JoinColumn(name = "system_id")
-    @JsonIgnore
     private IamMsSystem iamMsSystem;
 
+    @ToString.Exclude
     @ManyToOne
     @JoinColumn(name = "role_id")
-    @JsonIgnore
     private IamMsRole iamMsRole;
 
+    @ToString.Exclude
     @ManyToOne
     @JoinColumn(name = "object_id")
-    @JsonIgnore
     private IamMsObject iamMsObject;
     
 }

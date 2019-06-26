@@ -15,7 +15,7 @@ spring:
       password: priorP@ssw0rdIAM
    jpa:
       database: POSTGRESQL
-      show-sql: true
+      show-sql: false
       properties:
          hibernate:
             default_schema: iam2
