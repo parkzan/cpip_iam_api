@@ -38,7 +38,7 @@ public class UserController {
     }
 	
 	@PostMapping("/users")
-    @PreAuthorize("hasRole('ROLE_IAM_ADMIN')")
+//    @PreAuthorize("hasRole('ROLE_IAM_ADMIN')")
     public ResponseEntity<IamMsUserPage> getUsers(@RequestBody GetUsersRequest request) {
 		log.info("Controller getUsers systemId: {}", request.getSystemId());
 		
@@ -48,7 +48,7 @@ public class UserController {
     }
 	
 	@GetMapping("/user/{user_id}")
-    @PreAuthorize("hasRole('ROLE_IAM_ADMIN')")
+//    @PreAuthorize("hasRole('ROLE_IAM_ADMIN')")
     public ResponseEntity<GetUserResponse> getUser(@PathVariable(value = "user_id") long userId) throws Exception {
 		log.info("Controller getUser userId: {}", userId);
 		
@@ -58,7 +58,7 @@ public class UserController {
     }
 	
 	@DeleteMapping("/user")
-	@PreAuthorize("hasRole('ROLE_IAM_ADMIN')")
+//	@PreAuthorize("hasRole('ROLE_IAM_ADMIN')")
 	public ResponseEntity<Void> deleteUser(@RequestBody DeleteUserRequest request) throws Exception {
 		log.info("Controller deleteUser userId: {}", request.getUserId());
 		
