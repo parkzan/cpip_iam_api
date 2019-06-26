@@ -41,48 +41,64 @@ public class RoleMapObjectService {
     @Transactional
     public void editRoleObject(RoleMapObjectReq roleMapObjectReq) throws Exception {
         log.info("Service editRoleObject: {}", roleMapObjectReq);
-        IamMsRole iamMsRole = roleRepository.findByRoleIdAndIsDeleted(roleMapObjectReq.getRoleId(),"N")
-                .orElseThrow(() -> new DataNotFoundException("data not found"));
 
-        IamMsSystem iamMsSystem = systemRepository.findBySystemIdAndIsDeleted(roleMapObjectReq.getSystemId() , "N")
-                .orElseThrow(() -> new DataNotFoundException("data not found"));
 
-        List<IamMsRoleObject> objectsList = roleObjectRepository.findByIamMsRoleAndIsDeleted(iamMsRole,"N");
+        List<IamMsRoleObject> objectsList = roleObjectRepository.findByIamMsSystem_SystemIdAndIamMsRole_RoleIdAndIsDeleted(roleMapObjectReq.getSystemId(),roleMapObjectReq.getRoleId(),"N");
 
-        objectsList.removeAll(roleMapObjectReq.getNewObjectId());
         if(!objectsList.isEmpty()){
 
-                 for (IamMsRoleObject obj: objectsList){
-                     IamMsRoleObject iamMsRoleObject = roleObjectRepository.findByIamMsRoleAndIamMsObjectAndIsDeleted(iamMsRole,obj.getIamMsObject(),"N")
-                             .orElseThrow(() -> new DataNotFoundException("data not found"));
+            for (IamMsRoleObject object : objectsList){
+                if (!roleMapObjectReq.getNewObjectId().contains(object.getIamMsObject().getObjectId())){
 
-                     iamMsRoleObject.setIsDeleted("Y");
-
-                     roleObjectRepository.save(iamMsRoleObject);
-                 }
-        }
+                        object.setIsDeleted("Y");
+                        roleObjectRepository.save(object);
+                }
 
 
-        if(roleMapObjectReq.getNewObjectId()!=null){
 
-        for (Long newObj : roleMapObjectReq.getNewObjectId()){
-            log.debug("team " + newObj.toString());
-            IamMsObject iamMsObject = objectRepository.findByObjectIdAndIsDeleted(newObj,"N")
-                    .orElseThrow(() -> new DataNotFoundException("data not found"));
-            Optional<IamMsRoleObject> iamMsRoleObject = roleObjectRepository.findByIamMsRoleAndIamMsObjectAndIsDeleted(iamMsRole, iamMsObject , "N");
+            }
 
-            if (!iamMsRoleObject.isPresent()){
-                IamMsRoleObject newModel = new IamMsRoleObject();
-                newModel.setIamMsRole(iamMsRole);
-                newModel.setIamMsSystem(iamMsSystem);
-                newModel.setIamMsObject(iamMsObject);
+            for (long newObj:roleMapObjectReq.getNewObjectId()){
 
-                roleObjectRepository.save(newModel);
+                IamMsObject iamMsObject = objectRepository.findByObjectIdAndIsDeleted(newObj,"N")
+                        .orElseThrow(() -> new DataNotFoundException("data not found"));
+                if (!objectsList.contains(iamMsObject)){
+                    IamMsRoleObject model = new IamMsRoleObject();
+                    model.setIamMsObject(iamMsObject);
+                    model.setIamMsSystem(iamMsObject.getIamMsSystem());
+                    model.setIamMsRole(objectsList.get(0).getIamMsRole());
+                    roleObjectRepository.save(model);
+                }
+
+
             }
 
 
         }
-    }
+        else if (roleMapObjectReq.getNewObjectId()!= null) {
+
+            IamMsRole iamMsRole = roleRepository.findByRoleIdAndIsDeleted(roleMapObjectReq.getRoleId(),"N")
+                    .orElseThrow(() -> new DataNotFoundException("data not found"));
+            for (Long newObj : roleMapObjectReq.getNewObjectId()){
+
+                IamMsObject iamMsObject = objectRepository.findByObjectIdAndIsDeleted(newObj,"N")
+                        .orElseThrow(() -> new DataNotFoundException("data not found"));
+
+                    IamMsRoleObject newModel = new IamMsRoleObject();
+                    newModel.setIamMsRole(iamMsRole);
+                    newModel.setIamMsSystem(iamMsRole.getIamMsSystem());
+                    newModel.setIamMsObject(iamMsObject);
+
+
+
+                    roleObjectRepository.save(newModel);
+
+
+            }
+
+
+
+        }
 
     }
 }
