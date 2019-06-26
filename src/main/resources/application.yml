@@ -1,29 +1,33 @@
 server:
-  servlet:
-    contextPath: "/iam/v2"
-  port: 8080
+   servlet:
+      contextPath: /iam/v2
+   port: 8080
 spring:
-  profiles:
-    active: "dev"
+   profiles:
+      active: dev
 ---
 
 spring:
-  profiles: "dev"
-  datasource:
-    url: jdbc:postgresql://prod-db.droppointcrm.com:15432/prior_db_iam
-    username: prior_iam
-    password: priorP@ssw0rdIAM
-
-  jpa:
-    database: POSTGRESQL
-    show-sql: true
-    properties:
-      hibernate:
-        default_schema: iam2
-        temp:
-          use_jdbc_metadata_defaults: false
-          
+   profiles: dev
+   datasource:
+      url: jdbc:postgresql://prod-db.droppointcrm.com:15432/prior_db_iam
+      username: prior_iam
+      password: priorP@ssw0rdIAM
+   jpa:
+      database: POSTGRESQL
+      show-sql: true
+      properties:
+         hibernate:
+            default_schema: iam2
+            temp:
+               use_jdbc_metadata_defaults: false
+               
 security:
    jwt:
-      secret: jwt-secret
-      expirationTime: 3600 # second(s)
+      access:
+         secret: jwt-access-secret
+         expirationTime: 1800 # second(s)
+      refresh:
+         secret: jwt-refresh-secret
+         expirationTime: 3600 # second(s)
+         

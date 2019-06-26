@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import org.aspectj.lang.annotation.AfterReturning;
@@ -55,7 +56,7 @@ public class RepositoryListenerAspect {
 			long primaryKey = (long) ReflectionUtils.getField(primaryField, currentState);
 			
 			List<Field> fields = Arrays.stream(clazz.getDeclaredFields())
-					.filter(field -> field.getAnnotation(Id.class) == null && field.getAnnotation(ManyToOne.class) == null)
+					.filter(field -> field.getAnnotation(OneToMany.class) == null)
 					.collect(Collectors.toList());
 			for (Field field : fields) {
 				if (this.saveAuditTrail(clazz, field, previousState, currentState, runningNo, primaryKey).isPresent()) {
@@ -71,15 +72,22 @@ public class RepositoryListenerAspect {
 	private Optional<IamAuditTrail> saveAuditTrail(Class<?> clazz, Field field, Object previousState, Object currentState, 
 			int runningNo, long primaryKey) {
 		
+		String columnName = field.getName().replaceAll("(.)(\\p{Upper})", "$1_$2").toLowerCase();
 		ReflectionUtils.makeAccessible(field);
 		Object oldValue = previousState == null? null : ReflectionUtils.getField(field, previousState);
 		Object newValue = ReflectionUtils.getField(field, currentState);
-		if (field.getAnnotation(ManyToOne.class) != null) {
-			Optional<Field> fkFieldOpt = Arrays.stream(newValue.getClass().getDeclaredFields())
-					.filter(fkField -> field.getAnnotation(Id.class) != null)
+		if ((oldValue != null || newValue != null) && field.getAnnotation(ManyToOne.class) != null) {
+			Class<?> fkClazz = newValue == null? null : newValue.getClass();
+			if (newValue == null) {
+				fkClazz = oldValue.getClass();
+			}
+			Optional<Field> fkFieldOpt = Arrays.stream(fkClazz.getDeclaredFields())
+					.filter(fkField -> fkField.getAnnotation(Id.class) != null)
 					.findFirst();
 			if (fkFieldOpt.isPresent()) {
 				Field fkField = fkFieldOpt.get();
+				columnName = fkField.getName().replaceAll("(.)(\\p{Upper})", "$1_$2").toLowerCase();
+				ReflectionUtils.makeAccessible(fkField);
 				oldValue = oldValue == null? null : ReflectionUtils.getField(fkField, oldValue);
 				newValue = ReflectionUtils.getField(fkField, newValue);
 			}
@@ -96,7 +104,7 @@ public class RepositoryListenerAspect {
 			iamAuditTrail.setRunningNo(runningNo);
 			iamAuditTrail.setTableName(tableName);
 			iamAuditTrail.setPrimaryKey(primaryKey);
-			iamAuditTrail.setColumnName(field.getName().replaceAll("(.)(\\p{Upper})", "$1_$2").toLowerCase());
+			iamAuditTrail.setColumnName(columnName);
 			iamAuditTrail.setOldValue(oldValue == null? null : String.valueOf(oldValue));
 			iamAuditTrail.setNewValue(newValue == null? null : String.valueOf(newValue));
 			iamAuditTrail.setIsNew(previousState == null? "Y" : "N");

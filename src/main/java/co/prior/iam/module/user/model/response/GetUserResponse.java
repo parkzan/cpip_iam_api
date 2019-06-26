@@ -1,37 +1,21 @@
-package co.prior.iam.module.auth.model.request;
+package co.prior.iam.module.user.model.response;
 
-import javax.validation.constraints.NotBlank;
-
+import lombok.Builder;
 import lombok.Data;
 
 @Data
-public class SignUpRequest {
+@Builder
+public class GetUserResponse {
 
 	private long systemId;
-	
-	@NotBlank
+	private long userId;
 	private String userCode;
-	
-	@NotBlank
-	private String password;
-	
-	@NotBlank
 	private String localFirstName;
-	
 	private String localMiddleName;
-	
-	@NotBlank
 	private String localLastName;
-	
-	@NotBlank
 	private String engFirstName;
-	
 	private String engMiddleName;
-	
-	@NotBlank
 	private String engLastName;
-	
-	@NotBlank
 	private String isIamAdmin;
 	
 }

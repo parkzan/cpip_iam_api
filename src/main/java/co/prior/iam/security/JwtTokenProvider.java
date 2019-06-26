@@ -3,7 +3,6 @@ package co.prior.iam.security;
 import java.util.Calendar;
 import java.util.Date;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 
@@ -20,13 +19,7 @@ import lombok.extern.slf4j.Slf4j;
 @Component
 public class JwtTokenProvider {
 
-	@Value("${security.jwt.secret}")
-    private String jwtSecret;
-
-    @Value("${security.jwt.expirationTime}")
-    private int jwtExpirationTime;
-    
-    public String generateToken(Authentication authentication) {
+    public String generateToken(Authentication authentication, String jwtSecret, int jwtExpirationTime) {
     	log.info("Common generateToken");
     	
         UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
@@ -41,8 +34,8 @@ public class JwtTokenProvider {
                 .signWith(SignatureAlgorithm.HS512, jwtSecret)
                 .compact();
     }
-
-    public Long getUserIdFromJWT(String token) {
+    
+    public Long getUserIdFromJWT(String token, String jwtSecret) {
     	log.info("Common getUserIdFromJWT token: {}", token);
     	
     	Claims claims = Jwts.parser()
@@ -53,7 +46,7 @@ public class JwtTokenProvider {
         return Long.parseLong(claims.getSubject());
     }
 
-    public boolean validateToken(String token) {
+    public boolean validateToken(String token, String jwtSecret) {
     	log.info("Common validateToken token: {}", token);
     	
         try {

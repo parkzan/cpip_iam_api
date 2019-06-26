@@ -8,13 +8,13 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonProperty.Access;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -42,23 +42,18 @@ public class IamMsUser extends BaseEntity<IamMsUser> {
 	private String engFirstName;
 	private String engMiddleName;
 	private String engLastName;
-	
-	@JsonProperty(access = Access.WRITE_ONLY)
 	private String userPassword;
-	
-	@JsonProperty(access = Access.WRITE_ONLY)
 	private String firstTimeLogin;
-	
 	private String isIamAdmin;
-	
-	@JsonProperty(access = Access.WRITE_ONLY)
 	private Integer noOfFailTimes;
-	
-	@JsonProperty(access = Access.WRITE_ONLY)
 	private String disableFlag;
 	
 	@JsonIgnore
 	@OneToMany(mappedBy = "iamMsUser", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	private Set<IamMsUserRole> iamMsUserRoleSet;
+	
+	@ManyToOne
+	@JoinColumn(name = "system_id")
+    private IamMsSystem iamMsSystem;
 	
 }
