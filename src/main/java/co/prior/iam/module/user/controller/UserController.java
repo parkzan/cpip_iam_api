@@ -1,16 +1,19 @@
 package co.prior.iam.module.user.controller;
 
+import javax.validation.Valid;
+
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import co.prior.iam.module.user.model.request.DeleteUserRequest;
+import co.prior.iam.module.user.model.request.EditUserRequest;
 import co.prior.iam.module.user.model.request.GetUsersRequest;
 import co.prior.iam.module.user.model.response.GetUserResponse;
 import co.prior.iam.module.user.model.response.IamMsUserPage;
@@ -56,6 +59,16 @@ public class UserController {
 		
         return ResponseEntity.ok(response);
     }
+	
+	@PutMapping("/user")
+//  @PreAuthorize("hasRole('ROLE_IAM_ADMIN')")
+	public ResponseEntity<Void> editUser(@Valid @RequestBody EditUserRequest request) throws Exception {
+		log.info("Controller editUser userId: {}", request.getUserId());
+		
+		this.userService.editUser(request);
+		
+		return ResponseEntity.noContent().build();
+	}
 	
 	@DeleteMapping("/user")
 //	@PreAuthorize("hasRole('ROLE_IAM_ADMIN')")

@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 import co.prior.iam.entity.IamMsUser;
 import co.prior.iam.model.PageableRequest;
 import co.prior.iam.model.SortedModel;
+import co.prior.iam.module.user.model.request.EditUserRequest;
 import co.prior.iam.module.user.model.request.GetUsersRequest;
 import co.prior.iam.module.user.model.response.GetUserResponse;
 import co.prior.iam.module.user.model.response.IamMsUserPage;
@@ -45,8 +46,8 @@ public class UserService {
 		}
 		
 		Pageable records = PageRequest.of(page, size, sort);
-		Page<IamMsUser> userPage = this.iamMsUserRepository.findPageableByIamMsSystem_SystemIdAndIsDeleted(
-				request.getSystemId(), "N", records);
+		Page<IamMsUser> userPage = this.iamMsUserRepository.findPageableByIamMsSystem_SystemIdAndFirstTimeLoginAndIsDeleted(
+				request.getSystemId(), "N", "N", records);
 		List<GetUserResponse> data = new ArrayList<>();
 		for (IamMsUser user : userPage.getContent()) {
 			data.add(GetUserResponse.builder()
@@ -77,7 +78,7 @@ public class UserService {
 	public GetUserResponse getUser(long userId) throws Exception {
 		log.info("Service getUser userId: {}", userId);
 		
-		IamMsUser iamMsUser = this.iamMsUserRepository.findByUserIdAndIsDeleted(userId, "N")
+		IamMsUser iamMsUser = this.iamMsUserRepository.findByUserIdAndFirstTimeLoginAndIsDeleted(userId, "N", "N")
 				.orElseThrow(() -> new Exception("user not found"));
 		
 		return GetUserResponse.builder()
@@ -92,6 +93,22 @@ public class UserService {
 				.engLastName(iamMsUser.getEngLastName())
 				.isIamAdmin(iamMsUser.getIsIamAdmin())
 				.build();
+	}
+	
+	@Transactional
+	public void editUser(EditUserRequest request) throws Exception {
+		log.info("Service editUser userId: {}", request.getUserId());
+		
+		IamMsUser iamMsUser = this.iamMsUserRepository.findByUserIdAndFirstTimeLoginAndIsDeleted(request.getUserId(), "N", "N")
+				.orElseThrow(() -> new Exception("user not found"));
+		
+		iamMsUser.setLocalFirstName(request.getLocalFirstName());
+		iamMsUser.setLocalMiddleName(request.getLocalMiddleName());
+		iamMsUser.setLocalLastName(request.getLocalLastName());
+		iamMsUser.setEngFirstName(request.getEngFirstName());
+		iamMsUser.setEngMiddleName(request.getEngMiddleName());
+		iamMsUser.setEngLastName(request.getEngLastName());
+		this.iamMsUserRepository.save(iamMsUser);
 	}
 	
 	@Transactional

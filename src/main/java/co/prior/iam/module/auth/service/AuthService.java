@@ -19,6 +19,7 @@ import org.springframework.util.StringUtils;
 import co.prior.iam.entity.IamMsSystem;
 import co.prior.iam.entity.IamMsUser;
 import co.prior.iam.module.auth.model.request.ActivateUserRequest;
+import co.prior.iam.module.auth.model.request.ChangePasswordRequest;
 import co.prior.iam.module.auth.model.request.SignUpRequest;
 import co.prior.iam.module.auth.model.response.AuthResponse;
 import co.prior.iam.repository.IamMsUserRepository;
@@ -130,10 +131,23 @@ public class AuthService {
     
     @Transactional
     public void activateUser(ActivateUserRequest request) throws Exception {
-    	log.info("Service activateUser userCode: {}", request.getUserCode());
+    	log.info("Service activateUser systemId: {}, userCode: {}", request.getSystemId(), request.getUserCode());
     	
     	IamMsUser iamMsUser = this.iamMsUserRepository.findByIamMsSystem_SystemIdAndUserCodeAndUserPasswordAndIsDeleted(
     			request.getSystemId(), request.getUserCode(), passwordEncoder.encode(request.getOldPassword()), "N")
+    			.orElseThrow(() -> new Exception("password incorrect"));
+    	
+    	iamMsUser.setUserPassword(passwordEncoder.encode(request.getNewPassword()));
+    	iamMsUser.setFirstTimeLogin("N");
+    	this.iamMsUserRepository.save(iamMsUser);
+    }
+    
+    @Transactional
+    public void changePassword(ChangePasswordRequest request) throws Exception {
+    	log.info("Service changePassword userId: {}", request.getUserId());
+    	
+    	IamMsUser iamMsUser = this.iamMsUserRepository.findByUserIdAndUserPasswordAndIsDeleted(
+    			request.getUserId(), passwordEncoder.encode(request.getOldPassword()), "N")
     			.orElseThrow(() -> new Exception("password incorrect"));
     	
     	iamMsUser.setUserPassword(passwordEncoder.encode(request.getNewPassword()));
