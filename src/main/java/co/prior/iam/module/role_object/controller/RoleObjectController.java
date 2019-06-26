@@ -31,7 +31,7 @@ public class RoleObjectController {
 
 
     @GetMapping
-    @RequestMapping(path = "/{systemId}/{roleId}")
+    @RequestMapping("/{systemId}/{roleId}")
     public ResponseEntity<RoleMapObjectRespone> getRoleObject(@PathVariable Long systemId,@PathVariable Long roleId) throws Exception {
         log.info("Controller getRoleObject: {}", roleId);
         RoleMapObjectRespone list = getRoleObjectService.getRoleObject(systemId,roleId);
@@ -42,7 +42,7 @@ public class RoleObjectController {
     }
 
     @GetMapping
-    @RequestMapping(path = "/{systemId}")
+    @RequestMapping("/{systemId}")
     public ResponseEntity<List<RoleMapObjectRespone>> getAllRoleObject(@PathVariable Long systemId) throws Exception {
         log.info("Controller getAllRoleObject: {}", systemId);
         List<RoleMapObjectRespone> list = getRoleObjectService.allRoleMapObject(systemId);

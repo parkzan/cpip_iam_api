@@ -77,7 +77,7 @@ public class ObjectController {
     }
 
     @GetMapping
-    @RequestMapping(path = "/{systemId}")
+    @RequestMapping("/{systemId}")
     public ResponseEntity<List<IamMsObject>> inqueryObject(@PathVariable Long systemId) throws Exception {
         log.info("Controller inqueryObject: {}", systemId);
         List<IamMsObject> list = objectInqueryService.inqueryObject(systemId);
@@ -90,7 +90,7 @@ public class ObjectController {
 
     }
     @GetMapping
-    @RequestMapping(path = "/{systemId}/{objectId}")
+    @RequestMapping("/{systemId}/{objectId}")
     public ResponseEntity<List<IamMsObject>> inqueryChildObject(@PathVariable Long systemId ,@PathVariable  Long objectId) throws Exception {
         log.info("Controller inqueryChildObject: {}", objectId );
         List<IamMsObject> list = objectChildInqueryService.inqueryChildObject(systemId ,objectId);

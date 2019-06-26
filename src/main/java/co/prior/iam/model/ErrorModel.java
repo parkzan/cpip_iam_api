@@ -7,7 +7,6 @@ import lombok.Setter;
 
 @Setter
 @Getter
-@JsonIgnoreProperties(ignoreUnknown = true)
 public class ErrorModel {
     private long status;
     private String message;
