@@ -34,6 +34,7 @@ public class IamMsObject extends BaseEntity<IamMsObject> {
 
     @ManyToOne
     @JoinColumn(name = "system_id")
+    @JsonIgnore
     private IamMsSystem iamMsSystem;
 
     @JsonIgnore
@@ -42,6 +43,7 @@ public class IamMsObject extends BaseEntity<IamMsObject> {
 
     @ManyToOne
     @JoinColumn(name = "object_parent_id")
+    @JsonIgnore
     private IamMsObject objectParent;
 
     @JsonIgnore

@@ -9,6 +9,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -25,14 +26,17 @@ public class IamMsRoleObject extends BaseEntity<IamMsRoleObject> {
 
     @ManyToOne
     @JoinColumn(name = "system_id")
+    @JsonIgnore
     private IamMsSystem iamMsSystem;
 
     @ManyToOne
     @JoinColumn(name = "role_id")
+    @JsonIgnore
     private IamMsRole iamMsRole;
 
     @ManyToOne
     @JoinColumn(name = "object_id")
+    @JsonIgnore
     private IamMsObject iamMsObject;
     
 }

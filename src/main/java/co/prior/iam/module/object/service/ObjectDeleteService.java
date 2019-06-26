@@ -70,7 +70,7 @@ public class ObjectDeleteService {
 
             for (IamMsObject list : listChild) {
 
-                    if (list.getObjectParent() == root.getObjectParent()) {
+                    if (list.getObjectParent() == root) {
                         stack.push(list);
                     }
 

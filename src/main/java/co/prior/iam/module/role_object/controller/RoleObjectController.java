@@ -1,10 +1,10 @@
 package co.prior.iam.module.role_object.controller;
 
 
-import co.prior.iam.module.role_object.model.request.RoleObjectEditReq;
+import co.prior.iam.module.role_object.model.request.RoleMapObjectReq;
 import co.prior.iam.module.role_object.model.respone.RoleMapObjectRespone;
 import co.prior.iam.module.role_object.service.GetRoleObjectService;
-import co.prior.iam.module.role_object.service.RoleObjectEditService;
+import co.prior.iam.module.role_object.service.RoleMapObjectService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,13 +18,13 @@ public class RoleObjectController {
 
 
     private GetRoleObjectService getRoleObjectService;
-    private RoleObjectEditService roleObjectEditService;
+    private RoleMapObjectService roleMapObjectService;
 
-    RoleObjectController(GetRoleObjectService getRoleObjectService , RoleObjectEditService roleObjectEditService){
+    RoleObjectController(GetRoleObjectService getRoleObjectService , RoleMapObjectService roleMapObjectService){
 
 
         this.getRoleObjectService = getRoleObjectService;
-        this.roleObjectEditService = roleObjectEditService;
+        this.roleMapObjectService = roleMapObjectService;
 
     }
 
@@ -53,9 +53,9 @@ public class RoleObjectController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> editRoleObject(@RequestBody RoleObjectEditReq roleObjectEditReq) throws Exception{
-        log.info("Controller editRoleObject: {}", roleObjectEditReq);
-        roleObjectEditService.editRoleObject(roleObjectEditReq);
+    public ResponseEntity<Void> editRoleObject(@RequestBody RoleMapObjectReq roleMapObjectReq) throws Exception{
+        log.info("Controller editRoleObject: {}", roleMapObjectReq);
+        roleMapObjectService.editRoleObject(roleMapObjectReq);
 
         return  ResponseEntity.noContent().build();
     }

@@ -38,7 +38,8 @@ public class ObjectCreateService {
                 .orElseThrow(() -> new DataNotFoundException("data not found"));
 
         Optional<IamMsObject> iamMsObject = objectRepository.findByIamMsSystemAndObjectCodeAndIsDeleted(iamMsSystem,objectCreateReq.getObjectCode(),"N");
-
+        IamMsObject parentObject = objectRepository.findByIamMsSystem_SystemIdAndObjectIdAndIsDeleted(objectCreateReq.getSystemId(),objectCreateReq.getObjectParentId(),"N")
+                .orElseThrow(() -> new DataNotFoundException("data not found"));
         if(!iamMsObject.isPresent()){
 
 
@@ -46,7 +47,7 @@ public class ObjectCreateService {
             model.setObjectCode(objectCreateReq.getObjectCode());
             model.setObjectName(objectCreateReq.getObjectName());
             model.setIamMsSystem(iamMsSystem);
-            model.setObjectParent(iamMsObject.get());
+            model.setObjectParent(parentObject);
 
 
             objectRepository.save(model);

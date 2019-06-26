@@ -39,6 +39,7 @@ public class IamMsRole extends BaseEntity<IamMsRole> {
 
     @ManyToOne
     @JoinColumn(name = "system_id")
+    @JsonIgnore
     private IamMsSystem iamMsSystem;
 
     @JsonIgnore

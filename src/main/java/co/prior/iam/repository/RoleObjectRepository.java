@@ -15,7 +15,7 @@ public interface RoleObjectRepository  extends JpaRepository<IamMsRoleObject,Lon
 
             List<IamMsRoleObject> findByIamMsRoleAndIsDeleted(IamMsRole iamMsRole,String isDelete);
 
-            Optional<IamMsRoleObject> findByIamMsRoleAndIamMsObject(IamMsRole iamMsRole,IamMsObject iamMsObject);
+            Optional<IamMsRoleObject> findByIamMsRoleAndIamMsObjectAndIsDeleted(IamMsRole iamMsRole,IamMsObject iamMsObject,String isDelete);
 
             Optional<IamMsRoleObject> findByIamMsObjectAndIsDeleted(IamMsObject iamMsObject , String isDelete);
 
