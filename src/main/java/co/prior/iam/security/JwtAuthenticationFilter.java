@@ -15,6 +15,7 @@ import javax.servlet.http.HttpServletRequestWrapper;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -29,6 +30,12 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
+	@Value("${security.jwt.access.secret}")
+    private String accessSecret;
+
+    @Value("${security.jwt.access.expirationTime}")
+    private int accessExpirationTime;
+    
 	@Autowired
 	private JwtTokenProvider jwtTokenProvider;
 
@@ -42,8 +49,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         try {
             String jwt = getAuthentication(wrappedRequest);
 
-            if (StringUtils.hasText(jwt) && jwtTokenProvider.validateToken(jwt)) {
-                Long userId = jwtTokenProvider.getUserIdFromJWT(jwt);
+            if (StringUtils.hasText(jwt) && jwtTokenProvider.validateToken(jwt, accessSecret)) {
+                Long userId = jwtTokenProvider.getUserIdFromJWT(jwt, accessSecret);
 
                 UserDetails userDetails = userDetailsService.loadUserById(userId);
                 UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(

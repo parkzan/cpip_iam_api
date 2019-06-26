@@ -13,9 +13,10 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import co.prior.iam.entity.IamMsUser;
 import co.prior.iam.module.auth.model.request.ActivateUserRequest;
+import co.prior.iam.module.auth.model.request.RefreshTokenRequest;
 import co.prior.iam.module.auth.model.request.SignInRequest;
 import co.prior.iam.module.auth.model.request.SignUpRequest;
-import co.prior.iam.module.auth.model.response.SignInResponse;
+import co.prior.iam.module.auth.model.response.AuthResponse;
 import co.prior.iam.module.auth.service.AuthService;
 import lombok.extern.slf4j.Slf4j;
 
@@ -31,12 +32,12 @@ public class AuthController {
 	}
     
 	@PostMapping("/sign-in")
-    public ResponseEntity<SignInResponse> signIn(@Valid @RequestBody SignInRequest request) throws Exception {
+    public ResponseEntity<AuthResponse> signIn(@Valid @RequestBody SignInRequest request) throws Exception {
 		log.info("Controller signIn userCode: {}", request.getUserCode());
 		
-        return ResponseEntity.ok(SignInResponse.builder()
-        		.accessToken(this.authService.signIn(request.getUserCode(), request.getPassword()))
-        		.build());
+		AuthResponse response = this.authService.signIn(request.getUserCode(), request.getPassword());
+		
+        return ResponseEntity.ok(response);
     }
 
     @PostMapping("/sign-up")
@@ -59,6 +60,15 @@ public class AuthController {
     	this.authService.activateUser(request);
     	
         return ResponseEntity.noContent().build();
+    }
+    
+    @PostMapping("/refresh")
+    public ResponseEntity<AuthResponse> refreshToken(@Valid @RequestBody RefreshTokenRequest request) throws Exception {
+    	log.info("Controller refreshToken token: {}", request.getRefreshToken());
+    	
+    	AuthResponse response = this.authService.refreshToken(request.getRefreshToken());
+    	
+    	return ResponseEntity.ok(response);
     }
     
 }
