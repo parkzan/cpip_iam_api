@@ -47,7 +47,7 @@ public class AuthController {
     	IamMsUser iamMsUser = this.authService.signUp(request);
     	
         URI location = ServletUriComponentsBuilder
-                .fromCurrentContextPath().path("/users/{user_id}")
+                .fromCurrentContextPath().path("/auth/users/{user_id}")
                 .buildAndExpand(iamMsUser.getUserId()).toUri();
 
         return ResponseEntity.created(location).build();
