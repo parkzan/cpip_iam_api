@@ -1,21 +1,14 @@
 package co.prior.iam.model;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import lombok.Getter;
-import lombok.Setter;
 
-@Setter
-@Getter
+@Data
+@AllArgsConstructor
 public class ErrorModel {
-    private long status;
-    private String message;
 
-    public ErrorModel(long status, String message){
+	private String code;
+	private String message;
 
-        this.status = status;
-        this.message = message;
-
-
-    }
 }

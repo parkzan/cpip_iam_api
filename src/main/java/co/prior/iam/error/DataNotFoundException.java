@@ -1,20 +1,25 @@
 package co.prior.iam.error;
 
-import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.ResponseStatus;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 
-@ResponseStatus(HttpStatus.NOT_FOUND)
+@Data
+@EqualsAndHashCode(callSuper = false)
 public class DataNotFoundException extends RuntimeException {
 
-    private long status ;
-    private String message;
+	private final String code;
+	private final String message;
 
-   public DataNotFoundException(String exception){
-       super(exception);
-   }
-   public DataNotFoundException(long status , String message){
-       this.status = status ;
-       this.message = message;
+	public DataNotFoundException(String message) {
+		super(message);
+		this.code = "99";
+		this.message = message;
+	}
 
-   }
+	public DataNotFoundException(String code, String message) {
+		super(message);
+		this.code = code;
+		this.message = message;
+	}
+	
 }
