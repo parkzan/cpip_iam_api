@@ -9,6 +9,9 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.stereotype.Component;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import co.prior.iam.model.ErrorModel;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -17,9 +20,13 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
 
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException e) throws IOException {
-        log.error("responding with unauthorized error. message - {}", e.getMessage());
+        log.error(e.getMessage(), e);
         
-        response.sendError(HttpServletResponse.SC_UNAUTHORIZED, e.getMessage());
+        ErrorModel errorModel = new ErrorModel("99", "unauthorized");
+        
+        response.setContentType("application/json;charset=UTF-8");
+        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+        response.getWriter().write(new ObjectMapper().writeValueAsString(errorModel));
     }
     
 }
