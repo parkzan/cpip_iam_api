@@ -29,7 +29,6 @@ public class EditUserRequest {
 	@NotBlank
 	private String engLastName;
 	
-	@NotBlank
 	private AnswerFlag disableFlag;
 	
 }

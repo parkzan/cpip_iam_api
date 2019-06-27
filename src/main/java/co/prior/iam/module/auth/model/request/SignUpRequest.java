@@ -35,7 +35,6 @@ public class SignUpRequest {
 	@NotBlank
 	private String engLastName;
 	
-	@NotBlank
 	private AnswerFlag isIamAdmin;
 	
 }
