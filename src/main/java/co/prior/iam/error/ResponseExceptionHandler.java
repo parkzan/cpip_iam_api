@@ -6,12 +6,14 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+import co.prior.iam.error.exception.DataDuplicateException;
+import co.prior.iam.error.exception.DataNotFoundException;
 import co.prior.iam.model.ErrorModel;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @ControllerAdvice
-public class ExceptionHandling extends ResponseEntityExceptionHandler {
+public class ResponseExceptionHandler extends ResponseEntityExceptionHandler {
 
 	@ExceptionHandler(DataNotFoundException.class)
 	public final ResponseEntity<ErrorModel> handleDataNotFoundException(DataNotFoundException ex) {
@@ -28,4 +30,5 @@ public class ExceptionHandling extends ResponseEntityExceptionHandler {
 		ErrorModel errorModel = new ErrorModel(ex.getCode(), ex.getMessage());
 		return new ResponseEntity<>(errorModel, HttpStatus.CONFLICT);
 	}
+	
 }

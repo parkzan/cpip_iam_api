@@ -1,4 +1,4 @@
-package co.prior.iam.error;
+package co.prior.iam.error.exception;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -6,7 +6,9 @@ import lombok.EqualsAndHashCode;
 @Data
 @EqualsAndHashCode(callSuper = false)
 public class DataNotFoundException extends RuntimeException {
-
+	
+	private static final long serialVersionUID = -8372278667837617582L;
+	
 	private final String code;
 	private final String message;
 

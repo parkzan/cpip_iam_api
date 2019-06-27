@@ -5,7 +5,7 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 import co.prior.iam.entity.IamMsSystem;
-import co.prior.iam.error.DataNotFoundException;
+import co.prior.iam.error.exception.DataNotFoundException;
 import co.prior.iam.model.AnswerFlag;
 import co.prior.iam.repository.SystemRepository;
 import lombok.extern.slf4j.Slf4j;

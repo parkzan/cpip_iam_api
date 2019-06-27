@@ -1,7 +1,7 @@
 package co.prior.iam.module.role.service;
 
 import co.prior.iam.entity.IamMsRole;
-import co.prior.iam.error.DataNotFoundException;
+import co.prior.iam.error.exception.DataNotFoundException;
 import co.prior.iam.model.AnswerFlag;
 import co.prior.iam.repository.RoleRepository;
 import co.prior.iam.repository.SystemRepository;
