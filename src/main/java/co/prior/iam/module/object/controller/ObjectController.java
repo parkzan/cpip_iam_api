@@ -18,7 +18,7 @@ import java.util.Optional;
 
 @Slf4j
 @RestController
-@RequestMapping(path = "/api/object")
+@RequestMapping(path = "/api")
 public class ObjectController {
 
 
@@ -44,7 +44,7 @@ public class ObjectController {
     }
 
 
-    @PostMapping
+    @PostMapping("/object")
     public ResponseEntity<Void> createObject(@RequestBody ObjectCreateReq objectCreateReq) throws Exception {
         log.info("Controller createObject: {}", objectCreateReq);
         objectCreateService.createObject(objectCreateReq);
@@ -55,7 +55,7 @@ public class ObjectController {
 
     }
 
-    @PutMapping
+    @PutMapping("/object")
     public ResponseEntity<Void> editObject(@RequestBody ObjectEditReq objectEditReq) throws Exception {
 
         log.info("Controller editObject: {}", objectEditReq);
@@ -66,7 +66,7 @@ public class ObjectController {
 
     }
 
-    @DeleteMapping
+    @DeleteMapping("/object")
     public ResponseEntity<Void> deleteObject(@RequestBody ObjectDeleteReq objectDeleteReq) throws  Exception {
 
         log.info("Controller deleteObject: {}", objectDeleteReq);
@@ -76,7 +76,7 @@ public class ObjectController {
 
     }
 
-    @GetMapping("/system/{systemId}")
+    @GetMapping("/object/system/{systemId}")
     public ResponseEntity<List<IamMsObject>> inqueryObject(@PathVariable Long systemId) throws Exception {
         log.info("Controller inqueryObject: {}", systemId);
         List<IamMsObject> list = objectInqueryService.inqueryObject(systemId);
@@ -88,7 +88,7 @@ public class ObjectController {
 
 
     }
-    @GetMapping("/system/{systemId}/object/{objectId}")
+    @GetMapping("/object/{objectId}/system/{systemId}")
     public ResponseEntity<List<IamMsObject>> inqueryChildObject(@PathVariable Long systemId ,@PathVariable  Long objectId) throws Exception {
         log.info("Controller inqueryChildObject: {}", objectId );
         List<IamMsObject> list = objectChildInqueryService.inqueryChildObject(systemId ,objectId);
