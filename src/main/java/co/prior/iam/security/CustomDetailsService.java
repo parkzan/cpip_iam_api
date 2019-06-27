@@ -9,6 +9,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import co.prior.iam.entity.IamMsUser;
+import co.prior.iam.model.AnswerFlag;
 import co.prior.iam.repository.IamMsUserRepository;
 import lombok.extern.slf4j.Slf4j;
 
@@ -26,12 +27,12 @@ public class CustomDetailsService implements UserDetailsService {
     public UserDetails loadUserByUsername(String userCode) {
     	log.info("Service loadUserByUsername userCode: {}", userCode);
     	
-    	IamMsUser iamMsUser = this.iamMsUserRepository.findByUserCodeAndIsDeleted(userCode, "N")
+    	IamMsUser iamMsUser = this.iamMsUserRepository.findByUserCodeAndIsDeleted(userCode, AnswerFlag.N.toString())
     			.orElseThrow(() -> new UsernameNotFoundException("user not found with code: " + userCode));
     	
     	boolean isAccountNonLocked = iamMsUser.getNoOfFailTimes() >= 3? Boolean.FALSE : Boolean.TRUE;
-    	boolean isEnabled = "Y".equalsIgnoreCase(iamMsUser.getFirstTimeLogin())
-    			|| "Y".equalsIgnoreCase(iamMsUser.getDisableFlag())? Boolean.FALSE : Boolean.TRUE;
+    	boolean isEnabled = AnswerFlag.Y.toString().equalsIgnoreCase(iamMsUser.getFirstTimeLogin())
+    			|| AnswerFlag.Y.toString().equalsIgnoreCase(iamMsUser.getDisableFlag())? Boolean.FALSE : Boolean.TRUE;
     	
         return UserPrincipal.builder()
         		.userId(iamMsUser.getUserId())
@@ -51,7 +52,7 @@ public class CustomDetailsService implements UserDetailsService {
     public UserDetails loadUserById(Long userId) {
     	log.info("Service loadUserById userId: {}", userId);
     	
-    	IamMsUser iamMsUser = this.iamMsUserRepository.findByUserIdAndIsDeleted(userId, "N")
+    	IamMsUser iamMsUser = this.iamMsUserRepository.findByUserIdAndIsDeleted(userId, AnswerFlag.N.toString())
         		.orElseThrow(() -> new UsernameNotFoundException("user not found with id: " + userId));
 
         return UserPrincipal.builder()
@@ -64,7 +65,8 @@ public class CustomDetailsService implements UserDetailsService {
         		.engFirstName(iamMsUser.getEngFirstName())
         		.engMiddleName(iamMsUser.getEngMiddleName())
         		.engLastName(iamMsUser.getEngLastName())
-        		.authorities("Y".equals(iamMsUser.getIsIamAdmin())? Arrays.asList(new SimpleGrantedAuthority("ROLE_IAM_ADMIN")) : null)
+        		.authorities(AnswerFlag.Y.toString().equals(iamMsUser.getIsIamAdmin())? 
+        				Arrays.asList(new SimpleGrantedAuthority("ROLE_IAM_ADMIN")) : null)
         		.build();
     }
     

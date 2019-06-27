@@ -1,4 +1,4 @@
-package co.prior.iam.module.role_object.model.respone;
+package co.prior.iam.module.role.model.respone;
 
 import co.prior.iam.entity.IamMsObject;
 import co.prior.iam.entity.IamMsRole;

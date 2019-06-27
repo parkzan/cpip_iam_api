@@ -17,5 +17,6 @@ public class GetUserResponse {
 	private String engMiddleName;
 	private String engLastName;
 	private String isIamAdmin;
+	private String disableFlag;
 	
 }

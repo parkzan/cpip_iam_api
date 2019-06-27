@@ -1,10 +1,10 @@
-package co.prior.iam.module.role_object.controller;
+package co.prior.iam.module.role.controller;
 
 
-import co.prior.iam.module.role_object.model.request.RoleMapObjectReq;
-import co.prior.iam.module.role_object.model.respone.RoleMapObjectRespone;
-import co.prior.iam.module.role_object.service.GetRoleObjectService;
-import co.prior.iam.module.role_object.service.RoleMapObjectService;
+import co.prior.iam.module.role.model.request.RoleMapObjectReq;
+import co.prior.iam.module.role.model.respone.RoleMapObjectRespone;
+import co.prior.iam.module.role.service.GetRoleObjectService;
+import co.prior.iam.module.role.service.RoleMapObjectService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -29,8 +29,7 @@ public class RoleObjectController {
     }
 
 
-
-    @GetMapping("/roleObjects/{systemId}/{roleId}")
+    @GetMapping("/roleObject/system/{systemId}/role/{roleId}")
     public ResponseEntity<RoleMapObjectRespone> getRoleObject(@PathVariable Long systemId,@PathVariable Long roleId) throws Exception {
         log.info("Controller getRoleObject: {}", roleId);
         RoleMapObjectRespone list = getRoleObjectService.getRoleObject(systemId,roleId);
@@ -40,7 +39,8 @@ public class RoleObjectController {
 
     }
 
-    @GetMapping("/roleObject/{systemId}")
+
+    @GetMapping("/roleObjects/system/{systemId}")
     public ResponseEntity<List<RoleMapObjectRespone>> getAllRoleObject(@PathVariable Long systemId) throws Exception {
         log.info("Controller getAllRoleObject: {}", systemId);
         List<RoleMapObjectRespone> list = getRoleObjectService.allRoleMapObject(systemId);

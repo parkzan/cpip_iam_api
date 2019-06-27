@@ -3,6 +3,7 @@ package co.prior.iam.module.system.service;
 import java.util.Optional;
 
 import co.prior.iam.error.DataDuplicateException;
+import co.prior.iam.model.AnswerFlag;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,29 +16,26 @@ import co.prior.iam.repository.SystemRepository;
 @Service
 public class SystemCreateService {
 
+	SystemRepository systemRepository;
 
-    SystemRepository systemRepository;
+	public SystemCreateService(SystemRepository systemRepository) {
 
-    public  SystemCreateService(SystemRepository systemRepository){
+		this.systemRepository = systemRepository;
+	}
 
-        this.systemRepository = systemRepository ;
-    }
+	@Transactional
+	public void createSystem(SystemAddReq systemAddReq) throws Exception {
+		log.info("Service createSystem: {}", systemAddReq);
 
-    @Transactional
-    public void createSystem(SystemAddReq systemAddReq) throws Exception {
+		Optional<IamMsSystem> check = systemRepository.findBySystemCodeAndIsDeleted(systemAddReq.getSystemCode(),
+				AnswerFlag.N.toString());
 
-        log.info("Service createSystem: {}", systemAddReq);
-       Optional<IamMsSystem> check = systemRepository.findBySystemCodeAndIsDeleted(systemAddReq.getSystemCode(),"N");
-
-            if (!check.isPresent()) {
-
-                 IamMsSystem iamMsSystem = new IamMsSystem();
-                 iamMsSystem.setSystemCode(systemAddReq.getSystemCode());
-                 iamMsSystem.setSystemIcon(systemAddReq.getSystemIcon());
-                 iamMsSystem.setSystemName(systemAddReq.getSystemName());
-                 systemRepository.save(iamMsSystem);
-
-
+		if (!check.isPresent()) {
+			IamMsSystem iamMsSystem = new IamMsSystem();
+			iamMsSystem.setSystemCode(systemAddReq.getSystemCode());
+			iamMsSystem.setSystemIcon(systemAddReq.getSystemIcon());
+			iamMsSystem.setSystemName(systemAddReq.getSystemName());
+			systemRepository.save(iamMsSystem);
 
              }
             else {
@@ -49,3 +47,4 @@ public class SystemCreateService {
     }
 
 }
+

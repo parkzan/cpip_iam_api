@@ -1,4 +1,4 @@
-package co.prior.iam.module.role_object.model.request;
+package co.prior.iam.module.role.model.request;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;

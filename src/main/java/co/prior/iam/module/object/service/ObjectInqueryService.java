@@ -1,9 +1,9 @@
 package co.prior.iam.module.object.service;
 
-
 import co.prior.iam.entity.IamMsObject;
 import co.prior.iam.entity.IamMsSystem;
 import co.prior.iam.error.DataNotFoundException;
+import co.prior.iam.model.AnswerFlag;
 import co.prior.iam.repository.ObjectRepository;
 import co.prior.iam.repository.SystemRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -18,45 +18,36 @@ import java.util.Optional;
 @Service
 public class ObjectInqueryService {
 
-   ObjectRepository objectRepository ;
-   SystemRepository systemRepository;
+	ObjectRepository objectRepository;
+	SystemRepository systemRepository;
 
+	public ObjectInqueryService(ObjectRepository objectRepository, SystemRepository systemRepository) {
 
-   public  ObjectInqueryService(ObjectRepository objectRepository , SystemRepository systemRepository){
+		this.objectRepository = objectRepository;
+		this.systemRepository = systemRepository;
 
-       this.objectRepository = objectRepository;
-       this.systemRepository = systemRepository;
+	}
 
-   }
+	@Transactional
+	public List<IamMsObject> inqueryObject(Long systemId) throws Exception {
+		log.info("Service inqueryObject: {}", systemId);
 
-   @Transactional
-    public List<IamMsObject> inqueryObject(Long systemId) throws Exception {
+		List<IamMsObject> listModel = objectRepository.findByIamMsSystem_SystemIdAndIsDeleted(systemId,
+				AnswerFlag.N.toString());
+		List<IamMsObject> list = new ArrayList<>();
 
-       log.info("Service inqueryObject: {}", systemId);
+		if (!listModel.isEmpty()) {
 
+			for (IamMsObject object : listModel) {
 
+				if (object.getObjectParent() == null) {
+					list.add(object);
+				}
+			}
+			return list;
 
-
-       List<IamMsObject> listModel = objectRepository.findByIamMsSystem_SystemIdAndIsDeleted(systemId,"N");
-       List<IamMsObject> list = new ArrayList<>() ;
-
-
-       if(!listModel.isEmpty()){
-
-           for (IamMsObject object : listModel){
-
-               if(object.getObjectParent() == null){
-                   list.add(object);
-               }
-           }
-           return list;
-
-       }
-       throw new DataNotFoundException("data not found");
-
-   }
-
-
-
+		}
+		throw new DataNotFoundException("data not found");
+	}
 
 }
