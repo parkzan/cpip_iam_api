@@ -2,9 +2,13 @@ package co.prior.iam.module.auth.model.request;
 
 import javax.validation.constraints.NotBlank;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+import co.prior.iam.model.AnswerFlag;
 import lombok.Data;
 
 @Data
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class SignUpRequest {
 
 	private long systemId;
@@ -32,6 +36,6 @@ public class SignUpRequest {
 	private String engLastName;
 	
 	@NotBlank
-	private String isIamAdmin;
+	private AnswerFlag isIamAdmin;
 	
 }

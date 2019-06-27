@@ -2,9 +2,13 @@ package co.prior.iam.module.user.model.request;
 
 import javax.validation.constraints.NotBlank;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+import co.prior.iam.model.AnswerFlag;
 import lombok.Data;
 
 @Data
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class EditUserRequest {
 
 	private long userId;
@@ -24,5 +28,8 @@ public class EditUserRequest {
 	
 	@NotBlank
 	private String engLastName;
+	
+	@NotBlank
+	private AnswerFlag disableFlag;
 	
 }

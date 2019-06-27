@@ -17,6 +17,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import co.prior.iam.model.AnswerFlag;
 import lombok.Data;
 
 @Data
@@ -41,7 +42,7 @@ public class BaseEntity<T> {
     protected String updatedBy;
     
     @JsonIgnore
-    protected String isDeleted = "N";
+    protected String isDeleted = AnswerFlag.N.toString();
 
     @JsonIgnore
     @Transient

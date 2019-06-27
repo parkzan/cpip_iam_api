@@ -3,7 +3,6 @@ package co.prior.iam.module.user.service;
 import java.util.ArrayList;
 import java.util.List;
 
-import co.prior.iam.error.DataNotFoundException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -12,6 +11,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import co.prior.iam.entity.IamMsUser;
+import co.prior.iam.error.DataNotFoundException;
+import co.prior.iam.model.AnswerFlag;
 import co.prior.iam.model.PageableRequest;
 import co.prior.iam.model.SortedModel;
 import co.prior.iam.module.user.model.request.EditUserRequest;
@@ -47,8 +48,8 @@ public class UserService {
 		}
 		
 		Pageable records = PageRequest.of(page, size, sort);
-		Page<IamMsUser> userPage = this.iamMsUserRepository.findPageableByIamMsSystem_SystemIdAndFirstTimeLoginAndIsDeleted(
-				request.getSystemId(), "N", "N", records);
+		Page<IamMsUser> userPage = this.iamMsUserRepository.findPageableByIamMsSystem_SystemIdAndIsDeleted(
+				request.getSystemId(), AnswerFlag.N.toString(), records);
 		List<GetUserResponse> data = new ArrayList<>();
 		for (IamMsUser user : userPage.getContent()) {
 			data.add(GetUserResponse.builder()
@@ -62,6 +63,7 @@ public class UserService {
 					.engMiddleName(user.getEngMiddleName())
 					.engLastName(user.getEngLastName())
 					.isIamAdmin(user.getIsIamAdmin())
+					.disableFlag(user.getDisableFlag())
 					.build());
 		}
 		
@@ -79,8 +81,8 @@ public class UserService {
 	public GetUserResponse getUser(long userId) throws Exception {
 		log.info("Service getUser userId: {}", userId);
 		
-		IamMsUser iamMsUser = this.iamMsUserRepository.findByUserIdAndFirstTimeLoginAndIsDeleted(userId, "N", "N")
-				.orElseThrow(() -> new Exception("user not found"));
+		IamMsUser iamMsUser = this.iamMsUserRepository.findByUserIdAndIsDeleted(userId, AnswerFlag.N.toString())
+				.orElseThrow(() -> new DataNotFoundException("user not found"));
 		
 		return GetUserResponse.builder()
 				.systemId(iamMsUser.getIamMsSystem().getSystemId())
@@ -93,6 +95,7 @@ public class UserService {
 				.engMiddleName(iamMsUser.getEngMiddleName())
 				.engLastName(iamMsUser.getEngLastName())
 				.isIamAdmin(iamMsUser.getIsIamAdmin())
+				.disableFlag(iamMsUser.getDisableFlag())
 				.build();
 	}
 	
@@ -100,8 +103,8 @@ public class UserService {
 	public void editUser(EditUserRequest request) throws Exception {
 		log.info("Service editUser userId: {}", request.getUserId());
 		
-		IamMsUser iamMsUser = this.iamMsUserRepository.findByUserIdAndFirstTimeLoginAndIsDeleted(request.getUserId(), "N", "N")
-				.orElseThrow(() -> new Exception("user not found"));
+		IamMsUser iamMsUser = this.iamMsUserRepository.findByUserIdAndIsDeleted(request.getUserId(), AnswerFlag.N.toString())
+				.orElseThrow(() -> new DataNotFoundException("user not found"));
 		
 		iamMsUser.setLocalFirstName(request.getLocalFirstName());
 		iamMsUser.setLocalMiddleName(request.getLocalMiddleName());
@@ -109,6 +112,7 @@ public class UserService {
 		iamMsUser.setEngFirstName(request.getEngFirstName());
 		iamMsUser.setEngMiddleName(request.getEngMiddleName());
 		iamMsUser.setEngLastName(request.getEngLastName());
+		iamMsUser.setDisableFlag(request.getDisableFlag().toString());
 		this.iamMsUserRepository.save(iamMsUser);
 	}
 	
@@ -116,10 +120,10 @@ public class UserService {
 	public void deleteUser(long userId) throws Exception {
 		log.info("Service deleteUser userId: {}", userId);
 		
-		IamMsUser iamMsUser = this.iamMsUserRepository.findByUserIdAndIsDeleted(userId, "N")
-				.orElseThrow(() -> new Exception("user not found"));
+		IamMsUser iamMsUser = this.iamMsUserRepository.findByUserIdAndIsDeleted(userId, AnswerFlag.N.toString())
+				.orElseThrow(() -> new DataNotFoundException("user not found"));
 		
-		iamMsUser.setIsDeleted("Y");
+		iamMsUser.setIsDeleted(AnswerFlag.Y.toString());
 		this.iamMsUserRepository.save(iamMsUser);
 	}
 	

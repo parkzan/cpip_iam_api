@@ -18,6 +18,7 @@ import org.springframework.util.StringUtils;
 
 import co.prior.iam.entity.IamMsSystem;
 import co.prior.iam.entity.IamMsUser;
+import co.prior.iam.model.AnswerFlag;
 import co.prior.iam.module.auth.model.request.ActivateUserRequest;
 import co.prior.iam.module.auth.model.request.ChangePasswordRequest;
 import co.prior.iam.module.auth.model.request.SignUpRequest;
@@ -71,7 +72,7 @@ public class AuthService {
 	    	Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(userCode, password));
 	        SecurityContextHolder.getContext().setAuthentication(authentication);
 
-	        this.iamMsUserRepository.findByUserCodeAndIsDeleted(userCode, "N").ifPresent(user -> {
+	        this.iamMsUserRepository.findByUserCodeAndIsDeleted(userCode, AnswerFlag.N.toString()).ifPresent(user -> {
 	        	user.setNoOfFailTimes(0);
 	        	this.iamMsUserRepository.save(user);
 	        });
@@ -79,7 +80,7 @@ public class AuthService {
 	        return this.generateAuthResponse(authentication);
 	        
     	} catch (BadCredentialsException e) {
-    		this.iamMsUserRepository.findByUserCodeAndIsDeleted(userCode, "N").ifPresent(user -> {
+    		this.iamMsUserRepository.findByUserCodeAndIsDeleted(userCode, AnswerFlag.N.toString()).ifPresent(user -> {
     			int failedAttempt = user.getNoOfFailTimes() + 1;
 	        	user.setNoOfFailTimes(failedAttempt);
 	        	this.iamMsUserRepository.save(user);
@@ -100,15 +101,15 @@ public class AuthService {
     	log.info("Service signUp systemId: {}, userCode: {}", request.getSystemId(), request.getUserCode());
     	
     	if(this.iamMsUserRepository.existsByIamMsSystem_SystemIdAndUserCodeAndIsDeleted(
-    			request.getSystemId(), request.getUserCode(), "N")) {
+    			request.getSystemId(), request.getUserCode(), AnswerFlag.N.toString())) {
     		
             throw new Exception("user code is already exist");
         }
 
-    	IamMsSystem iamMsSystem = this.iamMsSystemRepository.findBySystemIdAndIsDeleted(request.getSystemId(), "N")
+    	IamMsSystem iamMsSystem = this.iamMsSystemRepository.findBySystemIdAndIsDeleted(request.getSystemId(), AnswerFlag.N.toString())
     			.orElseThrow(() -> new Exception("system not found"));
     			
-    	String isIamAdmin = request.getIsIamAdmin();
+    	String isIamAdmin = request.getIsIamAdmin().toString();
         IamMsUser iamMsUser = IamMsUser.builder()
         		.userCode(request.getUserCode())
         		.localFirstName(request.getLocalFirstName())
@@ -117,10 +118,10 @@ public class AuthService {
         		.engFirstName(request.getEngFirstName())
         		.engMiddleName(request.getEngMiddleName())
         		.engLastName(request.getEngLastName())
-        		.firstTimeLogin("Y".equalsIgnoreCase(isIamAdmin)? "N" : "Y")
+        		.firstTimeLogin(AnswerFlag.Y.toString().equalsIgnoreCase(isIamAdmin)? AnswerFlag.N.toString() : AnswerFlag.Y.toString())
         		.isIamAdmin(isIamAdmin)
         		.noOfFailTimes(0)
-        		.disableFlag("N")
+        		.disableFlag(AnswerFlag.N.toString())
         		.iamMsSystem(iamMsSystem)
         		.build();
         
@@ -134,11 +135,11 @@ public class AuthService {
     	log.info("Service activateUser systemId: {}, userCode: {}", request.getSystemId(), request.getUserCode());
     	
     	IamMsUser iamMsUser = this.iamMsUserRepository.findByIamMsSystem_SystemIdAndUserCodeAndUserPasswordAndIsDeleted(
-    			request.getSystemId(), request.getUserCode(), passwordEncoder.encode(request.getOldPassword()), "N")
+    			request.getSystemId(), request.getUserCode(), passwordEncoder.encode(request.getOldPassword()), AnswerFlag.N.toString())
     			.orElseThrow(() -> new Exception("password incorrect"));
     	
     	iamMsUser.setUserPassword(passwordEncoder.encode(request.getNewPassword()));
-    	iamMsUser.setFirstTimeLogin("N");
+    	iamMsUser.setFirstTimeLogin(AnswerFlag.N.toString());
     	this.iamMsUserRepository.save(iamMsUser);
     }
     
@@ -147,7 +148,7 @@ public class AuthService {
     	log.info("Service changePassword userId: {}", request.getUserId());
     	
     	IamMsUser iamMsUser = this.iamMsUserRepository.findByUserIdAndUserPasswordAndIsDeleted(
-    			request.getUserId(), passwordEncoder.encode(request.getOldPassword()), "N")
+    			request.getUserId(), passwordEncoder.encode(request.getOldPassword()), AnswerFlag.N.toString())
     			.orElseThrow(() -> new Exception("password incorrect"));
     	
     	iamMsUser.setUserPassword(passwordEncoder.encode(request.getNewPassword()));

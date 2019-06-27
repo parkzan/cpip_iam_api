@@ -4,6 +4,7 @@ import co.prior.iam.entity.IamMsObject;
 import co.prior.iam.entity.IamMsSystem;
 import co.prior.iam.error.DataDuplicateException;
 import co.prior.iam.error.DataNotFoundException;
+import co.prior.iam.model.AnswerFlag;
 import co.prior.iam.module.object.model.request.ObjectCreateReq;
 import co.prior.iam.module.object.model.respone.ObjectRespone;
 import co.prior.iam.repository.ObjectRepository;
@@ -21,40 +22,40 @@ import java.util.Optional;
 @Service
 public class ObjectCreateService {
 
+	ObjectRepository objectRepository;
 
-    ObjectRepository objectRepository;
+	SystemRepository systemRepository;
 
-    SystemRepository systemRepository;
+	public ObjectCreateService(ObjectRepository objectRepository, SystemRepository systemRepository) {
+		this.objectRepository = objectRepository;
+		this.systemRepository = systemRepository;
+	}
 
-    public ObjectCreateService(ObjectRepository objectRepository , SystemRepository systemRepository){
-        this.objectRepository = objectRepository;
-        this.systemRepository = systemRepository;
-    }
+	@Transactional
+	public void createObject(ObjectCreateReq objectCreateReq) throws Exception {
+		log.info("Service createObject: {}", objectCreateReq);
+		
+		IamMsSystem iamMsSystem = systemRepository.findBySystemIdAndIsDeleted(objectCreateReq.getSystemId(), AnswerFlag.N.toString())
+				.orElseThrow(() -> new DataNotFoundException("data not found"));
 
-    @Transactional
-    public void createObject(ObjectCreateReq objectCreateReq) throws Exception{
-        log.info("Service createObject: {}", objectCreateReq);
-        IamMsSystem iamMsSystem = systemRepository.findBySystemIdAndIsDeleted(objectCreateReq.getSystemId(),"N")
-                .orElseThrow(() -> new DataNotFoundException("data not found"));
+		Optional<IamMsObject> iamMsObject = objectRepository.findByIamMsSystemAndObjectCodeAndIsDeleted(iamMsSystem,
+				objectCreateReq.getObjectCode(), AnswerFlag.N.toString());
+		IamMsObject parentObject = objectRepository
+				.findByIamMsSystem_SystemIdAndObjectIdAndIsDeleted(objectCreateReq.getSystemId(),
+						objectCreateReq.getObjectParentId(), AnswerFlag.N.toString())
+				.orElseThrow(() -> new DataNotFoundException("data not found"));
+		if (!iamMsObject.isPresent()) {
 
-        Optional<IamMsObject> iamMsObject = objectRepository.findByIamMsSystemAndObjectCodeAndIsDeleted(iamMsSystem,objectCreateReq.getObjectCode(),"N");
-        IamMsObject parentObject = objectRepository.findByIamMsSystem_SystemIdAndObjectIdAndIsDeleted(objectCreateReq.getSystemId(),objectCreateReq.getObjectParentId(),"N")
-                .orElseThrow(() -> new DataNotFoundException("data not found"));
-        if(!iamMsObject.isPresent()){
+			IamMsObject model = new IamMsObject();
+			model.setObjectCode(objectCreateReq.getObjectCode());
+			model.setObjectName(objectCreateReq.getObjectName());
+			model.setIamMsSystem(iamMsSystem);
+			model.setObjectParent(parentObject);
 
+			objectRepository.save(model);
 
-            IamMsObject model = new IamMsObject();
-            model.setObjectCode(objectCreateReq.getObjectCode());
-            model.setObjectName(objectCreateReq.getObjectName());
-            model.setIamMsSystem(iamMsSystem);
-            model.setObjectParent(parentObject);
-
-
-            objectRepository.save(model);
-
-
-
-        }else throw new DataDuplicateException("Object code duplicate");
-
-    }
+		} else {
+			throw new DataDuplicateException("Object code duplicate");
+		}
+	}
 }

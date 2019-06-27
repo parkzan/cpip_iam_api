@@ -12,12 +12,10 @@ import co.prior.iam.entity.IamMsUser;
 @Repository
 public interface IamMsUserRepository extends PagingAndSortingRepository<IamMsUser, Long> {
 	
-	Page<IamMsUser> findPageableByIamMsSystem_SystemIdAndFirstTimeLoginAndIsDeleted(
-			long systemId, String firstTimeLogin, String isDeleted, Pageable pageable);
+	Page<IamMsUser> findPageableByIamMsSystem_SystemIdAndIsDeleted(long systemId, String isDeleted, Pageable pageable);
 	
-	Optional<IamMsUser> findByUserIdAndIsDeleted(Long userId, String isDeleted);
+	Optional<IamMsUser> findByUserIdAndIsDeleted(long userId, String isDeleted);
 
-	Optional<IamMsUser> findByUserIdAndFirstTimeLoginAndIsDeleted(Long userId, String firstTimeLogin, String isDeleted);
 	
     Optional<IamMsUser> findByUserCodeAndIsDeleted(String userCode, String isDeleted);
     

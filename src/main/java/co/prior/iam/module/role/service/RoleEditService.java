@@ -1,9 +1,9 @@
 package co.prior.iam.module.role.service;
 
-
 import co.prior.iam.entity.IamMsRole;
 import co.prior.iam.entity.IamMsSystem;
 import co.prior.iam.error.DataNotFoundException;
+import co.prior.iam.model.AnswerFlag;
 import co.prior.iam.module.role.model.request.RoleEditReq;
 import co.prior.iam.module.role.model.respone.RoleRespone;
 import co.prior.iam.repository.RoleRepository;
@@ -21,33 +21,28 @@ import java.util.Optional;
 @Service
 public class RoleEditService {
 
+	RoleRepository roleRepository;
+	SystemRepository systemRepository;
 
-    RoleRepository roleRepository;
-    SystemRepository systemRepository;
+	public RoleEditService(RoleRepository roleRepository, SystemRepository systemRepository) {
 
-    public RoleEditService(RoleRepository roleRepository , SystemRepository systemRepository){
+		this.roleRepository = roleRepository;
+		this.systemRepository = systemRepository;
 
-        this.roleRepository = roleRepository;
-        this.systemRepository=systemRepository;
+	}
 
-    }
+	@Transactional
+	public void editRole(RoleEditReq roleEditReq) throws Exception {
+		log.info("Service editRole: {}", roleEditReq);
 
+		IamMsRole iamMsRole = roleRepository
+				.findByRoleCodeAndIamMsSystem_SystemIdAndIsDeleted(roleEditReq.getRoleCode(), roleEditReq.getSystemId(),
+						AnswerFlag.N.toString())
+				.orElseThrow(() -> new DataNotFoundException("data not found"));
 
-    @Transactional
-    public void editRole(RoleEditReq roleEditReq) throws Exception{
+		iamMsRole.setRoleName(roleEditReq.getNewName());
+		iamMsRole.setRoleIcon(roleEditReq.getNewIcon());
+		roleRepository.save(iamMsRole);
+	}
 
-        log.info("Service editRole: {}", roleEditReq);
-
-
-
-
-                IamMsRole iamMsRole = roleRepository.findByRoleCodeAndIamMsSystem_SystemIdAndIsDeleted(roleEditReq.getRoleCode(),roleEditReq.getSystemId(),"N")
-                        .orElseThrow(() -> new DataNotFoundException("data not found"));
-
-
-                    iamMsRole.setRoleName(roleEditReq.getNewName());
-                    iamMsRole.setRoleIcon(roleEditReq.getNewIcon());
-                    roleRepository.save(iamMsRole);
-
-    }
 }

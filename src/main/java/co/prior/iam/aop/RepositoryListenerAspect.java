@@ -19,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ReflectionUtils;
 
 import co.prior.iam.entity.IamAuditTrail;
+import co.prior.iam.model.AnswerFlag;
 import co.prior.iam.repository.IamAuditTrailRepository;
 import lombok.extern.slf4j.Slf4j;
 
@@ -107,8 +108,8 @@ public class RepositoryListenerAspect {
 			iamAuditTrail.setColumnName(columnName);
 			iamAuditTrail.setOldValue(oldValue == null? null : String.valueOf(oldValue));
 			iamAuditTrail.setNewValue(newValue == null? null : String.valueOf(newValue));
-			iamAuditTrail.setIsNew(previousState == null? "Y" : "N");
-			iamAuditTrail.setIsFk(field.getAnnotation(ManyToOne.class) == null? "N" : "Y");
+			iamAuditTrail.setIsNew(previousState == null? AnswerFlag.Y.toString() : AnswerFlag.N.toString());
+			iamAuditTrail.setIsFk(field.getAnnotation(ManyToOne.class) == null? AnswerFlag.N.toString() : AnswerFlag.Y.toString());
 
 			return Optional.of(this.iamAuditTrailRepository.save(iamAuditTrail));
 		}

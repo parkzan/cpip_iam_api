@@ -1,12 +1,13 @@
-package co.prior.iam.module.role_object.service;
+package co.prior.iam.module.role.service;
 
 
 import co.prior.iam.entity.IamMsRole;
 import co.prior.iam.entity.IamMsRoleObject;
 import co.prior.iam.entity.IamMsSystem;
 import co.prior.iam.error.DataNotFoundException;
-import co.prior.iam.module.role_object.model.respone.ObjectModel;
-import co.prior.iam.module.role_object.model.respone.RoleMapObjectRespone;
+import co.prior.iam.model.AnswerFlag;
+import co.prior.iam.module.role.model.respone.ObjectModel;
+import co.prior.iam.module.role.model.respone.RoleMapObjectRespone;
 import co.prior.iam.repository.ObjectRepository;
 import co.prior.iam.repository.RoleObjectRepository;
 import co.prior.iam.repository.RoleRepository;
@@ -41,13 +42,11 @@ public class GetRoleObjectService {
     public RoleMapObjectRespone getRoleObject(Long systemId ,Long roleId) throws Exception{
         log.info("Service getRoleObject: {}", roleId);
 
-
-        IamMsRole iamMsRole = roleRepository.findByIamMsSystem_SystemIdAndRoleIdAndIsDeleted(systemId,roleId,"N")
+		IamMsRole iamMsRole = roleRepository
+				.findByIamMsSystem_SystemIdAndRoleIdAndIsDeleted(systemId, roleId, AnswerFlag.N.toString())
                 .orElseThrow(() -> new DataNotFoundException("data not found"));
 
-
-
-        List<IamMsRoleObject> objectList = roleObjectRepository.findByIamMsRoleAndIsDeleted(iamMsRole,"N");
+        List<IamMsRoleObject> objectList = roleObjectRepository.findByIamMsRoleAndIsDeleted(iamMsRole,AnswerFlag.N.toString());
         List<ObjectModel> listChid = new ArrayList<>();
         RoleMapObjectRespone respone = new RoleMapObjectRespone();
 
@@ -57,7 +56,6 @@ public class GetRoleObjectService {
 
         if (!objectList.isEmpty()) {
             for (IamMsRoleObject obj : objectList) {
-
                 ObjectModel objectModel = new ObjectModel();
 
                 if (obj.getIamMsObject().getObjectParent() == null) {
@@ -74,19 +72,18 @@ public class GetRoleObjectService {
             return  respone ;
         }
         else throw new DataNotFoundException("data not found");
-
     }
 
     @Transactional
     public List<RoleMapObjectRespone> allRoleMapObject(long systemId) throws Exception{
 
 
-        List<IamMsRole> listRole = roleRepository.findByIamMsSystem_SystemIdAndIsDeleted(systemId,"N");
+        List<IamMsRole> listRole = roleRepository.findByIamMsSystem_SystemIdAndIsDeleted(systemId,AnswerFlag.N.toString());
         List<RoleMapObjectRespone> listRespone = new ArrayList<>();
 
         if (!listRole.isEmpty()){
             for (IamMsRole role : listRole){
-                List<IamMsRoleObject> objectList = roleObjectRepository.findByIamMsRoleAndIsDeleted(role,"N");
+                List<IamMsRoleObject> objectList = roleObjectRepository.findByIamMsRoleAndIsDeleted(role,AnswerFlag.N.toString());
                 List<ObjectModel> listChid = new ArrayList<>();
                 RoleMapObjectRespone respone = new RoleMapObjectRespone();
 
