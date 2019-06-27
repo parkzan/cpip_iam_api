@@ -5,10 +5,12 @@ import co.prior.iam.entity.IamMsRole;
 import co.prior.iam.entity.IamMsRoleObject;
 import co.prior.iam.entity.IamMsSystem;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
 
+@Repository
 public interface RoleObjectRepository  extends JpaRepository<IamMsRoleObject,Long> {
 
 

@@ -37,9 +37,14 @@ public class SystemCreateService {
 			iamMsSystem.setSystemName(systemAddReq.getSystemName());
 			systemRepository.save(iamMsSystem);
 
-		} else {
-			throw new DataDuplicateException("System code duplicate");
-		}
-	}
+             }
+            else {
+
+                 throw new DataDuplicateException("99","System code duplicate");
+
+            }
+
+    }
 
 }
+

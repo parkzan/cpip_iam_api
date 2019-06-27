@@ -52,11 +52,12 @@ public class RoleCreateService {
 			model.setRoleName(roleCreateReq.getRoleName());
 			model.setRoleIcon(roleCreateReq.getRoleIcon());
 			model.setIamMsSystem(iamMsSystem);
-
 			roleRepository.save(model);
 
-		} else {
-			throw new DataDuplicateException("Role code duplicate");
-		}
+            }else {
+                throw new DataDuplicateException("99","Role code duplicate");
+            }
+
+
 	}
 }

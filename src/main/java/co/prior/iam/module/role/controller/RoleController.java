@@ -21,7 +21,7 @@ import java.util.Optional;
 
 @Slf4j
 @RestController
-@RequestMapping(path = "/api/role")
+@RequestMapping(path = "/api")
 public class RoleController {
 
     private final RoleCreateService roleCreateService;
@@ -43,7 +43,7 @@ public class RoleController {
     }
 
 
-    @PostMapping
+    @PostMapping("/role")
     public ResponseEntity<Void> createRole(@RequestBody RoleCreateReq roleCreateReq) throws Exception {
         log.info("Controller createRole: {}", roleCreateReq );
         roleCreateService.createRole(roleCreateReq);
@@ -51,7 +51,7 @@ public class RoleController {
         return ResponseEntity.created(null).build();
 
     }
-    @DeleteMapping
+    @DeleteMapping("/role")
     public ResponseEntity<Void> deleteRole(@RequestBody RoleDeleteReq roleDeleteReq)  throws Exception {
         log.info("Controller deleteRole: {}", roleDeleteReq );
         roleDeleteService.deleteRole(roleDeleteReq);
@@ -61,7 +61,7 @@ public class RoleController {
 
     }
 
-    @PutMapping
+    @PutMapping("/role")
     public ResponseEntity<Void> editRole(@RequestBody RoleEditReq roleEditReq) throws Exception{
         log.info("Controller editRole: {}", roleEditReq );
         roleEditService.editRole(roleEditReq);
@@ -72,7 +72,8 @@ public class RoleController {
 
     }
 
-    @GetMapping("/system/{systemId}")
+
+    @GetMapping("/role/system/{systemId}")
     public ResponseEntity<List<IamMsRole>> inqueryRole(@PathVariable Long systemId) throws Exception {
         log.info("Controller inqueryRole: {}", systemId );
        List<IamMsRole> list = roleInqueryService.inqueryRole(systemId);

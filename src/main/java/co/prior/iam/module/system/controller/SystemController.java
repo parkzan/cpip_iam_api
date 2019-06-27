@@ -28,7 +28,7 @@ import co.prior.iam.module.system.service.SystemInqueryService;
 
 @Slf4j
 @RestController
-@RequestMapping(path = "/api/system")
+@RequestMapping(path = "/api")
 public class SystemController {
 
 
@@ -50,7 +50,7 @@ public class SystemController {
         this.systemInqueryService = systemInqueryService;
     }
 
-    @PostMapping
+    @PostMapping("/system")
     public ResponseEntity<Void> createSystem(@RequestBody SystemAddReq systemAddReq) throws Exception {
 
         log.info("Controller createSystem: {}", systemAddReq );
@@ -60,7 +60,7 @@ public class SystemController {
 
     }
 
-    @DeleteMapping
+    @DeleteMapping("/system")
     public ResponseEntity<Void> deleteSystem(@RequestBody SystemDeleteReq systemDeleteReq) throws Exception  {
 
         log.info("Controller deleteSystem: {}", systemDeleteReq );
@@ -70,7 +70,7 @@ public class SystemController {
 
     }
 
-    @PutMapping
+    @PutMapping("/system")
     public ResponseEntity<Void> editSystem(@RequestBody SystemEditReq systemEditReq) throws Exception {
         log.info("Controller editSystem: {}", systemEditReq );
         systemEditService.editSystem(systemEditReq);
@@ -79,7 +79,7 @@ public class SystemController {
 
     }
 
-    @GetMapping
+    @GetMapping("/systems")
     public ResponseEntity<List<IamMsSystem>> inquerySystem() throws Exception  {
         log.info("Controller inquerySystem: {}");
         List<IamMsSystem> list = systemInqueryService.inquerySystem();
