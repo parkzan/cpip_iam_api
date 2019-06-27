@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import co.prior.iam.entity.IamMsUser;
 import co.prior.iam.model.PageableRequest;
 import co.prior.iam.model.SortedModel;
+import co.prior.iam.module.user.model.request.EditUserRequest;
 import co.prior.iam.module.user.model.request.GetUsersRequest;
 import co.prior.iam.module.user.model.response.GetUserResponse;
 import co.prior.iam.module.user.model.response.IamMsUserPage;
@@ -24,86 +25,102 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 public class UserService {
 
-    private final IamMsUserRepository iamMsUserRepository;
-
-    public UserService(IamMsUserRepository iamMsUserRepository) {
-        this.iamMsUserRepository = iamMsUserRepository;
-    }
-
-    public IamMsUserPage getUsers(GetUsersRequest request) {
-        log.info("Service getUsers systemId: {}", request.getSystemId());
-
-        PageableRequest pageableRequest = request.getPageable();
-        int page = pageableRequest.getPage() - 1;
-        int size = pageableRequest.getSize();
-        Sort sort = Sort.unsorted();
-
-        List<SortedModel> sortedList = pageableRequest.getSortedList();
-        if (sortedList != null) {
-            for (SortedModel sortedModel : sortedList) {
-                sort.and(Sort.by(sortedModel.getDirection(), sortedModel.getField()));
-            }
-        }
-
-        Pageable records = PageRequest.of(page, size, sort);
-        Page<IamMsUser> userPage = this.iamMsUserRepository.findPageableByIamMsSystem_SystemIdAndIsDeleted(
-                request.getSystemId(), "N", records);
-        List<GetUserResponse> data = new ArrayList<>();
-        for (IamMsUser user : userPage.getContent()) {
-            data.add(GetUserResponse.builder()
-                    .systemId(user.getIamMsSystem().getSystemId())
-                    .userId(user.getUserId())
-                    .userCode(user.getUserCode())
-                    .localFirstName(user.getLocalFirstName())
-                    .localMiddleName(user.getLocalMiddleName())
-                    .localLastName(user.getLocalLastName())
-                    .engFirstName(user.getEngFirstName())
-                    .engMiddleName(user.getEngMiddleName())
-                    .engLastName(user.getEngLastName())
-                    .isIamAdmin(user.getIsIamAdmin())
-                    .build());
-        }
-
-        return IamMsUserPage.builder()
-                .page(userPage.getNumber() + 1)
-                .size(userPage.getSize())
-                .totalPages(userPage.getTotalPages())
-                .totalRecords(userPage.getTotalElements())
-                .isFirst(userPage.isFirst())
-                .isLast(userPage.isLast())
-                .data(data)
-                .build();
-    }
-
-    public GetUserResponse getUser(long userId) throws Exception {
-        log.info("Service getUser userId: {}", userId);
-
-        IamMsUser iamMsUser = this.iamMsUserRepository.findByUserIdAndIsDeleted(userId, "N")
-                .orElseThrow(() -> new DataNotFoundException("user not found"));
-
-        return GetUserResponse.builder()
-                .systemId(iamMsUser.getIamMsSystem().getSystemId())
-                .userId(iamMsUser.getUserId())
-                .userCode(iamMsUser.getUserCode())
-                .localFirstName(iamMsUser.getLocalFirstName())
-                .localMiddleName(iamMsUser.getLocalMiddleName())
-                .localLastName(iamMsUser.getLocalLastName())
-                .engFirstName(iamMsUser.getEngFirstName())
-                .engMiddleName(iamMsUser.getEngMiddleName())
-                .engLastName(iamMsUser.getEngLastName())
-                .isIamAdmin(iamMsUser.getIsIamAdmin())
-                .build();
-    }
-
-    @Transactional
-    public void deleteUser(long userId) throws Exception {
-        log.info("Service deleteUser userId: {}", userId);
-
-        IamMsUser iamMsUser = this.iamMsUserRepository.findByUserIdAndIsDeleted(userId, "N")
-                .orElseThrow(() -> new DataNotFoundException("user not found"));
-
-        iamMsUser.setIsDeleted("Y");
-        this.iamMsUserRepository.save(iamMsUser);
-    }
-
+	private final IamMsUserRepository iamMsUserRepository;
+	
+	public UserService(IamMsUserRepository iamMsUserRepository) {
+		this.iamMsUserRepository = iamMsUserRepository;
+	}
+	
+	public IamMsUserPage getUsers(GetUsersRequest request) {
+		log.info("Service getUsers systemId: {}", request.getSystemId());
+		
+		PageableRequest pageableRequest = request.getPageable();
+		int page = pageableRequest.getPage() - 1;
+		int size = pageableRequest.getSize();
+		Sort sort = Sort.unsorted();
+		
+		List<SortedModel> sortedList = pageableRequest.getSortedList();
+		if (sortedList != null) {
+			for (SortedModel sortedModel : sortedList) {
+				sort.and(Sort.by(sortedModel.getDirection(), sortedModel.getField()));
+			}
+		}
+		
+		Pageable records = PageRequest.of(page, size, sort);
+		Page<IamMsUser> userPage = this.iamMsUserRepository.findPageableByIamMsSystem_SystemIdAndFirstTimeLoginAndIsDeleted(
+				request.getSystemId(), "N", "N", records);
+		List<GetUserResponse> data = new ArrayList<>();
+		for (IamMsUser user : userPage.getContent()) {
+			data.add(GetUserResponse.builder()
+					.systemId(user.getIamMsSystem().getSystemId())
+					.userId(user.getUserId())
+					.userCode(user.getUserCode())
+					.localFirstName(user.getLocalFirstName())
+					.localMiddleName(user.getLocalMiddleName())
+					.localLastName(user.getLocalLastName())
+					.engFirstName(user.getEngFirstName())
+					.engMiddleName(user.getEngMiddleName())
+					.engLastName(user.getEngLastName())
+					.isIamAdmin(user.getIsIamAdmin())
+					.build());
+		}
+		
+		return IamMsUserPage.builder()
+				.page(userPage.getNumber() + 1)
+				.size(userPage.getSize())
+				.totalPages(userPage.getTotalPages())
+				.totalRecords(userPage.getTotalElements())
+				.isFirst(userPage.isFirst())
+				.isLast(userPage.isLast())
+				.data(data)
+				.build();
+	}
+	
+	public GetUserResponse getUser(long userId) throws Exception {
+		log.info("Service getUser userId: {}", userId);
+		
+		IamMsUser iamMsUser = this.iamMsUserRepository.findByUserIdAndFirstTimeLoginAndIsDeleted(userId, "N", "N")
+				.orElseThrow(() -> new Exception("user not found"));
+		
+		return GetUserResponse.builder()
+				.systemId(iamMsUser.getIamMsSystem().getSystemId())
+				.userId(iamMsUser.getUserId())
+				.userCode(iamMsUser.getUserCode())
+				.localFirstName(iamMsUser.getLocalFirstName())
+				.localMiddleName(iamMsUser.getLocalMiddleName())
+				.localLastName(iamMsUser.getLocalLastName())
+				.engFirstName(iamMsUser.getEngFirstName())
+				.engMiddleName(iamMsUser.getEngMiddleName())
+				.engLastName(iamMsUser.getEngLastName())
+				.isIamAdmin(iamMsUser.getIsIamAdmin())
+				.build();
+	}
+	
+	@Transactional
+	public void editUser(EditUserRequest request) throws Exception {
+		log.info("Service editUser userId: {}", request.getUserId());
+		
+		IamMsUser iamMsUser = this.iamMsUserRepository.findByUserIdAndFirstTimeLoginAndIsDeleted(request.getUserId(), "N", "N")
+				.orElseThrow(() -> new Exception("user not found"));
+		
+		iamMsUser.setLocalFirstName(request.getLocalFirstName());
+		iamMsUser.setLocalMiddleName(request.getLocalMiddleName());
+		iamMsUser.setLocalLastName(request.getLocalLastName());
+		iamMsUser.setEngFirstName(request.getEngFirstName());
+		iamMsUser.setEngMiddleName(request.getEngMiddleName());
+		iamMsUser.setEngLastName(request.getEngLastName());
+		this.iamMsUserRepository.save(iamMsUser);
+	}
+	
+	@Transactional
+	public void deleteUser(long userId) throws Exception {
+		log.info("Service deleteUser userId: {}", userId);
+		
+		IamMsUser iamMsUser = this.iamMsUserRepository.findByUserIdAndIsDeleted(userId, "N")
+				.orElseThrow(() -> new Exception("user not found"));
+		
+		iamMsUser.setIsDeleted("Y");
+		this.iamMsUserRepository.save(iamMsUser);
+	}
+	
 }

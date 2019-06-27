@@ -13,6 +13,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import co.prior.iam.entity.IamMsUser;
 import co.prior.iam.module.auth.model.request.ActivateUserRequest;
+import co.prior.iam.module.auth.model.request.ChangePasswordRequest;
 import co.prior.iam.module.auth.model.request.RefreshTokenRequest;
 import co.prior.iam.module.auth.model.request.SignInRequest;
 import co.prior.iam.module.auth.model.request.SignUpRequest;
@@ -47,7 +48,7 @@ public class AuthController {
     	IamMsUser iamMsUser = this.authService.signUp(request);
     	
         URI location = ServletUriComponentsBuilder
-                .fromCurrentContextPath().path("/users/{user_id}")
+                .fromCurrentContextPath().path("/auth/users/{user_id}")
                 .buildAndExpand(iamMsUser.getUserId()).toUri();
 
         return ResponseEntity.created(location).build();
@@ -58,6 +59,15 @@ public class AuthController {
     	log.info("Controller activateUser systemId: {}, userCode: {}", request.getSystemId(), request.getUserCode());
     	
     	this.authService.activateUser(request);
+    	
+        return ResponseEntity.noContent().build();
+    }
+    
+    @PostMapping("/password/new")
+    public ResponseEntity<Void> changePassword(@Valid @RequestBody ChangePasswordRequest request) throws Exception {
+    	log.info("Controller changePassword userId: {}", request.getUserId());
+    	
+    	this.authService.changePassword(request);
     	
         return ResponseEntity.noContent().build();
     }
