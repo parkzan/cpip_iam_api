@@ -60,11 +60,11 @@ public class RoleMapObjectService {
 
             for (long newObj:roleMapObjectReq.getNewObjectId()){
 
-                IamMsObject iamMsObject = objectRepository.findByObjectIdAndIsDeleted(newObj,"N")
+                IamMsRoleObject iamMsObject = roleObjectRepository.findByIamMsSystem_SystemIdAndIamMsRole_RoleIdAndIamMsObject_ObjectIdAndIsDeleted(objectsList.get(0).getIamMsSystem().getSystemId(),objectsList.get(0).getIamMsRole().getRoleId(),newObj,"N")
                         .orElseThrow(() -> new DataNotFoundException("data not found"));
                 if (!objectsList.contains(iamMsObject)){
                     IamMsRoleObject model = new IamMsRoleObject();
-                    model.setIamMsObject(iamMsObject);
+                    model.setIamMsObject(iamMsObject.getIamMsObject());
                     model.setIamMsSystem(iamMsObject.getIamMsSystem());
                     model.setIamMsRole(objectsList.get(0).getIamMsRole());
                     roleObjectRepository.save(model);
