@@ -6,8 +6,6 @@ import lombok.EqualsAndHashCode;
 @Data
 @EqualsAndHashCode(callSuper = false)
 public class DataDuplicateException extends RuntimeException {
-
-	private static final long serialVersionUID = -2014700811697104449L;
 	
 	private final String code;
     private final String message;

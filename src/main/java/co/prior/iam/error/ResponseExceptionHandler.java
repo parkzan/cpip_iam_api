@@ -8,6 +8,8 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 
 import co.prior.iam.error.exception.DataDuplicateException;
 import co.prior.iam.error.exception.DataNotFoundException;
+import co.prior.iam.error.exception.ForbiddenException;
+import co.prior.iam.error.exception.UnauthorizedException;
 import co.prior.iam.model.ErrorModel;
 import lombok.extern.slf4j.Slf4j;
 
@@ -20,6 +22,7 @@ public class ResponseExceptionHandler extends ResponseEntityExceptionHandler {
 		log.error(ex.getMessage(), ex);
 		
 		ErrorModel errorModel = new ErrorModel(ex.getCode(), ex.getMessage());
+		
 		return new ResponseEntity<>(errorModel, HttpStatus.NOT_FOUND);
 	}
 
@@ -28,7 +31,35 @@ public class ResponseExceptionHandler extends ResponseEntityExceptionHandler {
 		log.error(ex.getMessage(), ex);
 
 		ErrorModel errorModel = new ErrorModel(ex.getCode(), ex.getMessage());
+		
 		return new ResponseEntity<>(errorModel, HttpStatus.CONFLICT);
+	}
+	
+	@ExceptionHandler(value = UnauthorizedException.class)
+	protected ResponseEntity<Object> handleUnauthorizedException(UnauthorizedException ex) {
+		logger.error(ex.getMessage(), ex);
+		
+		ErrorModel errorModel = new ErrorModel(ex.getCode(), ex.getMessage());
+		
+		return new ResponseEntity<>(errorModel, HttpStatus.UNAUTHORIZED);
+	}
+
+	@ExceptionHandler(value = ForbiddenException.class)
+	protected ResponseEntity<Object> handleForbiddenException(ForbiddenException ex) {
+		logger.error(ex.getMessage(), ex);
+
+		ErrorModel errorModel = new ErrorModel(ex.getCode(), ex.getMessage());
+
+		return new ResponseEntity<>(errorModel, HttpStatus.FORBIDDEN);
+	}
+	
+	@ExceptionHandler(value = Exception.class)
+	protected ResponseEntity<Object> handleInternalServerError(Exception ex) {
+		logger.error(ex.getLocalizedMessage(), ex);
+
+		ErrorModel errorModel = new ErrorModel("99", "internal server error");
+
+		return new ResponseEntity<>(errorModel, HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 	
 }

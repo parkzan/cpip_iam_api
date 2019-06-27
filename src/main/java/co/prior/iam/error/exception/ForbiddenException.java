@@ -7,8 +7,6 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = false)
 public class ForbiddenException extends RuntimeException {
 	
-	private static final long serialVersionUID = 5388780454698703479L;
-	
 	private final String code;
 	private final String message;
 

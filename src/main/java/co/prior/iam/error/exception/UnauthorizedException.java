@@ -7,8 +7,6 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = false)
 public class UnauthorizedException extends RuntimeException {
 
-	private static final long serialVersionUID = 5279618793746873570L;
-
 	private final String code;
 	private final String message;
 
