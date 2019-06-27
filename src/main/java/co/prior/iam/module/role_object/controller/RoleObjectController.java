@@ -13,7 +13,7 @@ import java.util.List;
 
 @Slf4j
 @RestController
-@RequestMapping(path = "/api/roleObject")
+@RequestMapping(path = "/api")
 public class RoleObjectController {
 
 
@@ -30,7 +30,7 @@ public class RoleObjectController {
 
 
 
-    @GetMapping("/{systemId}/{roleId}")
+    @GetMapping("/roleObjects/{systemId}/{roleId}")
     public ResponseEntity<RoleMapObjectRespone> getRoleObject(@PathVariable Long systemId,@PathVariable Long roleId) throws Exception {
         log.info("Controller getRoleObject: {}", roleId);
         RoleMapObjectRespone list = getRoleObjectService.getRoleObject(systemId,roleId);
@@ -40,7 +40,7 @@ public class RoleObjectController {
 
     }
 
-    @GetMapping("/{systemId}")
+    @GetMapping("/roleObject/{systemId}")
     public ResponseEntity<List<RoleMapObjectRespone>> getAllRoleObject(@PathVariable Long systemId) throws Exception {
         log.info("Controller getAllRoleObject: {}", systemId);
         List<RoleMapObjectRespone> list = getRoleObjectService.allRoleMapObject(systemId);
@@ -50,7 +50,7 @@ public class RoleObjectController {
 
     }
 
-    @PostMapping
+    @PostMapping("/roleObject")
     public ResponseEntity<Void> editRoleObject(@RequestBody RoleMapObjectReq roleMapObjectReq) throws Exception{
         log.info("Controller editRoleObject: {}", roleMapObjectReq);
         roleMapObjectService.editRoleObject(roleMapObjectReq);

@@ -42,7 +42,7 @@ public class SystemCreateService {
              }
             else {
 
-                 throw new DataDuplicateException("System code duplicate");
+                 throw new DataDuplicateException("99","System code duplicate");
 
             }
 

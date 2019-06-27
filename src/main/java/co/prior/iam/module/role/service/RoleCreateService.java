@@ -66,7 +66,7 @@ public class RoleCreateService {
 
 
             }else {
-                throw new DataDuplicateException("Role code duplicate");
+                throw new DataDuplicateException("99","Role code duplicate");
             }
 
     }

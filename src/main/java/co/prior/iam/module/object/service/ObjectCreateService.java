@@ -54,7 +54,7 @@ public class ObjectCreateService {
 
 
 
-        }else throw new DataDuplicateException("Object code duplicate");
+        }else throw new DataDuplicateException("99","Object code duplicate");
 
     }
 }
