@@ -1,13 +1,10 @@
 package co.prior.iam.module.role_object.controller;
 
 
-import co.prior.iam.entity.IamMsRoleObject;
-import co.prior.iam.module.role_object.model.request.RoleMapObjectCreateReq;
-import co.prior.iam.module.role_object.model.request.RoleObjectEditReq;
+import co.prior.iam.module.role_object.model.request.RoleMapObjectReq;
 import co.prior.iam.module.role_object.model.respone.RoleMapObjectRespone;
 import co.prior.iam.module.role_object.service.GetRoleObjectService;
-import co.prior.iam.module.role_object.service.RoleObjectCreateService;
-import co.prior.iam.module.role_object.service.RoleObjectEditService;
+import co.prior.iam.module.role_object.service.RoleMapObjectService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,29 +16,21 @@ import java.util.List;
 @RequestMapping(path = "/api/roleObject")
 public class RoleObjectController {
 
-    private RoleObjectCreateService roleObjectCreateService;
+
     private GetRoleObjectService getRoleObjectService;
-    private RoleObjectEditService roleObjectEditService;
+    private RoleMapObjectService roleMapObjectService;
 
-    RoleObjectController(RoleObjectCreateService roleObjectCreateService,GetRoleObjectService getRoleObjectService , RoleObjectEditService roleObjectEditService){
+    RoleObjectController(GetRoleObjectService getRoleObjectService , RoleMapObjectService roleMapObjectService){
 
-        this.roleObjectCreateService = roleObjectCreateService;
+
         this.getRoleObjectService = getRoleObjectService;
-        this.roleObjectEditService = roleObjectEditService;
+        this.roleMapObjectService = roleMapObjectService;
 
     }
 
-    @PostMapping
-    public ResponseEntity<Void> createRoleObject(@RequestBody RoleMapObjectCreateReq roleMapObjectCreateReq) throws Exception {
-        log.info("Controller createRoleObject: {}", roleMapObjectCreateReq);
-        roleObjectCreateService.createRoleMapObject(roleMapObjectCreateReq);
 
-        return ResponseEntity.created(null).build();
 
-    }
-
-    @GetMapping
-    @RequestMapping(path = "/{systemId}/{roleId}")
+    @GetMapping("/{systemId}/{roleId}")
     public ResponseEntity<RoleMapObjectRespone> getRoleObject(@PathVariable Long systemId,@PathVariable Long roleId) throws Exception {
         log.info("Controller getRoleObject: {}", roleId);
         RoleMapObjectRespone list = getRoleObjectService.getRoleObject(systemId,roleId);
@@ -51,8 +40,7 @@ public class RoleObjectController {
 
     }
 
-    @GetMapping
-    @RequestMapping(path = "/{systemId}")
+    @GetMapping("/{systemId}")
     public ResponseEntity<List<RoleMapObjectRespone>> getAllRoleObject(@PathVariable Long systemId) throws Exception {
         log.info("Controller getAllRoleObject: {}", systemId);
         List<RoleMapObjectRespone> list = getRoleObjectService.allRoleMapObject(systemId);
@@ -62,10 +50,10 @@ public class RoleObjectController {
 
     }
 
-    @PutMapping
-    public ResponseEntity<Void> editRoleObject(@RequestBody RoleObjectEditReq roleObjectEditReq) throws Exception{
-        log.info("Controller editRoleObject: {}", roleObjectEditReq);
-        roleObjectEditService.editRoleObject(roleObjectEditReq);
+    @PostMapping
+    public ResponseEntity<Void> editRoleObject(@RequestBody RoleMapObjectReq roleMapObjectReq) throws Exception{
+        log.info("Controller editRoleObject: {}", roleMapObjectReq);
+        roleMapObjectService.editRoleObject(roleMapObjectReq);
 
         return  ResponseEntity.noContent().build();
     }

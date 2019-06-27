@@ -1,5 +1,6 @@
 package co.prior.iam.module.system.service;
 
+import co.prior.iam.error.DataNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -29,7 +30,7 @@ public class SystemEditService {
 
         log.info("Service editSystem: {}", systemEditReq);
         IamMsSystem iamMsSystem = systemRepository.findBySystemCodeAndIsDeleted(systemEditReq.getSystemCode(), "N")
-                .orElseThrow(() -> new Exception("data not found"));
+                .orElseThrow(() -> new DataNotFoundException("data not found"));
 
 
             iamMsSystem.setSystemName(systemEditReq.getNewName());

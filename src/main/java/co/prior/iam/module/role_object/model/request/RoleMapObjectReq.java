@@ -9,7 +9,7 @@ import java.util.List;
 @Getter
 @Setter
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class RoleObjectEditReq {
+public class RoleMapObjectReq {
 
     private Long systemId;
     private Long roleId;

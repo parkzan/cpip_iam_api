@@ -4,6 +4,8 @@ package co.prior.iam.module.role.service;
 
 import co.prior.iam.entity.IamMsRole;
 import co.prior.iam.entity.IamMsSystem;
+import co.prior.iam.error.DataDuplicateException;
+import co.prior.iam.error.DataNotFoundException;
 import co.prior.iam.module.role.model.request.RoleCreateReq;
 import co.prior.iam.module.role.model.respone.RoleRespone;
 import co.prior.iam.repository.ObjectRepository;
@@ -45,7 +47,7 @@ public class RoleCreateService {
     public void createRole(RoleCreateReq roleCreateReq) throws Exception {
         log.info("Service createRole: {}", roleCreateReq);
             IamMsSystem iamMsSystem = systemRepository.findBySystemIdAndIsDeleted(roleCreateReq.getSystemId(),"N")
-                .orElseThrow(() -> new Exception("data not found"));
+                .orElseThrow(() -> new DataNotFoundException("data not found"));
 
 
             Optional<IamMsRole> iamMsRole = roleRepository.findByRoleCodeAndIamMsSystemAndIsDeleted(roleCreateReq.getRoleCode(),iamMsSystem,"N");
@@ -64,7 +66,7 @@ public class RoleCreateService {
 
 
             }else {
-                throw new Exception("Role code duplicate");
+                throw new DataDuplicateException("Role code duplicate");
             }
 
     }

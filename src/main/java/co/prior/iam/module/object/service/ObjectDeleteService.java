@@ -3,6 +3,7 @@ package co.prior.iam.module.object.service;
 
 import co.prior.iam.entity.IamMsObject;
 import co.prior.iam.entity.IamMsSystem;
+import co.prior.iam.error.DataNotFoundException;
 import co.prior.iam.module.object.model.request.ObjectDeleteReq;
 import co.prior.iam.module.object.model.respone.ObjectRespone;
 import co.prior.iam.repository.ObjectRepository;
@@ -39,7 +40,7 @@ public class ObjectDeleteService {
 
 
         IamMsObject root = objectRepository.findByIamMsSystem_SystemIdAndObjectCodeAndIsDeleted(objectDeleteReq.getSystemId(), objectDeleteReq.getObjectCode(), "N")
-                .orElseThrow(() -> new Exception("data not found"));
+                .orElseThrow(() -> new DataNotFoundException("data not found"));
         List<IamMsObject> listObject = new ArrayList<>();
         Stack<IamMsObject> stack = new Stack<>();
 
@@ -69,7 +70,7 @@ public class ObjectDeleteService {
 
             for (IamMsObject list : listChild) {
 
-                    if (list.getObjectParent() == root.getObjectParent()) {
+                    if (list.getObjectParent() == root) {
                         stack.push(list);
                     }
 

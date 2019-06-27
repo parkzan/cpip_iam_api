@@ -72,8 +72,7 @@ public class RoleController {
 
     }
 
-    @GetMapping
-    @RequestMapping(path = "/{systemId}")
+    @GetMapping("/{systemId}")
     public ResponseEntity<List<IamMsRole>> inqueryRole(@PathVariable Long systemId) throws Exception {
         log.info("Controller inqueryRole: {}", systemId );
        List<IamMsRole> list = roleInqueryService.inqueryRole(systemId);

@@ -3,6 +3,7 @@ package co.prior.iam.module.user.service;
 import java.util.ArrayList;
 import java.util.List;
 
+import co.prior.iam.error.DataNotFoundException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;

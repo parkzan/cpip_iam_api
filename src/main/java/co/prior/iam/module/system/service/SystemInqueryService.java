@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import co.prior.iam.entity.IamMsRole;
+import co.prior.iam.error.DataNotFoundException;
 import co.prior.iam.module.system.model.respone.SystemRespone;
 import co.prior.iam.repository.RoleRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -35,6 +36,6 @@ public class SystemInqueryService {
 
             return iamMsSystemList ;
         }
-        throw new Exception("data not found");
+        throw new DataNotFoundException("data not found");
     }
 }
