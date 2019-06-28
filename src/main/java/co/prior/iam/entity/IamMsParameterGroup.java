@@ -16,7 +16,8 @@ import java.util.Set;
 public class IamMsParameterGroup extends BaseEntity<IamMsParameterGroup> {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @SequenceGenerator(name = "param_group_id_seq", sequenceName = "iam_ms_parameter_group_param_group_id_seq",allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "param_group_id_seq")
     private Long paramGroupId;
     private String paramGroup;
     private String paramEnDescription;
@@ -25,6 +26,6 @@ public class IamMsParameterGroup extends BaseEntity<IamMsParameterGroup> {
     @ToString.Exclude
     @JsonIgnore
     @OneToMany(mappedBy = "paramGroup", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private Set<IamMsParameterCode> paramCode;
+    private Set<IamMsParameterInfo> paramInfoSet;
 
 }

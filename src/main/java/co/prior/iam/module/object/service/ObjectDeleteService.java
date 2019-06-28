@@ -34,8 +34,8 @@ public class ObjectDeleteService {
 		log.info("Service deleteObject: {}", objectDeleteReq);
 
 		IamMsObject root = objectRepository
-				.findByIamMsSystem_SystemIdAndObjectCodeAndIsDeleted(objectDeleteReq.getSystemId(),
-						objectDeleteReq.getObjectCode(), AnswerFlag.N.toString())
+				.findByIamMsSystem_SystemIdAndObjectIdAndIsDeleted(objectDeleteReq.getSystemId(),
+						objectDeleteReq.getObjectId(), AnswerFlag.N.toString())
 				.orElseThrow(() -> new DataNotFoundException("data not found"));
 		List<IamMsObject> listObject = new ArrayList<>();
 		Stack<IamMsObject> stack = new Stack<>();

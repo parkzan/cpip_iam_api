@@ -10,7 +10,7 @@ import lombok.Setter;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ObjectDeleteReq {
 
-    private String objectCode;
-    private Long systemId;
+    private  long objectId;
+    private long systemId;
 
 }

@@ -11,12 +11,13 @@ import javax.persistence.*;
 @EqualsAndHashCode(callSuper=false)
 @Entity
 @Table(name = "iam_ms_parameter_code")
-public class IamMsParameterCode  extends BaseEntity<IamMsParameterCode>{
+public class IamMsParameterInfo extends BaseEntity<IamMsParameterInfo>{
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long paramCodeId;
-    private String paramCode;
+    @SequenceGenerator(name = "param_info_id_seq", sequenceName = "iam_ms_parameter_info_param_info_id_seq",allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "param_info_id_seq")
+    private Long paramInfoId;
+    private String paramInfo;
     private String paramEnDescription;
     private String paramLocalDescription;
 

@@ -5,9 +5,10 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface ParamGroupRepository  extends JpaRepository<IamMsParameterGroup,Long> {
 
-    List<IamMsParameterGroup> findByIsDeleted(String isDelete);
+    Optional<IamMsParameterGroup> findByParamGroupAndIsDeleted(String paramGroup, String isDelete);
 }
