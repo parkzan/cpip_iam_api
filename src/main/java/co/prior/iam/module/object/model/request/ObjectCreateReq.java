@@ -11,7 +11,7 @@ public class ObjectCreateReq {
 
     private String objectCode;
     private String objectName;
-    private Long systemId;
-    private Long objectParentId;
+    private long systemId;
+    private long objectParentId;
 
 }

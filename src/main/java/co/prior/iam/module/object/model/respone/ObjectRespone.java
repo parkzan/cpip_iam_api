@@ -16,5 +16,6 @@ public class ObjectRespone {
     private long systemId;
     private long objectId;
     private String objectCode;
+    private long objectParentId;
     private long objectTotalChild;
 }

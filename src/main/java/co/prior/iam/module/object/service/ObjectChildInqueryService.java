@@ -51,6 +51,7 @@ public class ObjectChildInqueryService {
 			respone.setSystemId(object.getIamMsSystem().getSystemId());
 			respone.setObjectCode(object.getObjectCode());
 			respone.setObjectId(object.getObjectId());
+			respone.setObjectParentId(object.getObjectParent().getObjectId());
 			respone.setObjectTotalChild(countObjectChild(object, listAllObject, count));
 
 			list.add(respone);

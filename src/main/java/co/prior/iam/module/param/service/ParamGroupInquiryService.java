@@ -5,6 +5,7 @@ import co.prior.iam.entity.IamMsParameterGroup;
 import co.prior.iam.entity.IamMsParameterInfo;
 
 import co.prior.iam.error.exception.DataNotFoundException;
+import co.prior.iam.module.param.model.ParamInfoModel;
 import co.prior.iam.module.param.model.ParamRespone;
 import co.prior.iam.repository.ParamGroupRepository;
 import co.prior.iam.repository.ParamInfoRepository;
@@ -35,14 +36,26 @@ public class ParamGroupInquiryService {
             IamMsParameterGroup parameterGroup = paramGroupRepository.findByParamGroupAndIsDeleted(paramGroup,"N")
                     .orElseThrow(() -> new DataNotFoundException("99" , "data not found"));
 
-
+            List<IamMsParameterInfo> parameterInfo = paramInfoRepository.findByParamGroup_ParamGroupAndIsDeleted(parameterGroup.getParamGroup(),"N");
+            List<ParamInfoModel> paramInfoList = new ArrayList<>();
             ParamRespone respones = new ParamRespone();
-            respones.setParamGroup(parameterGroup.getParamGroup());
+            if(!parameterInfo.isEmpty()){
+
+                for(IamMsParameterInfo param : parameterInfo){
+
+                    ParamInfoModel info = new ParamInfoModel();
+                    respones.setParamGroup(parameterGroup.getParamGroup());
+                    info.setParamInfo(param.getParamInfo());
+                    info.setParamEnMessage(param.getParamEnDescription());
+                    info.setParamLocalMessage(param.getParamLocalDescription());
+
+                    paramInfoList.add(info);
+                }
+                respones.setParamInfo(paramInfoList);
+                return respones;
+            }
 
 
-
-
-            return null ;
-
+            throw new DataNotFoundException("99","data not found");
     }
 }
