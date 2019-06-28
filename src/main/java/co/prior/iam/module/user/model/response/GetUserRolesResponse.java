@@ -16,6 +16,12 @@ public class GetUserRolesResponse {
 	private String systemName;
 	private long userId;
 	private String userCode;
+	private String localFirstName;
+	private String localMiddleName;
+	private String localLastName;
+	private String engFirstName;
+	private String engMiddleName;
+	private String engLastName;
 	
 	@Builder.Default
 	private List<UserRole> userRoles = new ArrayList<>();

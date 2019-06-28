@@ -63,13 +63,20 @@ public class UserRoleService {
 		
 		IamMsUserRole iamMsUserRole = iamMsUserRoles.get(0);
 		IamMsSystem iamMsSystem = iamMsUserRole.getIamMsSystem();
+		IamMsUser iamMsUser = iamMsUserRole.getIamMsUser();
 		return GetUserRolesResponse.builder()
 				.userRoleId(iamMsUserRole.getUserRoleId())
 				.systemId(iamMsSystem.getSystemId())
 				.systemCode(iamMsSystem.getSystemCode())
 				.systemName(iamMsSystem.getSystemName())
 				.userId(userId)
-				.userCode(iamMsUserRole.getIamMsUser().getUserCode())
+				.userCode(iamMsUser.getUserCode())
+				.localFirstName(iamMsUser.getLocalFirstName())
+				.localMiddleName(iamMsUser.getLocalMiddleName())
+				.localLastName(iamMsUser.getLocalLastName())
+				.engFirstName(iamMsUser.getEngFirstName())
+				.engMiddleName(iamMsUser.getEngMiddleName())
+				.engLastName(iamMsUser.getEngLastName())
 				.userRoles(userRoles)
 				.build();
 	}
@@ -89,6 +96,12 @@ public class UserRoleService {
 			users.add(UserData.builder()
 					.userId(iamMsUser.getUserId())
 					.userCode(iamMsUser.getUserCode())
+					.localFirstName(iamMsUser.getLocalFirstName())
+					.localMiddleName(iamMsUser.getLocalMiddleName())
+					.localLastName(iamMsUser.getLocalLastName())
+					.engFirstName(iamMsUser.getEngFirstName())
+					.engMiddleName(iamMsUser.getEngMiddleName())
+					.engLastName(iamMsUser.getEngLastName())
 					.build());
 		}
 		
