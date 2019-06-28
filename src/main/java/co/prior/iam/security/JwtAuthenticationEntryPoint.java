@@ -22,10 +22,10 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException e) throws IOException {
         log.error(e.getMessage(), e);
         
-        ErrorModel errorModel = new ErrorModel("99", "access denied");
+        ErrorModel errorModel = new ErrorModel("99", e.getMessage());
         
         response.setContentType("application/json;charset=UTF-8");
-        response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
         response.getWriter().write(new ObjectMapper().writeValueAsString(errorModel));
     }
     

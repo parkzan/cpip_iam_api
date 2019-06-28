@@ -2,6 +2,7 @@ package co.prior.iam.error;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
@@ -9,7 +10,6 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 import co.prior.iam.error.exception.BadRequestException;
 import co.prior.iam.error.exception.DataDuplicateException;
 import co.prior.iam.error.exception.DataNotFoundException;
-import co.prior.iam.error.exception.ForbiddenException;
 import co.prior.iam.error.exception.UnauthorizedException;
 import co.prior.iam.model.ErrorModel;
 import lombok.extern.slf4j.Slf4j;
@@ -54,11 +54,11 @@ public class ResponseExceptionHandler extends ResponseEntityExceptionHandler {
 		return new ResponseEntity<>(errorModel, HttpStatus.UNAUTHORIZED);
 	}
 
-	@ExceptionHandler(value = ForbiddenException.class)
-	protected ResponseEntity<Object> handleForbiddenException(ForbiddenException ex) {
+	@ExceptionHandler(value = AccessDeniedException.class)
+	protected ResponseEntity<Object> handleForbiddenException(AccessDeniedException ex) {
 		logger.error(ex.getMessage(), ex);
 
-		ErrorModel errorModel = new ErrorModel(ex.getCode(), ex.getMessage());
+		ErrorModel errorModel = new ErrorModel("99", ex.getMessage());
 
 		return new ResponseEntity<>(errorModel, HttpStatus.FORBIDDEN);
 	}

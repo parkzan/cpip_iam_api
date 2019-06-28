@@ -14,7 +14,9 @@ import co.prior.iam.error.exception.DataDuplicateException;
 import co.prior.iam.error.exception.DataNotFoundException;
 import co.prior.iam.model.AnswerFlag;
 import co.prior.iam.module.user.model.request.CreateUserRoleRequest;
+import co.prior.iam.module.user.model.response.GetRoleUsersResponse;
 import co.prior.iam.module.user.model.response.GetUserRolesResponse;
+import co.prior.iam.module.user.model.response.UserData;
 import co.prior.iam.module.user.model.response.UserRole;
 import co.prior.iam.repository.IamMsUserRepository;
 import co.prior.iam.repository.IamMsUserRoleRepository;
@@ -40,10 +42,11 @@ public class UserRoleService {
 		this.iamMsUserRoleRepository = iamMsUserRoleRepository;
 	}
 	
-	public GetUserRolesResponse getUserRoles(long userId) {
-		log.info("Service getUserRoles userId: {}", userId);
+	public GetUserRolesResponse getUserRoles(long systemId, long userId) {
+		log.info("Service getUserRoles systemId: {}, userId: {}", systemId, userId);
 		
-		List<IamMsUserRole> iamMsUserRoles = this.iamMsUserRoleRepository.findByIamMsUser_UserIdAndIsDeleted(userId, AnswerFlag.N.toString());
+		List<IamMsUserRole> iamMsUserRoles = this.iamMsUserRoleRepository.findByIamMsSystem_SystemIdAndIamMsUser_UserIdAndIsDeleted(
+				systemId, userId, AnswerFlag.N.toString());
 		if (iamMsUserRoles.isEmpty()) {
 			throw new DataNotFoundException("user role not found");
 		}
@@ -62,12 +65,45 @@ public class UserRoleService {
 		IamMsSystem iamMsSystem = iamMsUserRole.getIamMsSystem();
 		return GetUserRolesResponse.builder()
 				.userRoleId(iamMsUserRole.getUserRoleId())
-				.systemId(iamMsSystem.getSystemId())
+				.systemId(systemId)
 				.systemCode(iamMsSystem.getSystemCode())
 				.systemName(iamMsSystem.getSystemName())
 				.userId(userId)
 				.userCode(iamMsUserRole.getIamMsUser().getUserCode())
 				.userRoles(userRoles)
+				.build();
+	}
+	
+	public GetRoleUsersResponse getRoleUsers(long systemId, long roleId) {
+		log.info("Service getRoleUsers systemId: {}, roleId: {}", systemId, roleId);
+		
+		List<IamMsUserRole> iamMsUserRoles = this.iamMsUserRoleRepository.findByIamMsSystem_SystemIdAndIamMsRole_RoleIdAndIsDeleted(
+				systemId, roleId, AnswerFlag.N.toString());
+		if (iamMsUserRoles.isEmpty()) {
+			throw new DataNotFoundException("user role not found");
+		}
+		
+		List<UserData> users = new ArrayList<>();
+		for (IamMsUserRole iamMsUserRole : iamMsUserRoles) {
+			IamMsUser iamMsUser = iamMsUserRole.getIamMsUser();
+			users.add(UserData.builder()
+					.userId(iamMsUser.getUserId())
+					.userCode(iamMsUser.getUserCode())
+					.build());
+		}
+		
+		IamMsUserRole iamMsUserRole = iamMsUserRoles.get(0);
+		IamMsSystem iamMsSystem = iamMsUserRole.getIamMsSystem();
+		IamMsRole iamMsRole = iamMsUserRole.getIamMsRole();
+		return GetRoleUsersResponse.builder()
+				.userRoleId(iamMsUserRole.getUserRoleId())
+				.systemId(systemId)
+				.systemCode(iamMsSystem.getSystemCode())
+				.systemName(iamMsSystem.getSystemName())
+				.roleId(roleId)
+				.roleCode(iamMsRole.getRoleCode())
+				.roleName(iamMsRole.getRoleName())
+				.users(users)
 				.build();
 	}
 	

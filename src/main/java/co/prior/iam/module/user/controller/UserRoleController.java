@@ -3,7 +3,6 @@ package co.prior.iam.module.user.controller;
 import java.net.URI;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -16,6 +15,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import co.prior.iam.entity.IamMsUserRole;
 import co.prior.iam.module.user.model.request.CreateUserRoleRequest;
 import co.prior.iam.module.user.model.request.DeleteUserRoleRequest;
+import co.prior.iam.module.user.model.response.GetRoleUsersResponse;
 import co.prior.iam.module.user.model.response.GetUserRolesResponse;
 import co.prior.iam.module.user.service.UserRoleService;
 import lombok.extern.slf4j.Slf4j;
@@ -32,11 +32,22 @@ public class UserRoleController {
 		this.userRoleService = userRoleService;
 	}
 	
-	@GetMapping("/user/{user_id}/roles")
-    public ResponseEntity<GetUserRolesResponse> getUserRoles(@PathVariable(value = "user_id") long userId) {
-		log.info("Controller getUserRoles userId: {}", userId);
+	@GetMapping("/user/{user_id}/roles/system/{system_id}")
+    public ResponseEntity<GetUserRolesResponse> getUserRoles(
+    		@PathVariable(value = "user_id") long userId, @PathVariable(value = "system_id") long systemId) {
+		log.info("Controller getUserRoles systemId: {}, userId: {}", systemId, userId);
 		
-		GetUserRolesResponse response = this.userRoleService.getUserRoles(userId);
+		GetUserRolesResponse response = this.userRoleService.getUserRoles(systemId, userId);
+		
+        return ResponseEntity.ok(response);
+    }
+	
+	@GetMapping("/role/{role_id}/users/system/{system_id}")
+    public ResponseEntity<GetRoleUsersResponse> getRoleUsers(
+    		@PathVariable(value = "role_id") long roleId, @PathVariable(value = "system_id") long systemId) {
+		log.info("Controller getRoleUsers systemId: {}, roleId: {}", systemId, roleId);
+		
+		GetRoleUsersResponse response = this.userRoleService.getRoleUsers(systemId, roleId);
 		
         return ResponseEntity.ok(response);
     }
