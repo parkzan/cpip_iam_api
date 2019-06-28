@@ -1,6 +1,5 @@
 package co.prior.iam.module.system.service;
 
-import co.prior.iam.error.DataNotFoundException;
 import co.prior.iam.model.AnswerFlag;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import co.prior.iam.entity.IamMsSystem;
+import co.prior.iam.error.exception.DataNotFoundException;
 import co.prior.iam.module.system.model.request.SystemEditReq;
 import co.prior.iam.repository.SystemRepository;
 

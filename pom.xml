@@ -11,7 +11,7 @@
 	</parent>
 	<groupId>co.prior.iam</groupId>
 	<artifactId>iam2-api</artifactId>
-	<version>snapshot</version>
+	<version>0.0.1-snapshot</version>
 	<name>iam2-api</name>
 
 	<properties>
@@ -46,6 +46,10 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-security</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-cache</artifactId>
 		</dependency>
 
 		<dependency>
@@ -111,13 +115,6 @@
 			<artifactId>mockito-junit-jupiter</artifactId>
 			<scope>test</scope>
 		</dependency>
-
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-cache</artifactId>
-		</dependency>
-
-
 	</dependencies>
 
 	<build>

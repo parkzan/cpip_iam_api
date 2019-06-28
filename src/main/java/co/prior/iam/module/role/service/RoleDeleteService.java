@@ -4,7 +4,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import co.prior.iam.entity.IamMsRole;
-import co.prior.iam.error.DataNotFoundException;
+import co.prior.iam.error.exception.DataNotFoundException;
 import co.prior.iam.model.AnswerFlag;
 import co.prior.iam.module.role.model.request.RoleDeleteReq;
 import co.prior.iam.repository.RoleRepository;

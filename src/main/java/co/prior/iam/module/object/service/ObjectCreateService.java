@@ -7,8 +7,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import co.prior.iam.entity.IamMsObject;
 import co.prior.iam.entity.IamMsSystem;
-import co.prior.iam.error.DataDuplicateException;
-import co.prior.iam.error.DataNotFoundException;
+import co.prior.iam.error.exception.DataDuplicateException;
+import co.prior.iam.error.exception.DataNotFoundException;
 import co.prior.iam.model.AnswerFlag;
 import co.prior.iam.module.object.model.request.ObjectCreateReq;
 import co.prior.iam.repository.ObjectRepository;

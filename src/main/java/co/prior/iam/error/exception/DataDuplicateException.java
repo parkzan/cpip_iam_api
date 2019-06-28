@@ -1,15 +1,13 @@
-package co.prior.iam.error;
+package co.prior.iam.error.exception;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.ResponseStatus;
 
 @Data
 @EqualsAndHashCode(callSuper = false)
 public class DataDuplicateException extends RuntimeException {
-
-    private final String code;
+	
+	private final String code;
     private final String message;
 
     public DataDuplicateException(String message) {
@@ -23,4 +21,5 @@ public class DataDuplicateException extends RuntimeException {
         this.code = code;
         this.message = message;
     }
+    
 }

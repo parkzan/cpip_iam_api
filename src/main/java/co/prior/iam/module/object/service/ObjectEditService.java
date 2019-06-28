@@ -3,7 +3,7 @@ package co.prior.iam.module.object.service;
 
 import co.prior.iam.entity.IamMsObject;
 import co.prior.iam.entity.IamMsSystem;
-import co.prior.iam.error.DataNotFoundException;
+import co.prior.iam.error.exception.DataNotFoundException;
 import co.prior.iam.module.object.model.request.ObjectEditReq;
 import co.prior.iam.module.object.model.respone.ObjectRespone;
 import co.prior.iam.repository.ObjectRepository;

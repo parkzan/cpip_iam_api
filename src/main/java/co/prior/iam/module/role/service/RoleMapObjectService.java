@@ -8,7 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 import co.prior.iam.entity.IamMsObject;
 import co.prior.iam.entity.IamMsRole;
 import co.prior.iam.entity.IamMsRoleObject;
-import co.prior.iam.error.DataNotFoundException;
+import co.prior.iam.error.exception.DataNotFoundException;
 import co.prior.iam.model.AnswerFlag;
 import co.prior.iam.module.role.model.request.RoleMapObjectReq;
 import co.prior.iam.repository.ObjectRepository;
