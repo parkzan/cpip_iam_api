@@ -32,22 +32,20 @@ public class UserRoleController {
 		this.userRoleService = userRoleService;
 	}
 	
-	@GetMapping("/user/{user_id}/roles/system/{system_id}")
-    public ResponseEntity<GetUserRolesResponse> getUserRoles(
-    		@PathVariable(value = "user_id") long userId, @PathVariable(value = "system_id") long systemId) {
-		log.info("Controller getUserRoles systemId: {}, userId: {}", systemId, userId);
+	@GetMapping("/user/{user_id}/roles")
+    public ResponseEntity<GetUserRolesResponse> getUserRoles(@PathVariable(value = "user_id") long userId) {
+		log.info("Controller getUserRoles userId: {}", userId);
 		
-		GetUserRolesResponse response = this.userRoleService.getUserRoles(systemId, userId);
+		GetUserRolesResponse response = this.userRoleService.getUserRoles(userId);
 		
         return ResponseEntity.ok(response);
     }
 	
-	@GetMapping("/role/{role_id}/users/system/{system_id}")
-    public ResponseEntity<GetRoleUsersResponse> getRoleUsers(
-    		@PathVariable(value = "role_id") long roleId, @PathVariable(value = "system_id") long systemId) {
-		log.info("Controller getRoleUsers systemId: {}, roleId: {}", systemId, roleId);
+	@GetMapping("/role/{role_id}/users")
+    public ResponseEntity<GetRoleUsersResponse> getRoleUsers(@PathVariable(value = "role_id") long roleId) {
+		log.info("Controller getRoleUsers roleId: {}", roleId);
 		
-		GetRoleUsersResponse response = this.userRoleService.getRoleUsers(systemId, roleId);
+		GetRoleUsersResponse response = this.userRoleService.getRoleUsers(roleId);
 		
         return ResponseEntity.ok(response);
     }

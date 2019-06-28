@@ -42,11 +42,11 @@ public class UserRoleService {
 		this.iamMsUserRoleRepository = iamMsUserRoleRepository;
 	}
 	
-	public GetUserRolesResponse getUserRoles(long systemId, long userId) {
-		log.info("Service getUserRoles systemId: {}, userId: {}", systemId, userId);
+	public GetUserRolesResponse getUserRoles(long userId) {
+		log.info("Service getUserRoles userId: {}", userId);
 		
-		List<IamMsUserRole> iamMsUserRoles = this.iamMsUserRoleRepository.findByIamMsSystem_SystemIdAndIamMsUser_UserIdAndIsDeleted(
-				systemId, userId, AnswerFlag.N.toString());
+		List<IamMsUserRole> iamMsUserRoles = this.iamMsUserRoleRepository.findByIamMsUser_UserIdAndIsDeleted(
+				userId, AnswerFlag.N.toString());
 		if (iamMsUserRoles.isEmpty()) {
 			throw new DataNotFoundException("user role not found");
 		}
@@ -65,7 +65,7 @@ public class UserRoleService {
 		IamMsSystem iamMsSystem = iamMsUserRole.getIamMsSystem();
 		return GetUserRolesResponse.builder()
 				.userRoleId(iamMsUserRole.getUserRoleId())
-				.systemId(systemId)
+				.systemId(iamMsSystem.getSystemId())
 				.systemCode(iamMsSystem.getSystemCode())
 				.systemName(iamMsSystem.getSystemName())
 				.userId(userId)
@@ -74,11 +74,11 @@ public class UserRoleService {
 				.build();
 	}
 	
-	public GetRoleUsersResponse getRoleUsers(long systemId, long roleId) {
-		log.info("Service getRoleUsers systemId: {}, roleId: {}", systemId, roleId);
+	public GetRoleUsersResponse getRoleUsers(long roleId) {
+		log.info("Service getRoleUsers roleId: {}", roleId);
 		
-		List<IamMsUserRole> iamMsUserRoles = this.iamMsUserRoleRepository.findByIamMsSystem_SystemIdAndIamMsRole_RoleIdAndIsDeleted(
-				systemId, roleId, AnswerFlag.N.toString());
+		List<IamMsUserRole> iamMsUserRoles = this.iamMsUserRoleRepository.findByIamMsRole_RoleIdAndIsDeleted(
+				roleId, AnswerFlag.N.toString());
 		if (iamMsUserRoles.isEmpty()) {
 			throw new DataNotFoundException("user role not found");
 		}
@@ -97,7 +97,7 @@ public class UserRoleService {
 		IamMsRole iamMsRole = iamMsUserRole.getIamMsRole();
 		return GetRoleUsersResponse.builder()
 				.userRoleId(iamMsUserRole.getUserRoleId())
-				.systemId(systemId)
+				.systemId(iamMsSystem.getSystemId())
 				.systemCode(iamMsSystem.getSystemCode())
 				.systemName(iamMsSystem.getSystemName())
 				.roleId(roleId)
