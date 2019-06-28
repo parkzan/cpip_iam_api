@@ -30,7 +30,7 @@ public class ObjectDeleteService {
 	}
 
 	@Transactional
-	public void deleteObject(ObjectDeleteReq objectDeleteReq) throws Exception {
+	public void deleteObject(ObjectDeleteReq objectDeleteReq) {
 		log.info("Service deleteObject: {}", objectDeleteReq);
 
 		IamMsObject root = objectRepository

@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+import co.prior.iam.error.exception.BadRequestException;
 import co.prior.iam.error.exception.DataDuplicateException;
 import co.prior.iam.error.exception.DataNotFoundException;
 import co.prior.iam.error.exception.ForbiddenException;
@@ -17,6 +18,15 @@ import lombok.extern.slf4j.Slf4j;
 @ControllerAdvice
 public class ResponseExceptionHandler extends ResponseEntityExceptionHandler {
 
+	@ExceptionHandler(BadRequestException.class)
+	public final ResponseEntity<ErrorModel> handleBadRequestException(BadRequestException ex) {
+		log.error(ex.getMessage(), ex);
+		
+		ErrorModel errorModel = new ErrorModel(ex.getCode(), ex.getMessage());
+		
+		return new ResponseEntity<>(errorModel, HttpStatus.BAD_REQUEST);
+	}
+	
 	@ExceptionHandler(DataNotFoundException.class)
 	public final ResponseEntity<ErrorModel> handleDataNotFoundException(DataNotFoundException ex) {
 		log.error(ex.getMessage(), ex);

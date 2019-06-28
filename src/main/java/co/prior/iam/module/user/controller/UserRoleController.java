@@ -33,7 +33,7 @@ public class UserRoleController {
 	}
 	
 	@GetMapping("/user/{user_id}/roles")
-    public ResponseEntity<GetUserRolesResponse> getUserRoles(@PathVariable(value = "user_id") long userId) throws Exception {
+    public ResponseEntity<GetUserRolesResponse> getUserRoles(@PathVariable(value = "user_id") long userId) {
 		log.info("Controller getUserRoles userId: {}", userId);
 		
 		GetUserRolesResponse response = this.userRoleService.getUserRoles(userId);
@@ -42,7 +42,7 @@ public class UserRoleController {
     }
 	
 	@PostMapping("/user/role")
-	public ResponseEntity<Void> createUserRole(@RequestBody CreateUserRoleRequest request) throws Exception {
+	public ResponseEntity<Void> createUserRole(@RequestBody CreateUserRoleRequest request) {
 		log.info("Controller createUserRole userId: {}", request.getUserId());
 		
 		IamMsUserRole iamMsUserRole = this.userRoleService.createUserRole(request);
@@ -55,7 +55,7 @@ public class UserRoleController {
 	}
 	
 	@DeleteMapping("/user/role")
-	public ResponseEntity<Void> deleteUserRole(@RequestBody DeleteUserRoleRequest request) throws Exception {
+	public ResponseEntity<Void> deleteUserRole(@RequestBody DeleteUserRoleRequest request) {
 		log.info("Controller deleteUserRole userRoleId: {}", request.getUserRoleId());
 		
 		this.userRoleService.deleteUserRole(request.getUserRoleId());

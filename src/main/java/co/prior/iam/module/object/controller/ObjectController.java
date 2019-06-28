@@ -1,20 +1,28 @@
 package co.prior.iam.module.object.controller;
 
 
-import co.prior.iam.entity.IamMsObject;
+import java.util.List;
+
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
 import co.prior.iam.module.object.model.request.ObjectCreateReq;
 import co.prior.iam.module.object.model.request.ObjectDeleteReq;
 import co.prior.iam.module.object.model.request.ObjectEditReq;
 import co.prior.iam.module.object.model.respone.ObjectRespone;
-import co.prior.iam.module.object.service.*;
+import co.prior.iam.module.object.service.ObjectChildInqueryService;
+import co.prior.iam.module.object.service.ObjectCreateService;
+import co.prior.iam.module.object.service.ObjectDeleteService;
+import co.prior.iam.module.object.service.ObjectEditService;
+import co.prior.iam.module.object.service.ObjectInqueryService;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
-import java.util.Optional;
 
 @Slf4j
 @RestController
@@ -45,7 +53,7 @@ public class ObjectController {
 
 
     @PostMapping("/object")
-    public ResponseEntity<Void> createObject(@RequestBody ObjectCreateReq objectCreateReq) throws Exception {
+    public ResponseEntity<Void> createObject(@RequestBody ObjectCreateReq objectCreateReq) {
         log.info("Controller createObject: {}", objectCreateReq);
         objectCreateService.createObject(objectCreateReq);
 
@@ -56,7 +64,7 @@ public class ObjectController {
     }
 
     @PutMapping("/object")
-    public ResponseEntity<Void> editObject(@RequestBody ObjectEditReq objectEditReq) throws Exception {
+    public ResponseEntity<Void> editObject(@RequestBody ObjectEditReq objectEditReq) {
 
         log.info("Controller editObject: {}", objectEditReq);
         objectEditService.editObject(objectEditReq);
@@ -78,7 +86,7 @@ public class ObjectController {
 
 
     @GetMapping("/objects/system/{systemId}")
-    public ResponseEntity<List<ObjectRespone>> inqueryObject(@PathVariable Long systemId) throws Exception {
+    public ResponseEntity<List<ObjectRespone>> inqueryObject(@PathVariable Long systemId) {
         log.info("Controller inqueryObject: {}", systemId);
         List<ObjectRespone> list = objectInqueryService.inqueryObject(systemId);
 
@@ -91,7 +99,7 @@ public class ObjectController {
     }
 
     @GetMapping("/objects/{objectId}/system/{systemId}")
-    public ResponseEntity<List<ObjectRespone>> inqueryChildObject(@PathVariable Long systemId ,@PathVariable  Long objectId) throws Exception {
+    public ResponseEntity<List<ObjectRespone>> inqueryChildObject(@PathVariable Long systemId ,@PathVariable  Long objectId) {
         log.info("Controller inqueryChildObject: {}", objectId );
         List<ObjectRespone> list = objectChildInqueryService.inqueryChildObject(systemId ,objectId);
 

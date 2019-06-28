@@ -52,7 +52,7 @@ public class UserController {
 	
 	@GetMapping("/user/{user_id}")
 //    @PreAuthorize("hasRole('ROLE_IAM_ADMIN')")
-    public ResponseEntity<GetUserResponse> getUser(@PathVariable(value = "user_id") long userId) throws Exception {
+    public ResponseEntity<GetUserResponse> getUser(@PathVariable(value = "user_id") long userId) {
 		log.info("Controller getUser userId: {}", userId);
 		
 		GetUserResponse response = this.userService.getUser(userId);
@@ -62,7 +62,7 @@ public class UserController {
 	
 	@PutMapping("/user")
 //  @PreAuthorize("hasRole('ROLE_IAM_ADMIN')")
-	public ResponseEntity<Void> editUser(@Valid @RequestBody EditUserRequest request) throws Exception {
+	public ResponseEntity<Void> editUser(@Valid @RequestBody EditUserRequest request) {
 		log.info("Controller editUser userId: {}", request.getUserId());
 		
 		this.userService.editUser(request);
@@ -72,7 +72,7 @@ public class UserController {
 	
 	@DeleteMapping("/user")
 //	@PreAuthorize("hasRole('ROLE_IAM_ADMIN')")
-	public ResponseEntity<Void> deleteUser(@RequestBody DeleteUserRequest request) throws Exception {
+	public ResponseEntity<Void> deleteUser(@RequestBody DeleteUserRequest request) {
 		log.info("Controller deleteUser userId: {}", request.getUserId());
 		
 		this.userService.deleteUser(request.getUserId());

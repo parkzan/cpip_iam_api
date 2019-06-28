@@ -25,7 +25,7 @@ public class RoleDeleteService {
 	}
 
 	@Transactional
-	public void deleteRole(RoleDeleteReq roleDeleteReq) throws Exception {
+	public void deleteRole(RoleDeleteReq roleDeleteReq) {
 		log.info("Service deleteRole: {}", roleDeleteReq);
 
 		IamMsRole iamMsRole = roleRepository

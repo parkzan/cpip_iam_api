@@ -18,6 +18,10 @@ import org.springframework.util.StringUtils;
 
 import co.prior.iam.entity.IamMsSystem;
 import co.prior.iam.entity.IamMsUser;
+import co.prior.iam.error.exception.BadRequestException;
+import co.prior.iam.error.exception.DataDuplicateException;
+import co.prior.iam.error.exception.DataNotFoundException;
+import co.prior.iam.error.exception.UnauthorizedException;
 import co.prior.iam.model.AnswerFlag;
 import co.prior.iam.module.auth.model.request.ActivateUserRequest;
 import co.prior.iam.module.auth.model.request.ChangePasswordRequest;
@@ -65,7 +69,7 @@ public class AuthService {
     }
     
     @Transactional(noRollbackFor = Exception.class)
-    public AuthResponse signIn(String userCode, String password) throws Exception {
+    public AuthResponse signIn(String userCode, String password) {
     	log.info("Service signIn userCode: {}", userCode);
     	
     	try {
@@ -86,28 +90,28 @@ public class AuthService {
 	        	this.iamMsUserRepository.save(user);
 	        });
     		
-        	throw new Exception("user code or password incorrect");
+        	throw new UnauthorizedException("user code or password incorrect");
 		
         } catch (DisabledException e) {
-        	throw new Exception("user code is disabled");
+        	throw new UnauthorizedException("user code is disabled");
         	
         } catch (LockedException e) {
-        	throw new Exception("user code is locked");
+        	throw new UnauthorizedException("user code is locked");
         }
     }
     
     @Transactional
-    public IamMsUser signUp(SignUpRequest request) throws Exception {
+    public IamMsUser signUp(SignUpRequest request) {
     	log.info("Service signUp systemId: {}, userCode: {}", request.getSystemId(), request.getUserCode());
     	
     	if(this.iamMsUserRepository.existsByIamMsSystem_SystemIdAndUserCodeAndIsDeleted(
     			request.getSystemId(), request.getUserCode(), AnswerFlag.N.toString())) {
     		
-            throw new Exception("user code is already exist");
+            throw new DataDuplicateException("user code is already exist");
         }
 
     	IamMsSystem iamMsSystem = this.iamMsSystemRepository.findBySystemIdAndIsDeleted(request.getSystemId(), AnswerFlag.N.toString())
-    			.orElseThrow(() -> new Exception("system not found"));
+    			.orElseThrow(() -> new DataNotFoundException("system not found"));
     			
     	String isIamAdmin = request.getIsIamAdmin().toString();
         IamMsUser iamMsUser = IamMsUser.builder()
@@ -131,12 +135,16 @@ public class AuthService {
     }
     
     @Transactional
-    public void activateUser(ActivateUserRequest request) throws Exception {
+    public void activateUser(ActivateUserRequest request) {
     	log.info("Service activateUser systemId: {}, userCode: {}", request.getSystemId(), request.getUserCode());
     	
-    	IamMsUser iamMsUser = this.iamMsUserRepository.findByIamMsSystem_SystemIdAndUserCodeAndUserPasswordAndIsDeleted(
-    			request.getSystemId(), request.getUserCode(), passwordEncoder.encode(request.getOldPassword()), AnswerFlag.N.toString())
-    			.orElseThrow(() -> new Exception("password incorrect"));
+    	IamMsUser iamMsUser = this.iamMsUserRepository.findByIamMsSystem_SystemIdAndUserCodeAndIsDeleted(
+    			request.getSystemId(), request.getUserCode(), AnswerFlag.N.toString())
+    			.orElseThrow(() -> new DataNotFoundException("user not found"));
+    	
+    	if (!passwordEncoder.matches(request.getOldPassword(), iamMsUser.getUserPassword())) {
+    		throw new BadRequestException("password incorrect");
+    	}
     	
     	iamMsUser.setUserPassword(passwordEncoder.encode(request.getNewPassword()));
     	iamMsUser.setFirstTimeLogin(AnswerFlag.N.toString());
@@ -144,18 +152,21 @@ public class AuthService {
     }
     
     @Transactional
-    public void changePassword(ChangePasswordRequest request) throws Exception {
+    public void changePassword(ChangePasswordRequest request) {
     	log.info("Service changePassword userId: {}", request.getUserId());
     	
-    	IamMsUser iamMsUser = this.iamMsUserRepository.findByUserIdAndUserPasswordAndIsDeleted(
-    			request.getUserId(), passwordEncoder.encode(request.getOldPassword()), AnswerFlag.N.toString())
-    			.orElseThrow(() -> new Exception("password incorrect"));
+    	IamMsUser iamMsUser = this.iamMsUserRepository.findByUserIdAndIsDeleted(request.getUserId(), AnswerFlag.N.toString())
+    			.orElseThrow(() -> new DataNotFoundException("user not found"));
+    	
+    	if (!passwordEncoder.matches(request.getOldPassword(), iamMsUser.getUserPassword())) {
+    		throw new BadRequestException("password incorrect");
+    	}
     	
     	iamMsUser.setUserPassword(passwordEncoder.encode(request.getNewPassword()));
     	this.iamMsUserRepository.save(iamMsUser);
     }
     
-    public AuthResponse refreshToken(String token) throws Exception {
+    public AuthResponse refreshToken(String token) {
     	log.info("Service refreshToken token: {}", token);
     	
     	if (StringUtils.hasText(token) && jwtTokenProvider.validateToken(token, refreshSecret)) {
@@ -167,7 +178,7 @@ public class AuthService {
             return this.generateAuthResponse(authentication);
     	}
     	
-    	throw new Exception("refresh token invalid");
+    	throw new BadRequestException("refresh token invalid");
     }
 
 	private AuthResponse generateAuthResponse(Authentication authentication) {

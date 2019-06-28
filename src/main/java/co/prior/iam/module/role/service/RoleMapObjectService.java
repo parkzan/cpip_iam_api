@@ -37,7 +37,7 @@ public class RoleMapObjectService {
 	}
 
 	@Transactional
-	public void editRoleObject(RoleMapObjectReq roleMapObjectReq) throws Exception {
+	public void editRoleObject(RoleMapObjectReq roleMapObjectReq) {
 		log.info("Service editRoleObject: {}", roleMapObjectReq);
 
 		List<IamMsRoleObject> objectsList = roleObjectRepository

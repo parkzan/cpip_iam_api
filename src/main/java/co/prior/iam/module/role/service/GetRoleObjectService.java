@@ -1,9 +1,14 @@
 package co.prior.iam.module.role.service;
 
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import co.prior.iam.entity.IamMsRole;
 import co.prior.iam.entity.IamMsRoleObject;
-import co.prior.iam.entity.IamMsSystem;
 import co.prior.iam.error.exception.DataNotFoundException;
 import co.prior.iam.model.AnswerFlag;
 import co.prior.iam.module.role.model.respone.ObjectModel;
@@ -13,13 +18,6 @@ import co.prior.iam.repository.RoleObjectRepository;
 import co.prior.iam.repository.RoleRepository;
 import co.prior.iam.repository.SystemRepository;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Stack;
-import java.util.concurrent.CopyOnWriteArrayList;
 
 @Slf4j
 @Service
@@ -39,7 +37,7 @@ public class GetRoleObjectService {
     }
 
     @Transactional
-    public RoleMapObjectRespone getRoleObject(Long systemId ,Long roleId) throws Exception{
+    public RoleMapObjectRespone getRoleObject(Long systemId ,Long roleId) {
         log.info("Service getRoleObject: {}", roleId);
 
 		IamMsRole iamMsRole = roleRepository
@@ -75,7 +73,7 @@ public class GetRoleObjectService {
     }
 
     @Transactional
-    public List<RoleMapObjectRespone> allRoleMapObject(long systemId) throws Exception{
+    public List<RoleMapObjectRespone> allRoleMapObject(long systemId) {
 
 
         List<IamMsRole> listRole = roleRepository.findByIamMsSystem_SystemIdAndIsDeleted(systemId,AnswerFlag.N.toString());
@@ -118,7 +116,7 @@ public class GetRoleObjectService {
 
     }
 
-    private void setObjectChild(IamMsRoleObject root ,List<IamMsRoleObject> list  ,List<ObjectModel> listChild ) throws Exception{
+    private void setObjectChild(IamMsRoleObject root ,List<IamMsRoleObject> list  ,List<ObjectModel> listChild ) {
 
             ObjectModel childObjectModel = new ObjectModel();
 

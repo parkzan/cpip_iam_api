@@ -1,21 +1,18 @@
 package co.prior.iam.module.object.service;
 
-import co.prior.iam.entity.IamMsObject;
-import co.prior.iam.entity.IamMsRoleObject;
-import co.prior.iam.entity.IamMsSystem;
-import co.prior.iam.error.exception.DataNotFoundException;
-import co.prior.iam.model.AnswerFlag;
-import co.prior.iam.module.object.model.respone.ObjectRespone;
-import co.prior.iam.module.role.model.respone.ObjectModel;
-import co.prior.iam.repository.ObjectRepository;
-import co.prior.iam.repository.SystemRepository;
-import lombok.extern.slf4j.Slf4j;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import co.prior.iam.entity.IamMsObject;
+import co.prior.iam.error.exception.DataNotFoundException;
+import co.prior.iam.model.AnswerFlag;
+import co.prior.iam.module.object.model.respone.ObjectRespone;
+import co.prior.iam.repository.ObjectRepository;
+import co.prior.iam.repository.SystemRepository;
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Service
@@ -32,7 +29,7 @@ public class ObjectInqueryService {
 	}
 
 	@Transactional
-	public List<ObjectRespone> inqueryObject(Long systemId) throws Exception {
+	public List<ObjectRespone> inqueryObject(Long systemId) {
 		log.info("Service inqueryObject: {}", systemId);
 
 		List<IamMsObject> listModel = objectRepository.findByIamMsSystem_SystemIdAndIsDeleted(systemId,
@@ -67,17 +64,11 @@ public class ObjectInqueryService {
 		throw new DataNotFoundException("data not found");
 	}
 
-	private long countObjectChild(IamMsObject root , List<IamMsObject> list  , long count ) throws Exception{
-
+	private long countObjectChild(IamMsObject root , List<IamMsObject> list  , long count ) {
 			for (IamMsObject obj : list) {
-				if(obj.getObjectParent() != null){
-					if (obj.getObjectParent().getObjectId() == root.getObjectId()) {
-
-						count++ ;
-						countObjectChild(obj, list ,count );
-
-					}
-
+				if(obj.getObjectParent() != null && obj.getObjectParent().getObjectId().equals(root.getObjectId())) {
+					count++ ;
+					countObjectChild(obj, list ,count );
 				}
 
 			}

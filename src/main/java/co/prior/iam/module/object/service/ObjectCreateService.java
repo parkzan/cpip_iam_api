@@ -29,7 +29,7 @@ public class ObjectCreateService {
 	}
 
 	@Transactional
-	public void createObject(ObjectCreateReq objectCreateReq) throws Exception {
+	public void createObject(ObjectCreateReq objectCreateReq) {
 		log.info("Service createObject: {}", objectCreateReq);
 		IamMsSystem iamMsSystem = systemRepository
 				.findBySystemIdAndIsDeleted(objectCreateReq.getSystemId(), AnswerFlag.N.toString())
@@ -49,8 +49,9 @@ public class ObjectCreateService {
 			model.setObjectParent(parentObject);
 			objectRepository.save(model);
 
-		} else
+		} else {
 			throw new DataDuplicateException("99", "Object code duplicate");
+		}
 
 	}
 
