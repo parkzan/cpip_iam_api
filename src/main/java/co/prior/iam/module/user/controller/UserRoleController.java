@@ -2,8 +2,6 @@ package co.prior.iam.module.user.controller;
 
 import java.net.URI;
 
-import javax.validation.Valid;
-
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -25,7 +23,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @RestController
 @RequestMapping(path = "/api")
-@PreAuthorize("hasRole('ROLE_IAM_ADMIN')")
+//@PreAuthorize("hasRole('ROLE_IAM_ADMIN')")
 public class UserRoleController {
 
 	private final UserRoleService userRoleService;
@@ -44,7 +42,7 @@ public class UserRoleController {
     }
 	
 	@PostMapping("/user/role")
-	public ResponseEntity<Void> createUserRole(@Valid @RequestBody CreateUserRoleRequest request) throws Exception {
+	public ResponseEntity<Void> createUserRole(@RequestBody CreateUserRoleRequest request) throws Exception {
 		log.info("Controller createUserRole userId: {}", request.getUserId());
 		
 		IamMsUserRole iamMsUserRole = this.userRoleService.createUserRole(request);
