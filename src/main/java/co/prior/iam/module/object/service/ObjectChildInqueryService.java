@@ -1,18 +1,18 @@
 package co.prior.iam.module.object.service;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import co.prior.iam.entity.IamMsObject;
-import co.prior.iam.entity.IamMsSystem;
 import co.prior.iam.error.exception.DataNotFoundException;
 import co.prior.iam.model.AnswerFlag;
 import co.prior.iam.module.object.model.respone.ObjectRespone;
 import co.prior.iam.repository.ObjectRepository;
 import co.prior.iam.repository.SystemRepository;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Slf4j
 @Service
@@ -29,7 +29,7 @@ public class ObjectChildInqueryService {
 	}
 
 	@Transactional
-	public List<ObjectRespone> inqueryChildObject(Long systemId, Long objectId) throws Exception {
+	public List<ObjectRespone> inqueryChildObject(Long systemId, Long objectId) {
 		log.info("Service inqueryChildObject: {}", objectId);
 
 		List<IamMsObject> listObject = objectRepository.findByIamMsSystem_SystemIdAndObjectParent_ObjectIdAndIsDeleted(
@@ -60,19 +60,12 @@ public class ObjectChildInqueryService {
 
 	}
 
-	private long countObjectChild(IamMsObject root , List<IamMsObject> list  , long count ) throws Exception{
-
+	private long countObjectChild(IamMsObject root , List<IamMsObject> list  , long count ) {
 		for (IamMsObject obj : list) {
-			if(obj.getObjectParent() != null){
-				if (obj.getObjectParent().getObjectId() == root.getObjectId()) {
-
-					count++ ;
-					countObjectChild(obj, list ,count );
-
-				}
-
+			if(obj.getObjectParent() != null && obj.getObjectParent().getObjectId().equals(root.getObjectId())) {
+				count++ ;
+				countObjectChild(obj, list ,count );
 			}
-
 		}
 		return count;
 	}

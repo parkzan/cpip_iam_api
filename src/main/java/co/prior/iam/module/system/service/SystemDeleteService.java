@@ -21,7 +21,7 @@ public class SystemDeleteService {
 	}
 
 	@Transactional
-	public void deleteSystem(SystemDeleteReq systemDeleteReq) throws Exception {
+	public void deleteSystem(SystemDeleteReq systemDeleteReq) {
 		log.info("Service deleteSystem: {}", systemDeleteReq);
 
 		IamMsSystem iamMsSystem = systemRepository

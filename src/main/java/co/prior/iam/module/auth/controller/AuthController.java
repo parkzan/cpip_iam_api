@@ -33,7 +33,7 @@ public class AuthController {
 	}
     
 	@PostMapping("/sign-in")
-    public ResponseEntity<AuthResponse> signIn(@Valid @RequestBody SignInRequest request) throws Exception {
+    public ResponseEntity<AuthResponse> signIn(@Valid @RequestBody SignInRequest request) {
 		log.info("Controller signIn userCode: {}", request.getUserCode());
 		
 		AuthResponse response = this.authService.signIn(request.getUserCode(), request.getPassword());
@@ -42,7 +42,7 @@ public class AuthController {
     }
 
     @PostMapping("/sign-up")
-    public ResponseEntity<Void> signUp(@Valid @RequestBody SignUpRequest request) throws Exception {
+    public ResponseEntity<Void> signUp(@Valid @RequestBody SignUpRequest request) {
     	log.info("Controller signUp systemId: {}, userCode: {}", request.getSystemId(), request.getUserCode());
     	
     	IamMsUser iamMsUser = this.authService.signUp(request);
@@ -55,7 +55,7 @@ public class AuthController {
     }
     
     @PostMapping("/activate")
-    public ResponseEntity<Void> activateUser(@Valid @RequestBody ActivateUserRequest request) throws Exception {
+    public ResponseEntity<Void> activateUser(@Valid @RequestBody ActivateUserRequest request) {
     	log.info("Controller activateUser systemId: {}, userCode: {}", request.getSystemId(), request.getUserCode());
     	
     	this.authService.activateUser(request);
@@ -64,7 +64,7 @@ public class AuthController {
     }
     
     @PostMapping("/password/new")
-    public ResponseEntity<Void> changePassword(@Valid @RequestBody ChangePasswordRequest request) throws Exception {
+    public ResponseEntity<Void> changePassword(@Valid @RequestBody ChangePasswordRequest request) {
     	log.info("Controller changePassword userId: {}", request.getUserId());
     	
     	this.authService.changePassword(request);
@@ -73,7 +73,7 @@ public class AuthController {
     }
     
     @PostMapping("/refresh")
-    public ResponseEntity<AuthResponse> refreshToken(@Valid @RequestBody RefreshTokenRequest request) throws Exception {
+    public ResponseEntity<AuthResponse> refreshToken(@Valid @RequestBody RefreshTokenRequest request) {
     	log.info("Controller refreshToken token: {}", request.getRefreshToken());
     	
     	AuthResponse response = this.authService.refreshToken(request.getRefreshToken());

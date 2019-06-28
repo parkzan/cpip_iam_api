@@ -25,9 +25,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import co.prior.iam.model.JwtConstants;
-import lombok.extern.slf4j.Slf4j;
 
-@Slf4j
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
 	@Value("${security.jwt.access.secret}")
@@ -46,22 +44,17 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws IOException, ServletException {
 		ResettableStreamHttpServletRequest wrappedRequest = new ResettableStreamHttpServletRequest((HttpServletRequest) request);
 		
-        try {
-            String jwt = getAuthentication(wrappedRequest);
+        String jwt = getAuthentication(wrappedRequest);
 
-            if (StringUtils.hasText(jwt) && jwtTokenProvider.validateToken(jwt, accessSecret)) {
-                Long userId = jwtTokenProvider.getUserIdFromJWT(jwt, accessSecret);
+        if (StringUtils.hasText(jwt) && jwtTokenProvider.validateToken(jwt, accessSecret)) {
+            Long userId = jwtTokenProvider.getUserIdFromJWT(jwt, accessSecret);
 
-                UserDetails userDetails = userDetailsService.loadUserById(userId);
-                UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
-                		userDetails, null, userDetails.getAuthorities());
-                authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+            UserDetails userDetails = userDetailsService.loadUserById(userId);
+            UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
+            		userDetails, null, userDetails.getAuthorities());
+            authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 
-                SecurityContextHolder.getContext().setAuthentication(authentication);
-            }
-            
-        } catch (Exception ex) {
-            log.error("could not set user authentication in security context", ex);
+            SecurityContextHolder.getContext().setAuthentication(authentication);
         }
 
         filterChain.doFilter(request, response);

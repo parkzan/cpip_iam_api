@@ -1,25 +1,19 @@
 package co.prior.iam.module.role.service;
 
+import java.util.Optional;
+
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import co.prior.iam.entity.IamMsRole;
 import co.prior.iam.entity.IamMsSystem;
 import co.prior.iam.error.exception.DataDuplicateException;
 import co.prior.iam.error.exception.DataNotFoundException;
 import co.prior.iam.model.AnswerFlag;
 import co.prior.iam.module.role.model.request.RoleCreateReq;
-import co.prior.iam.module.role.model.respone.RoleRespone;
-import co.prior.iam.repository.ObjectRepository;
 import co.prior.iam.repository.RoleRepository;
 import co.prior.iam.repository.SystemRepository;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Date;
-import java.util.Optional;
 
 @Slf4j
 @Service
@@ -36,7 +30,7 @@ public class RoleCreateService {
 	}
 
 	@Transactional
-	public void createRole(RoleCreateReq roleCreateReq) throws Exception {
+	public void createRole(RoleCreateReq roleCreateReq) {
 		log.info("Service createRole: {}", roleCreateReq);
 		
 		IamMsSystem iamMsSystem = systemRepository

@@ -1,21 +1,15 @@
 package co.prior.iam.module.role.service;
 
-import co.prior.iam.entity.IamMsRole;
-import co.prior.iam.entity.IamMsSystem;
-import co.prior.iam.error.exception.DataNotFoundException;
-import co.prior.iam.model.AnswerFlag;
-import co.prior.iam.module.role.model.request.RoleEditReq;
-import co.prior.iam.module.role.model.respone.RoleRespone;
-import co.prior.iam.repository.RoleRepository;
-import co.prior.iam.repository.SystemRepository;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Optional;
+import co.prior.iam.entity.IamMsRole;
+import co.prior.iam.error.exception.DataNotFoundException;
+import co.prior.iam.model.AnswerFlag;
+import co.prior.iam.module.role.model.request.RoleEditReq;
+import co.prior.iam.repository.RoleRepository;
+import co.prior.iam.repository.SystemRepository;
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Service
@@ -32,7 +26,7 @@ public class RoleEditService {
 	}
 
 	@Transactional
-	public void editRole(RoleEditReq roleEditReq) throws Exception {
+	public void editRole(RoleEditReq roleEditReq) {
 		log.info("Service editRole: {}", roleEditReq);
 
 		IamMsRole iamMsRole = roleRepository

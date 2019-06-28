@@ -1,14 +1,15 @@
 package co.prior.iam.module.role.service;
 
+import java.util.List;
+
+import org.springframework.stereotype.Service;
+
 import co.prior.iam.entity.IamMsRole;
 import co.prior.iam.error.exception.DataNotFoundException;
 import co.prior.iam.model.AnswerFlag;
 import co.prior.iam.repository.RoleRepository;
 import co.prior.iam.repository.SystemRepository;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Slf4j
 @Service
@@ -22,7 +23,7 @@ public class RoleInqueryService {
 		this.systemRepository = systemRepository;
 	}
 
-	public List<IamMsRole> inqueryRole(Long systemId) throws Exception {
+	public List<IamMsRole> inqueryRole(Long systemId) {
 		log.info("Service inqueryRole: {}", systemId);
 
 		List<IamMsRole> roleList = roleRepository.findByIamMsSystem_SystemIdAndIsDeleted(systemId,

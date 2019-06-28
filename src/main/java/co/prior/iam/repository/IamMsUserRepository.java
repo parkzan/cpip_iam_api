@@ -15,14 +15,10 @@ public interface IamMsUserRepository extends PagingAndSortingRepository<IamMsUse
 	Page<IamMsUser> findPageableByIamMsSystem_SystemIdAndIsDeleted(long systemId, String isDeleted, Pageable pageable);
 	
 	Optional<IamMsUser> findByUserIdAndIsDeleted(long userId, String isDeleted);
-
 	
     Optional<IamMsUser> findByUserCodeAndIsDeleted(String userCode, String isDeleted);
     
-    Optional<IamMsUser> findByUserIdAndUserPasswordAndIsDeleted(long userId, String userPassword, String isDeleted);
-    
-    Optional<IamMsUser> findByIamMsSystem_SystemIdAndUserCodeAndUserPasswordAndIsDeleted(
-    		long systemId, String userCode, String userPassword, String isDeleted);
+    Optional<IamMsUser> findByIamMsSystem_SystemIdAndUserCodeAndIsDeleted(long systemId, String userCode, String isDeleted);
 
     Boolean existsByIamMsSystem_SystemIdAndUserCodeAndIsDeleted(long systemId, String userCode, String isDeleted);
 }

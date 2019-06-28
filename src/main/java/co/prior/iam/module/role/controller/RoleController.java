@@ -1,23 +1,27 @@
 package co.prior.iam.module.role.controller;
 
 
+import java.util.List;
+
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
 import co.prior.iam.entity.IamMsRole;
 import co.prior.iam.module.role.model.request.RoleCreateReq;
 import co.prior.iam.module.role.model.request.RoleDeleteReq;
 import co.prior.iam.module.role.model.request.RoleEditReq;
-import co.prior.iam.module.role.model.respone.RoleRespone;
 import co.prior.iam.module.role.service.RoleCreateService;
 import co.prior.iam.module.role.service.RoleDeleteService;
 import co.prior.iam.module.role.service.RoleEditService;
 import co.prior.iam.module.role.service.RoleInqueryService;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
-import java.util.Optional;
 
 @Slf4j
 @RestController
@@ -44,7 +48,7 @@ public class RoleController {
 
 
     @PostMapping("/role")
-    public ResponseEntity<Void> createRole(@RequestBody RoleCreateReq roleCreateReq) throws Exception {
+    public ResponseEntity<Void> createRole(@RequestBody RoleCreateReq roleCreateReq) {
         log.info("Controller createRole: {}", roleCreateReq );
         roleCreateService.createRole(roleCreateReq);
 
@@ -52,7 +56,7 @@ public class RoleController {
 
     }
     @DeleteMapping("/role")
-    public ResponseEntity<Void> deleteRole(@RequestBody RoleDeleteReq roleDeleteReq)  throws Exception {
+    public ResponseEntity<Void> deleteRole(@RequestBody RoleDeleteReq roleDeleteReq) {
         log.info("Controller deleteRole: {}", roleDeleteReq );
         roleDeleteService.deleteRole(roleDeleteReq);
 
@@ -62,7 +66,7 @@ public class RoleController {
     }
 
     @PutMapping("/role")
-    public ResponseEntity<Void> editRole(@RequestBody RoleEditReq roleEditReq) throws Exception{
+    public ResponseEntity<Void> editRole(@RequestBody RoleEditReq roleEditReq) {
         log.info("Controller editRole: {}", roleEditReq );
         roleEditService.editRole(roleEditReq);
 
@@ -74,7 +78,7 @@ public class RoleController {
 
 
     @GetMapping("/role/system/{systemId}")
-    public ResponseEntity<List<IamMsRole>> inqueryRole(@PathVariable Long systemId) throws Exception {
+    public ResponseEntity<List<IamMsRole>> inqueryRole(@PathVariable Long systemId) {
         log.info("Controller inqueryRole: {}", systemId );
        List<IamMsRole> list = roleInqueryService.inqueryRole(systemId);
 

@@ -20,7 +20,7 @@ public class SystemInqueryService {
 		this.systemRepository = systemRepository;
 	}
 
-	public List<IamMsSystem> inquerySystem() throws Exception {
+	public List<IamMsSystem> inquerySystem() {
 		log.info("Service inquerySystem: {}");
 
 		List<IamMsSystem> iamMsSystemList = systemRepository.findByIsDeleted(AnswerFlag.N.toString());

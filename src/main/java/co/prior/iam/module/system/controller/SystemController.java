@@ -4,9 +4,7 @@ package co.prior.iam.module.system.controller;
 
 import java.util.List;
 
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -22,8 +20,8 @@ import co.prior.iam.module.system.model.request.SystemEditReq;
 import co.prior.iam.module.system.service.SystemCreateService;
 import co.prior.iam.module.system.service.SystemDeleteService;
 import co.prior.iam.module.system.service.SystemEditService;
-
 import co.prior.iam.module.system.service.SystemInqueryService;
+import lombok.extern.slf4j.Slf4j;
 
 
 @Slf4j
@@ -51,7 +49,7 @@ public class SystemController {
     }
 
     @PostMapping("/system")
-    public ResponseEntity<Void> createSystem(@RequestBody SystemAddReq systemAddReq) throws Exception {
+    public ResponseEntity<Void> createSystem(@RequestBody SystemAddReq systemAddReq) {
 
         log.info("Controller createSystem: {}", systemAddReq );
         systemCreateService.createSystem(systemAddReq);
@@ -61,7 +59,7 @@ public class SystemController {
     }
 
     @DeleteMapping("/system")
-    public ResponseEntity<Void> deleteSystem(@RequestBody SystemDeleteReq systemDeleteReq) throws Exception  {
+    public ResponseEntity<Void> deleteSystem(@RequestBody SystemDeleteReq systemDeleteReq) {
 
         log.info("Controller deleteSystem: {}", systemDeleteReq );
         systemDeleteService.deleteSystem(systemDeleteReq);
@@ -71,7 +69,7 @@ public class SystemController {
     }
 
     @PutMapping("/system")
-    public ResponseEntity<Void> editSystem(@RequestBody SystemEditReq systemEditReq) throws Exception {
+    public ResponseEntity<Void> editSystem(@RequestBody SystemEditReq systemEditReq) {
         log.info("Controller editSystem: {}", systemEditReq );
         systemEditService.editSystem(systemEditReq);
 
@@ -80,7 +78,7 @@ public class SystemController {
     }
 
     @GetMapping("/systems")
-    public ResponseEntity<List<IamMsSystem>> inquerySystem() throws Exception  {
+    public ResponseEntity<List<IamMsSystem>> inquerySystem() {
         log.info("Controller inquerySystem: {}");
         List<IamMsSystem> list = systemInqueryService.inquerySystem();
 

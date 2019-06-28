@@ -78,7 +78,7 @@ public class UserService {
 				.build();
 	}
 	
-	public GetUserResponse getUser(long userId) throws Exception {
+	public GetUserResponse getUser(long userId) {
 		log.info("Service getUser userId: {}", userId);
 		
 		IamMsUser iamMsUser = this.iamMsUserRepository.findByUserIdAndIsDeleted(userId, AnswerFlag.N.toString())
@@ -100,7 +100,7 @@ public class UserService {
 	}
 	
 	@Transactional
-	public void editUser(EditUserRequest request) throws Exception {
+	public void editUser(EditUserRequest request) {
 		log.info("Service editUser userId: {}", request.getUserId());
 		
 		IamMsUser iamMsUser = this.iamMsUserRepository.findByUserIdAndIsDeleted(request.getUserId(), AnswerFlag.N.toString())
@@ -117,7 +117,7 @@ public class UserService {
 	}
 	
 	@Transactional
-	public void deleteUser(long userId) throws Exception {
+	public void deleteUser(long userId) {
 		log.info("Service deleteUser userId: {}", userId);
 		
 		IamMsUser iamMsUser = this.iamMsUserRepository.findByUserIdAndIsDeleted(userId, AnswerFlag.N.toString())

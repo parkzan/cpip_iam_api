@@ -10,6 +10,8 @@ import co.prior.iam.entity.IamMsRole;
 import co.prior.iam.entity.IamMsSystem;
 import co.prior.iam.entity.IamMsUser;
 import co.prior.iam.entity.IamMsUserRole;
+import co.prior.iam.error.exception.DataDuplicateException;
+import co.prior.iam.error.exception.DataNotFoundException;
 import co.prior.iam.model.AnswerFlag;
 import co.prior.iam.module.user.model.request.CreateUserRoleRequest;
 import co.prior.iam.module.user.model.response.GetUserRolesResponse;
@@ -38,12 +40,12 @@ public class UserRoleService {
 		this.iamMsUserRoleRepository = iamMsUserRoleRepository;
 	}
 	
-	public GetUserRolesResponse getUserRoles(long userId) throws Exception {
+	public GetUserRolesResponse getUserRoles(long userId) {
 		log.info("Service getUserRoles userId: {}", userId);
 		
 		List<IamMsUserRole> iamMsUserRoles = this.iamMsUserRoleRepository.findByIamMsUser_UserIdAndIsDeleted(userId, AnswerFlag.N.toString());
 		if (iamMsUserRoles.isEmpty()) {
-			throw new Exception("user role not found");
+			throw new DataNotFoundException("user role not found");
 		}
 		
 		List<UserRole> userRoles = new ArrayList<>();
@@ -70,7 +72,7 @@ public class UserRoleService {
 	}
 	
 	@Transactional
-	public IamMsUserRole createUserRole(CreateUserRoleRequest request) throws Exception {
+	public IamMsUserRole createUserRole(CreateUserRoleRequest request) {
 		log.info("Service createUserRole userId: {}", request.getUserId());
 		
 		long systemId = request.getSystemId();
@@ -80,15 +82,15 @@ public class UserRoleService {
 		if (this.iamMsUserRoleRepository.existsByIamMsSystem_SystemIdAndIamMsUser_UserIdAndIamMsRole_RoleIdAndIsDeleted(
 				systemId, userId, roleId, AnswerFlag.N.toString())) {
 			
-			throw new Exception("user role is duplicated");
+			throw new DataDuplicateException("user role is duplicated");
 		}
 		
 		IamMsSystem iamMsSystem = this.iamMsSystemRepository.findBySystemIdAndIsDeleted(systemId, AnswerFlag.N.toString())
-				.orElseThrow(() -> new Exception("system not found"));
+				.orElseThrow(() -> new DataNotFoundException("system not found"));
 		IamMsUser iamMsUser = this.iamMsUserRepository.findByUserIdAndIsDeleted(userId, AnswerFlag.N.toString())
-				.orElseThrow(() -> new Exception("user not found"));
+				.orElseThrow(() -> new DataNotFoundException("user not found"));
 		IamMsRole iamMsRole = this.iamMsRoleRepository.findByRoleIdAndIsDeleted(roleId, AnswerFlag.N.toString())
-				.orElseThrow(() -> new Exception("role not found"));
+				.orElseThrow(() -> new DataNotFoundException("role not found"));
 		
 		IamMsUserRole iamMsUserRole = IamMsUserRole.builder()
 				.iamMsSystem(iamMsSystem)
@@ -100,11 +102,11 @@ public class UserRoleService {
 	}
 	
 	@Transactional
-	public void deleteUserRole(long userRoleId) throws Exception {
+	public void deleteUserRole(long userRoleId) {
 		log.info("Service deleteUserRole userRoleId: {}", userRoleId);
 		
 		IamMsUserRole iamMsUserRole = this.iamMsUserRoleRepository.findByUserRoleIdAndIsDeleted(userRoleId, AnswerFlag.N.toString())
-				.orElseThrow(() -> new Exception("user role not found"));
+				.orElseThrow(() -> new DataNotFoundException("user role not found"));
 		
 		iamMsUserRole.setIsDeleted(AnswerFlag.Y.toString());
 		this.iamMsUserRoleRepository.save(iamMsUserRole);
