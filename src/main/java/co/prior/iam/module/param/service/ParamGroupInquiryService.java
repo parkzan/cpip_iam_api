@@ -3,7 +3,8 @@ package co.prior.iam.module.param.service;
 
 import co.prior.iam.entity.IamMsParameterGroup;
 import co.prior.iam.entity.IamMsParameterInfo;
-import co.prior.iam.error.DataNotFoundException;
+
+import co.prior.iam.error.exception.DataNotFoundException;
 import co.prior.iam.module.param.model.ParamRespone;
 import co.prior.iam.repository.ParamGroupRepository;
 import co.prior.iam.repository.ParamInfoRepository;
