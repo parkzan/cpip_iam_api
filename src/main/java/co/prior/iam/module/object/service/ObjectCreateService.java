@@ -14,6 +14,7 @@ import co.prior.iam.module.object.model.request.ObjectCreateReq;
 import co.prior.iam.repository.ObjectRepository;
 import co.prior.iam.repository.SystemRepository;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.util.StringUtils;
 
 @Slf4j
 @Service
@@ -37,10 +38,18 @@ public class ObjectCreateService {
 
 		Optional<IamMsObject> iamMsObject = objectRepository.findByIamMsSystemAndObjectCodeAndIsDeleted(iamMsSystem,
 				objectCreateReq.getObjectCode(), AnswerFlag.N.toString());
-		IamMsObject parentObject = objectRepository
-				.findByIamMsSystem_SystemIdAndObjectIdAndIsDeleted(objectCreateReq.getSystemId(),
-						objectCreateReq.getObjectParentId(), AnswerFlag.N.toString())
-				.orElseThrow(() -> new DataNotFoundException("data not found"));
+
+		IamMsObject parentObject = new IamMsObject();
+
+		if(objectCreateReq.getObjectParentId() > 0){
+			 parentObject = objectRepository
+					.findByIamMsSystem_SystemIdAndObjectIdAndIsDeleted(objectCreateReq.getSystemId(),
+							objectCreateReq.getObjectParentId(), AnswerFlag.N.toString())
+					.orElseThrow(() -> new DataNotFoundException("data not found"));
+		}else {
+			parentObject = null;
+		}
+
 		if (!iamMsObject.isPresent()) {
 			IamMsObject model = new IamMsObject();
 			model.setObjectCode(objectCreateReq.getObjectCode());

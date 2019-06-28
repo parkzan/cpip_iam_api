@@ -10,7 +10,7 @@ import javax.persistence.*;
 @Data
 @EqualsAndHashCode(callSuper=false)
 @Entity
-@Table(name = "iam_ms_parameter_code")
+@Table(name = "iam_ms_parameter_info")
 public class IamMsParameterInfo extends BaseEntity<IamMsParameterInfo>{
 
     @Id
