@@ -1,52 +1,65 @@
 package co.prior.iam.module.param.controller;
 
-
-import co.prior.iam.entity.IamMsParameterGroup;
-import co.prior.iam.module.param.model.ParamGroupCreateModel;
-import co.prior.iam.module.param.model.ParamInfoCreateModel;
-import co.prior.iam.module.param.model.ParamRespone;
-import co.prior.iam.module.param.service.ParamGroupCreateService;
-import co.prior.iam.module.param.service.ParamGroupInquiryService;
-import co.prior.iam.module.param.service.ParamInfoCreateService;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import co.prior.iam.module.param.model.request.CreateParamGroupRequest;
+import co.prior.iam.module.param.model.request.CreateParamInfoRequest;
+import co.prior.iam.module.param.model.response.GetParamsResponse;
+import co.prior.iam.module.param.service.ParamService;
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 @RestController
 @RequestMapping("/api")
 public class ParamController {
 
-    ParamGroupInquiryService paramGroupInquiryService;
-    ParamInfoCreateService paramInfoCreateService;
-    ParamGroupCreateService paramGroupCreateService;
+	private final ParamService paramService;
 
-    public ParamController(ParamGroupInquiryService paramGroupInquiryService ,ParamInfoCreateService paramInfoCreateService , ParamGroupCreateService paramGroupCreateService){
-        this.paramGroupInquiryService = paramGroupInquiryService;
-        this.paramInfoCreateService = paramInfoCreateService;
-        this.paramGroupCreateService = paramGroupCreateService;
-    }
+	public ParamController(ParamService paramService) {
+		this.paramService = paramService;
+	}
 
+	@GetMapping("/params")
+	public ResponseEntity<List<GetParamsResponse>> getParams() {
+		log.info("Controller getParams");
 
-    @GetMapping("/paramGroups")
-    public ResponseEntity<List<ParamRespone>> inquiryParamGroup() throws Exception{
-        return ResponseEntity.ok(paramGroupInquiryService.inquiryParamGroup());
-    }
+		List<GetParamsResponse> response = this.paramService.getParams();
+		
+		return ResponseEntity.ok(response);
+	}
 
-    @PostMapping("/paramGroups")
-    public ResponseEntity<Void> create(@RequestBody ParamInfoCreateModel paramInfoCreateModel) throws Exception{
-        paramInfoCreateService.createParamInfo(paramInfoCreateModel);
+	@PostMapping("/param/group")
+	public ResponseEntity<Void> createParamGroup(@RequestBody CreateParamGroupRequest request) {
+		log.info("Controller createParamGroup paramGroup: {}", request.getParamGroup());
+		
+		this.paramService.createParamGroup(request);
 
-        return ResponseEntity.created(null).build();
-    }
+		return ResponseEntity.created(null).build();
+	}
+	
+	@PostMapping("/param/info")
+	public ResponseEntity<Void> createParamInfo(@RequestBody CreateParamInfoRequest request) {
+		log.info("Controller createParamInfo paramInfo: {}", request.getParamInfo());
+		
+		this.paramService.createParamInfo(request);
 
-    @PostMapping("/paramGroup/create")
-    public ResponseEntity<Void> createGroup(@RequestBody ParamGroupCreateModel paramGroupCreateModel) throws Exception{
-        paramGroupCreateService.createParamGroup(paramGroupCreateModel);
+		return ResponseEntity.created(null).build();
+	}
+	
+	@PostMapping("/params/refresh")
+	public ResponseEntity<Void> refreshParams() {
+		log.info("Controller refreshParams");
+		
+		this.paramService.refreshParams();
 
-        return ResponseEntity.created(null).build();
-    }
-
-
+		return ResponseEntity.noContent().build();
+	}
 
 }

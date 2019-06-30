@@ -1,30 +1,37 @@
 package co.prior.iam.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
+
+import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
-import javax.persistence.*;
-
 @Data
-@EqualsAndHashCode(callSuper=false)
+@Builder
+@EqualsAndHashCode(callSuper = false)
 @Entity
 @Table(name = "iam_ms_parameter_info")
-public class IamMsParameterInfo extends BaseEntity<IamMsParameterInfo>{
+public class IamMsParameterInfo extends BaseEntity<IamMsParameterInfo> {
 
-    @Id
-    @SequenceGenerator(name = "param_info_id_seq", sequenceName = "iam_ms_parameter_info_param_info_id_seq",allocationSize = 1)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "param_info_id_seq")
-    private Long paramInfoId;
-    private String paramInfo;
-    private String paramEnDescription;
-    private String paramLocalDescription;
+	@Id
+	@SequenceGenerator(name = "param_info_id_seq", sequenceName = "iam_ms_parameter_info_param_info_id_seq", allocationSize = 1)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "param_info_id_seq")
+	private Long paramInfoId;
+	private String paramInfo;
+	private String paramEnDescription;
+	private String paramLocalDescription;
 
-    @ToString.Exclude
-    @ManyToOne
-    @JsonIgnore
-    @JoinColumn(name = "param_group_id")
-    private IamMsParameterGroup paramGroup;
+	@ToString.Exclude
+	@ManyToOne
+	@JoinColumn(name = "param_group_id")
+	private IamMsParameterGroup paramGroup;
 
 }
