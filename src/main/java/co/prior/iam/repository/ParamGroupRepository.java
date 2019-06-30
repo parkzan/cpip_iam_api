@@ -11,4 +11,5 @@ import java.util.Optional;
 public interface ParamGroupRepository  extends JpaRepository<IamMsParameterGroup,Long> {
 
     Optional<IamMsParameterGroup> findByParamGroupAndIsDeleted(String paramGroup, String isDelete);
+    List<IamMsParameterGroup> findByIsDeleted(String isDelete);
 }

@@ -4,7 +4,7 @@ import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 
 @Service
-@CacheConfig(cacheNames = "{param_group}")
+@CacheConfig(cacheNames = "param")
 public class ParamInfoUpdateService {
 
 }

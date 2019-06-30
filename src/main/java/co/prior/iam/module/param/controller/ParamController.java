@@ -29,8 +29,8 @@ public class ParamController {
 
 
     @GetMapping("/paramGroups")
-    public ResponseEntity<ParamRespone> inquiryParamGroup(@RequestParam String paramGroup) throws Exception{
-        return ResponseEntity.ok(paramGroupInquiryService.inquiryParamGroup(paramGroup));
+    public ResponseEntity<List<ParamRespone>> inquiryParamGroup() throws Exception{
+        return ResponseEntity.ok(paramGroupInquiryService.inquiryParamGroup());
     }
 
     @PostMapping("/paramGroups")

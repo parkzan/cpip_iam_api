@@ -13,11 +13,14 @@ import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
+import javax.xml.crypto.Data;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Service
-@CacheConfig(cacheNames = "{param_group}")
+@CacheConfig(cacheNames = "param")
 public class ParamGroupInquiryService {
 
     ParamGroupRepository paramGroupRepository;
@@ -31,31 +34,40 @@ public class ParamGroupInquiryService {
 
 
     @Cacheable
-    public ParamRespone inquiryParamGroup(String paramGroup) throws Exception{
+    public List<ParamRespone> inquiryParamGroup() throws Exception{
 
-            IamMsParameterGroup parameterGroup = paramGroupRepository.findByParamGroupAndIsDeleted(paramGroup,"N")
-                    .orElseThrow(() -> new DataNotFoundException("99" , "data not found"));
+            List<IamMsParameterGroup> parameterGroups = paramGroupRepository.findByIsDeleted("N");
+        List<ParamRespone> list = new ArrayList<>();
+            if(!parameterGroups.isEmpty()) {
 
-            List<IamMsParameterInfo> parameterInfo = paramInfoRepository.findByParamGroup_ParamGroupAndIsDeleted(parameterGroup.getParamGroup(),"N");
-            List<ParamInfoModel> paramInfoList = new ArrayList<>();
-            ParamRespone respones = new ParamRespone();
-            if(!parameterInfo.isEmpty()){
 
-                for(IamMsParameterInfo param : parameterInfo){
 
-                    ParamInfoModel info = new ParamInfoModel();
-                    respones.setParamGroup(parameterGroup.getParamGroup());
-                    info.setParamInfo(param.getParamInfo());
-                    info.setParamEnMessage(param.getParamEnDescription());
-                    info.setParamLocalMessage(param.getParamLocalDescription());
+                for (IamMsParameterGroup group : parameterGroups) {
+                    List<IamMsParameterInfo> parameterInfo = paramInfoRepository.findByParamGroup_ParamGroupAndIsDeleted(group.getParamGroup(), "N");
+                    List<ParamInfoModel> paramInfoList = new ArrayList<>();
+                    ParamRespone respones = new ParamRespone();
 
-                    paramInfoList.add(info);
+                    if (!parameterInfo.isEmpty()) {
+
+                        for (IamMsParameterInfo param : parameterInfo) {
+
+                            ParamInfoModel info = new ParamInfoModel();
+                            respones.setParamGroup(group.getParamGroup());
+                            info.setParamInfo(param.getParamInfo());
+                            info.setParamEnMessage(param.getParamEnDescription());
+                            info.setParamLocalMessage(param.getParamLocalDescription());
+
+                            paramInfoList.add(info);
+                        }
+                        respones.setParamInfo(paramInfoList);
+
+
+                    }
+
+                    list.add(respones);
                 }
-                respones.setParamInfo(paramInfoList);
-                return respones;
+                return list;
             }
-
-
-            throw new DataNotFoundException("99","data not found");
+        throw new DataNotFoundException("99", "data not found");
     }
 }

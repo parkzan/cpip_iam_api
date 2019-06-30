@@ -15,7 +15,7 @@ import org.springframework.stereotype.Service;
 import java.util.Optional;
 
 @Service
-@CacheConfig(cacheNames = "{param_group}")
+@CacheConfig(cacheNames = "param")
 public class ParamInfoCreateService {
 
     ParamInfoRepository paramInfoRepository;
@@ -26,7 +26,7 @@ public class ParamInfoCreateService {
         this.paramGroupRepository = paramGroupRepository;
     }
 
-    @CacheEvict(value = "{param_group}" , allEntries = true)
+    @CacheEvict(value = "param" , allEntries = true)
     public void  createParamInfo(ParamInfoCreateModel paramInfoCreateModel) throws Exception{
 
         Optional<IamMsParameterInfo> model = paramInfoRepository.findByParamInfoAndIsDeleted(paramInfoCreateModel.getParamInfo() , "N");
