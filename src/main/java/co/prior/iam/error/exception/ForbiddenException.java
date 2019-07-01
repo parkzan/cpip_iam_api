@@ -1,5 +1,6 @@
 package co.prior.iam.error.exception;
 
+import co.prior.iam.model.ErrorCode;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -7,19 +8,14 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = false)
 public class ForbiddenException extends RuntimeException {
 	
-	private final String code;
-	private final String message;
+	private final ErrorCode code;
 
-	public ForbiddenException(String message) {
-		super(message);
-		this.code = "99";
-		this.message = message;
+	public ForbiddenException() {
+		this.code = ErrorCode.INTERNAL_SERVER_ERROR;
 	}
 
-	public ForbiddenException(String code, String message) {
-		super(message);
+	public ForbiddenException(ErrorCode code) {
 		this.code = code;
-		this.message = message;
 	}
 	
 }

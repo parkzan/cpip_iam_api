@@ -7,7 +7,8 @@ import lombok.Data;
 @AllArgsConstructor
 public class ErrorModel {
 
-	private String code;
-	private String message;
+	private ErrorCode code;
+	private String messageEn;
+	private String messageTh;
 
 }

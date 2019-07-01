@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 import co.prior.iam.entity.IamMsUser;
 import co.prior.iam.error.exception.DataNotFoundException;
 import co.prior.iam.model.AnswerFlag;
+import co.prior.iam.model.ErrorCode;
 import co.prior.iam.model.PageableRequest;
 import co.prior.iam.model.SortedModel;
 import co.prior.iam.module.user.model.request.EditUserRequest;
@@ -82,7 +83,7 @@ public class UserService {
 		log.info("Service getUser userId: {}", userId);
 		
 		IamMsUser iamMsUser = this.iamMsUserRepository.findByUserIdAndIsDeleted(userId, AnswerFlag.N.toString())
-				.orElseThrow(() -> new DataNotFoundException("user not found"));
+				.orElseThrow(() -> new DataNotFoundException(ErrorCode.USER_NOT_FOUND));
 		
 		return GetUserResponse.builder()
 				.systemId(iamMsUser.getIamMsSystem().getSystemId())
@@ -104,7 +105,7 @@ public class UserService {
 		log.info("Service editUser userId: {}", request.getUserId());
 		
 		IamMsUser iamMsUser = this.iamMsUserRepository.findByUserIdAndIsDeleted(request.getUserId(), AnswerFlag.N.toString())
-				.orElseThrow(() -> new DataNotFoundException("user not found"));
+				.orElseThrow(() -> new DataNotFoundException(ErrorCode.USER_NOT_FOUND));
 		
 		iamMsUser.setLocalFirstName(request.getLocalFirstName());
 		iamMsUser.setLocalMiddleName(request.getLocalMiddleName());
@@ -121,7 +122,7 @@ public class UserService {
 		log.info("Service deleteUser userId: {}", userId);
 		
 		IamMsUser iamMsUser = this.iamMsUserRepository.findByUserIdAndIsDeleted(userId, AnswerFlag.N.toString())
-				.orElseThrow(() -> new DataNotFoundException("user not found"));
+				.orElseThrow(() -> new DataNotFoundException(ErrorCode.USER_NOT_FOUND));
 		
 		iamMsUser.setIsDeleted(AnswerFlag.Y.toString());
 		this.iamMsUserRepository.save(iamMsUser);

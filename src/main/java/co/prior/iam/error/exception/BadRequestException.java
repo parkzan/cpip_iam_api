@@ -1,5 +1,6 @@
 package co.prior.iam.error.exception;
 
+import co.prior.iam.model.ErrorCode;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -7,19 +8,14 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = false)
 public class BadRequestException extends RuntimeException {
 
-	private final String code;
-    private final String message;
+	private final ErrorCode code;
 
-    public BadRequestException(String message) {
-        super(message);
-        this.code = "99";
-        this.message = message;
+    public BadRequestException() {
+        this.code = ErrorCode.INTERNAL_SERVER_ERROR;
     }
 
-    public BadRequestException(String code, String message) {
-        super(message);
+    public BadRequestException(ErrorCode code) {
         this.code = code;
-        this.message = message;
     }
     
 }

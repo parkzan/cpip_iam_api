@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 import co.prior.iam.entity.IamMsSystem;
 import co.prior.iam.error.exception.DataDuplicateException;
 import co.prior.iam.model.AnswerFlag;
+import co.prior.iam.model.ErrorCode;
 import co.prior.iam.module.system.model.request.SystemAddReq;
 import co.prior.iam.repository.SystemRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -16,10 +17,9 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 public class SystemCreateService {
 
-	SystemRepository systemRepository;
+	private final SystemRepository systemRepository;
 
 	public SystemCreateService(SystemRepository systemRepository) {
-
 		this.systemRepository = systemRepository;
 	}
 
@@ -27,24 +27,18 @@ public class SystemCreateService {
 	public void createSystem(SystemAddReq systemAddReq) {
 		log.info("Service createSystem: {}", systemAddReq);
 
-		Optional<IamMsSystem> check = systemRepository.findBySystemCodeAndIsDeleted(systemAddReq.getSystemCode(),
-				AnswerFlag.N.toString());
+		Optional<IamMsSystem> check = this.systemRepository.findBySystemCodeAndIsDeleted(
+				systemAddReq.getSystemCode(), AnswerFlag.N.toString());
 
-		if (!check.isPresent()) {
-			IamMsSystem iamMsSystem = new IamMsSystem();
-			iamMsSystem.setSystemCode(systemAddReq.getSystemCode());
-			iamMsSystem.setSystemIcon(systemAddReq.getSystemIcon());
-			iamMsSystem.setSystemName(systemAddReq.getSystemName());
-			systemRepository.save(iamMsSystem);
+		if (check.isPresent()) {
+			throw new DataDuplicateException(ErrorCode.SYSTEM_DUPLICATED);	
+		}
 
-             }
-            else {
-
-                 throw new DataDuplicateException("99","System code duplicate");
-
-            }
-
+		IamMsSystem iamMsSystem = new IamMsSystem();
+		iamMsSystem.setSystemCode(systemAddReq.getSystemCode());
+		iamMsSystem.setSystemIcon(systemAddReq.getSystemIcon());
+		iamMsSystem.setSystemName(systemAddReq.getSystemName());
+		this.systemRepository.save(iamMsSystem);
     }
 
 }
-

@@ -6,6 +6,7 @@ import org.springframework.transaction.annotation.Transactional;
 import co.prior.iam.entity.IamMsSystem;
 import co.prior.iam.error.exception.DataNotFoundException;
 import co.prior.iam.model.AnswerFlag;
+import co.prior.iam.model.ErrorCode;
 import co.prior.iam.module.system.model.request.SystemEditReq;
 import co.prior.iam.repository.SystemRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -14,7 +15,7 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 public class SystemEditService {
 
-	SystemRepository systemRepository;
+	private final SystemRepository systemRepository;
 
 	public SystemEditService(SystemRepository systemRepository) {
 		this.systemRepository = systemRepository;
@@ -23,14 +24,15 @@ public class SystemEditService {
 	@Transactional
 	public void editSystem(SystemEditReq systemEditReq) {
 		log.info("Service editSystem: {}", systemEditReq);
-		IamMsSystem iamMsSystem = systemRepository
-				.findBySystemCodeAndIsDeleted(systemEditReq.getSystemCode(), AnswerFlag.N.toString())
-				.orElseThrow(() -> new DataNotFoundException("data not found"));
+		
+		IamMsSystem iamMsSystem = this.systemRepository.findBySystemCodeAndIsDeleted(
+				systemEditReq.getSystemCode(), AnswerFlag.N.toString())
+				.orElseThrow(() -> new DataNotFoundException(ErrorCode.SYSTEM_NOT_FOUND));
 
 		iamMsSystem.setSystemName(systemEditReq.getNewName());
 		iamMsSystem.setSystemIcon(systemEditReq.getNewIcon());
 
-		systemRepository.save(iamMsSystem);
+		this.systemRepository.save(iamMsSystem);
 	}
 
 }

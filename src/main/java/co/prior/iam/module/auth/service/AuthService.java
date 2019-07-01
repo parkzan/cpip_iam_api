@@ -23,6 +23,7 @@ import co.prior.iam.error.exception.DataDuplicateException;
 import co.prior.iam.error.exception.DataNotFoundException;
 import co.prior.iam.error.exception.UnauthorizedException;
 import co.prior.iam.model.AnswerFlag;
+import co.prior.iam.model.ErrorCode;
 import co.prior.iam.module.auth.model.request.ActivateUserRequest;
 import co.prior.iam.module.auth.model.request.ChangePasswordRequest;
 import co.prior.iam.module.auth.model.request.SignUpRequest;
@@ -78,7 +79,7 @@ public class AuthService {
 
 	        IamMsUser iamMsUser = this.iamMsUserRepository.findByUserCodeAndIsIamAdminAndIsDeleted(
 	        		userCode, isIamAdmin, AnswerFlag.N.toString())
-	        		.orElseThrow(() -> new UnauthorizedException("user code or password incorrect"));
+	        		.orElseThrow(() -> new UnauthorizedException(ErrorCode.USER_OR_PASSWORD_INCORRECT));
 	        
 	        iamMsUser.setNoOfFailTimes(0);
 	        this.iamMsUserRepository.save(iamMsUser);
@@ -93,13 +94,13 @@ public class AuthService {
 	        	this.iamMsUserRepository.save(user);
 	        });
     		
-        	throw new UnauthorizedException("user code or password incorrect");
+        	throw new UnauthorizedException(ErrorCode.USER_OR_PASSWORD_INCORRECT);
 		
         } catch (DisabledException e) {
-        	throw new UnauthorizedException("user code is disabled");
+        	throw new UnauthorizedException(ErrorCode.USER_DISABLED);
         	
         } catch (LockedException e) {
-        	throw new UnauthorizedException("user code is locked");
+        	throw new UnauthorizedException(ErrorCode.USER_LOCKED);
         }
     }
     
@@ -110,11 +111,11 @@ public class AuthService {
     	if(this.iamMsUserRepository.existsByIamMsSystem_SystemIdAndUserCodeAndIsDeleted(
     			request.getSystemId(), request.getUserCode(), AnswerFlag.N.toString())) {
     		
-            throw new DataDuplicateException("user code is already exist");
+            throw new DataDuplicateException(ErrorCode.USER_DUPLICATED);
         }
 
     	IamMsSystem iamMsSystem = this.iamMsSystemRepository.findBySystemIdAndIsDeleted(request.getSystemId(), AnswerFlag.N.toString())
-    			.orElseThrow(() -> new DataNotFoundException("system not found"));
+    			.orElseThrow(() -> new DataNotFoundException(ErrorCode.SYSTEM_NOT_FOUND));
     			
     	String isIamAdmin = request.getIsIamAdmin().toString();
         IamMsUser iamMsUser = IamMsUser.builder()
@@ -143,10 +144,10 @@ public class AuthService {
     	
     	IamMsUser iamMsUser = this.iamMsUserRepository.findByIamMsSystem_SystemIdAndUserCodeAndIsDeleted(
     			request.getSystemId(), request.getUserCode(), AnswerFlag.N.toString())
-    			.orElseThrow(() -> new DataNotFoundException("user not found"));
+    			.orElseThrow(() -> new DataNotFoundException(ErrorCode.USER_NOT_FOUND));
     	
     	if (!passwordEncoder.matches(request.getOldPassword(), iamMsUser.getUserPassword())) {
-    		throw new BadRequestException("password incorrect");
+    		throw new BadRequestException(ErrorCode.PASSWORD_INCORRECT);
     	}
     	
     	iamMsUser.setUserPassword(passwordEncoder.encode(request.getNewPassword()));
@@ -159,10 +160,10 @@ public class AuthService {
     	log.info("Service changePassword userId: {}", request.getUserId());
     	
     	IamMsUser iamMsUser = this.iamMsUserRepository.findByUserIdAndIsDeleted(request.getUserId(), AnswerFlag.N.toString())
-    			.orElseThrow(() -> new DataNotFoundException("user not found"));
+    			.orElseThrow(() -> new DataNotFoundException(ErrorCode.USER_NOT_FOUND));
     	
     	if (!passwordEncoder.matches(request.getOldPassword(), iamMsUser.getUserPassword())) {
-    		throw new BadRequestException("password incorrect");
+    		throw new BadRequestException(ErrorCode.PASSWORD_INCORRECT);
     	}
     	
     	iamMsUser.setUserPassword(passwordEncoder.encode(request.getNewPassword()));
@@ -181,7 +182,7 @@ public class AuthService {
             return this.generateAuthResponse(authentication);
     	}
     	
-    	throw new BadRequestException("refresh token invalid");
+    	throw new BadRequestException(ErrorCode.INVALID_REFRESH_TOKEN);
     }
 
 	private AuthResponse generateAuthResponse(Authentication authentication) {

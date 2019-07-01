@@ -2,6 +2,7 @@ package co.prior.iam.module.param.service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
@@ -13,6 +14,8 @@ import co.prior.iam.entity.IamMsParameterInfo;
 import co.prior.iam.error.exception.DataDuplicateException;
 import co.prior.iam.error.exception.DataNotFoundException;
 import co.prior.iam.model.AnswerFlag;
+import co.prior.iam.model.ErrorCode;
+import co.prior.iam.model.ParamGroup;
 import co.prior.iam.module.param.model.request.CreateParamGroupRequest;
 import co.prior.iam.module.param.model.request.CreateParamInfoRequest;
 import co.prior.iam.module.param.model.response.GetParamsResponse;
@@ -39,7 +42,7 @@ public class ParamService {
 		
 		List<IamMsParameterGroup> iamMsParameterGroups= this.paramGroupRepository.findByIsDeleted(AnswerFlag.N.toString());
 		if (iamMsParameterGroups.isEmpty()) {
-			throw new DataNotFoundException("99", "data not found");
+			throw new DataNotFoundException(ErrorCode.INTERNAL_SERVER_ERROR);
 		}
 		
 		List<GetParamsResponse> params = new ArrayList<>();
@@ -66,7 +69,7 @@ public class ParamService {
 		log.info("Service createParamGroup paramGroup: {}", request.getParamGroup());
 
 		if (this.paramGroupRepository.existsByParamGroupAndIsDeleted(request.getParamGroup(), AnswerFlag.N.toString())) {
-			throw new DataDuplicateException("99", "param group is duplicated");
+			throw new DataDuplicateException(ErrorCode.INTERNAL_SERVER_ERROR);
 		}
 
 		IamMsParameterGroup iamMsParameterGroup = IamMsParameterGroup.builder()
@@ -84,12 +87,12 @@ public class ParamService {
 		log.info("Service createParamInfo paramInfo: {}", request.getParamInfo());
 		
 		if (this.paramInfoRepository.existsByParamInfoAndIsDeleted(request.getParamInfo(), AnswerFlag.N.toString())) {
-			throw new DataDuplicateException("99", "param info is duplicated");
+			throw new DataDuplicateException(ErrorCode.INTERNAL_SERVER_ERROR);
 		}
 		
 		IamMsParameterGroup iamMsParameterGroup = this.paramGroupRepository.findByParamGroupAndIsDeleted(
 				request.getParamGroup(), AnswerFlag.N.toString())
-				.orElseThrow(() -> new DataNotFoundException("99", "param group not found"));
+				.orElseThrow(() -> new DataNotFoundException(ErrorCode.INTERNAL_SERVER_ERROR));
 
 		this.paramInfoRepository.save(IamMsParameterInfo.builder()
 				.paramInfo(request.getParamInfo())
@@ -105,7 +108,24 @@ public class ParamService {
 	public void refreshParams() {
 		log.info("Service refreshParams");
 		
-		// refresh parameters
+		// clear all parameter cache
+	}
+	
+	public Optional<ParamInfoData> getErrorMessage(ErrorCode errorCode) {
+		log.info("Service getErrorMessage errorCode: {}", errorCode);
+		
+		Optional<GetParamsResponse> paramOpt = this.getParams().stream()
+				.filter(param -> ParamGroup.ERROR_MESSAGE.toString().equalsIgnoreCase(param.getParamGroup()))
+				.findFirst();
+		
+		if (paramOpt.isPresent()) {
+			GetParamsResponse param = paramOpt.get();
+			return param.getParamInfoList().stream()
+					.filter(paramInfo -> errorCode.toString().equalsIgnoreCase(paramInfo.getParamInfo()))
+					.findFirst();
+		}
+		
+		return Optional.empty();
 	}
 
 }
