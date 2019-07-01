@@ -56,6 +56,7 @@ public class UserRoleService {
 		for (IamMsUserRole iamMsUserRole : iamMsUserRoles) {
 			IamMsRole iamMsRole = iamMsUserRole.getIamMsRole();
 			userRoles.add(UserRole.builder()
+					.userRoleId(iamMsUserRole.getUserRoleId())
 					.roleId(iamMsRole.getRoleId())
 					.roleCode(iamMsRole.getRoleCode())
 					.roleName(iamMsRole.getRoleName())
@@ -66,7 +67,6 @@ public class UserRoleService {
 		IamMsSystem iamMsSystem = iamMsUserRole.getIamMsSystem();
 		IamMsUser iamMsUser = iamMsUserRole.getIamMsUser();
 		return GetUserRolesResponse.builder()
-				.userRoleId(iamMsUserRole.getUserRoleId())
 				.systemId(iamMsSystem.getSystemId())
 				.systemCode(iamMsSystem.getSystemCode())
 				.systemName(iamMsSystem.getSystemName())
@@ -95,6 +95,7 @@ public class UserRoleService {
 		for (IamMsUserRole iamMsUserRole : iamMsUserRoles) {
 			IamMsUser iamMsUser = iamMsUserRole.getIamMsUser();
 			users.add(UserData.builder()
+					.userRoleId(iamMsUserRole.getUserRoleId())
 					.userId(iamMsUser.getUserId())
 					.userCode(iamMsUser.getUserCode())
 					.localFirstName(iamMsUser.getLocalFirstName())
@@ -110,7 +111,6 @@ public class UserRoleService {
 		IamMsSystem iamMsSystem = iamMsUserRole.getIamMsSystem();
 		IamMsRole iamMsRole = iamMsUserRole.getIamMsRole();
 		return GetRoleUsersResponse.builder()
-				.userRoleId(iamMsUserRole.getUserRoleId())
 				.systemId(iamMsSystem.getSystemId())
 				.systemCode(iamMsSystem.getSystemCode())
 				.systemName(iamMsSystem.getSystemName())

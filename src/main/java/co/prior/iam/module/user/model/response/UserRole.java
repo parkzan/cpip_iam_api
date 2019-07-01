@@ -7,6 +7,7 @@ import lombok.Data;
 @Builder
 public class UserRole {
 
+	private long userRoleId;
 	private long roleId;
 	private String roleCode;
 	private String roleName;

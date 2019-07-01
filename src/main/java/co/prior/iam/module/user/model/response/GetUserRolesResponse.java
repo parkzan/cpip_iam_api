@@ -10,7 +10,6 @@ import lombok.Data;
 @Builder
 public class GetUserRolesResponse {
 
-	private long userRoleId;
 	private long systemId;
 	private String systemCode;
 	private String systemName;
