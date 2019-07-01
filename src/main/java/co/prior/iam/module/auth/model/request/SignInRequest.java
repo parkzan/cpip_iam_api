@@ -4,6 +4,7 @@ import javax.validation.constraints.NotBlank;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+import co.prior.iam.model.AnswerFlag;
 import lombok.Data;
 
 @Data
@@ -15,5 +16,7 @@ public class SignInRequest {
 	
 	@NotBlank
 	private String password;
+	
+	private AnswerFlag isIamAdmin;
 	
 }

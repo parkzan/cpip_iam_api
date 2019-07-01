@@ -36,7 +36,7 @@ public class AuthController {
     public ResponseEntity<AuthResponse> signIn(@Valid @RequestBody SignInRequest request) {
 		log.info("Controller signIn userCode: {}", request.getUserCode());
 		
-		AuthResponse response = this.authService.signIn(request.getUserCode(), request.getPassword());
+		AuthResponse response = this.authService.signIn(request.getUserCode(), request.getPassword(), request.getIsIamAdmin().toString());
 		
         return ResponseEntity.ok(response);
     }

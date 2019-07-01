@@ -68,23 +68,26 @@ public class AuthService {
     	this.iamMsUserRepository = iamMsUserRepository;
     }
     
-    @Transactional(noRollbackFor = Exception.class)
-    public AuthResponse signIn(String userCode, String password) {
-    	log.info("Service signIn userCode: {}", userCode);
+    @Transactional(noRollbackFor = UnauthorizedException.class)
+    public AuthResponse signIn(String userCode, String password, String isIamAdmin) {
+    	log.info("Service signIn userCode: {}, isIamAdmin: {}", userCode, isIamAdmin);
     	
     	try {
 	    	Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(userCode, password));
 	        SecurityContextHolder.getContext().setAuthentication(authentication);
 
-	        this.iamMsUserRepository.findByUserCodeAndIsDeleted(userCode, AnswerFlag.N.toString()).ifPresent(user -> {
-	        	user.setNoOfFailTimes(0);
-	        	this.iamMsUserRepository.save(user);
-	        });
+	        IamMsUser iamMsUser = this.iamMsUserRepository.findByUserCodeAndIsIamAdminAndIsDeleted(
+	        		userCode, isIamAdmin, AnswerFlag.N.toString())
+	        		.orElseThrow(() -> new UnauthorizedException("user code or password incorrect"));
+	        
+	        iamMsUser.setNoOfFailTimes(0);
+	        this.iamMsUserRepository.save(iamMsUser);
 	        
 	        return this.generateAuthResponse(authentication);
 	        
     	} catch (BadCredentialsException e) {
-    		this.iamMsUserRepository.findByUserCodeAndIsDeleted(userCode, AnswerFlag.N.toString()).ifPresent(user -> {
+    		this.iamMsUserRepository.findByUserCodeAndIsIamAdminAndIsDeleted(
+    				userCode, isIamAdmin, AnswerFlag.N.toString()).ifPresent(user -> {
     			int failedAttempt = user.getNoOfFailTimes() + 1;
 	        	user.setNoOfFailTimes(failedAttempt);
 	        	this.iamMsUserRepository.save(user);
