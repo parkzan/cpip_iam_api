@@ -1,15 +1,13 @@
 package co.prior.iam.module.role.model.respone;
 
+import lombok.Builder;
+import lombok.Data;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import lombok.Getter;
-import lombok.Setter;
-
-@Getter
-@Setter
-@JsonIgnoreProperties(ignoreUnknown = true)
+@Data
+@Builder
 public class RoleRespone {
 
     private String message;
     private String code;
+    
 }

@@ -1,6 +1,5 @@
 package co.prior.iam.module.role.controller;
 
-
 import java.util.List;
 
 import org.springframework.http.ResponseEntity;
@@ -29,62 +28,53 @@ import lombok.extern.slf4j.Slf4j;
 public class RoleController {
 
     private final RoleCreateService roleCreateService;
-
-
     private final RoleDeleteService roleDeleteService;
-
-
     private final RoleEditService roleEditService;
-
-
     private final RoleInqueryService roleInqueryService;
 
-    public RoleController(RoleCreateService roleCreateService, RoleDeleteService roleDeleteService, RoleEditService roleEditService, RoleInqueryService roleInqueryService) {
+    public RoleController(RoleCreateService roleCreateService, RoleDeleteService roleDeleteService, 
+    		RoleEditService roleEditService, RoleInqueryService roleInqueryService) {
+    	
         this.roleCreateService = roleCreateService;
         this.roleDeleteService = roleDeleteService;
         this.roleEditService = roleEditService;
         this.roleInqueryService = roleInqueryService;
     }
 
-
     @PostMapping("/role")
     public ResponseEntity<Void> createRole(@RequestBody RoleCreateReq roleCreateReq) {
-        log.info("Controller createRole: {}", roleCreateReq );
-        roleCreateService.createRole(roleCreateReq);
+        log.info("Controller createRole: {}", roleCreateReq);
+        
+        this.roleCreateService.createRole(roleCreateReq);
 
         return ResponseEntity.created(null).build();
-
     }
+    
     @DeleteMapping("/role")
     public ResponseEntity<Void> deleteRole(@RequestBody RoleDeleteReq roleDeleteReq) {
-        log.info("Controller deleteRole: {}", roleDeleteReq );
-        roleDeleteService.deleteRole(roleDeleteReq);
-
+        log.info("Controller deleteRole: {}", roleDeleteReq);
+        
+        this.roleDeleteService.deleteRole(roleDeleteReq);
 
         return ResponseEntity.noContent().build();
-
     }
 
     @PutMapping("/role")
     public ResponseEntity<Void> editRole(@RequestBody RoleEditReq roleEditReq) {
-        log.info("Controller editRole: {}", roleEditReq );
-        roleEditService.editRole(roleEditReq);
-
+        log.info("Controller editRole: {}", roleEditReq);
+        
+        this.roleEditService.editRole(roleEditReq);
 
         return ResponseEntity.noContent().build();
-
-
     }
 
-
     @GetMapping("/role/system/{systemId}")
-    public ResponseEntity<List<IamMsRole>> inqueryRole(@PathVariable Long systemId) {
-        log.info("Controller inqueryRole: {}", systemId );
-       List<IamMsRole> list = roleInqueryService.inqueryRole(systemId);
+    public ResponseEntity<List<IamMsRole>> inqueryRole(@PathVariable long systemId) {
+        log.info("Controller inqueryRole systemId: {}", systemId);
+        
+        List<IamMsRole> list = roleInqueryService.inqueryRole(systemId);
 
-           return ResponseEntity.ok(list);
-
-
+        return ResponseEntity.ok(list);
     }
 
 }

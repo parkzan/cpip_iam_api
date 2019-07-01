@@ -1,19 +1,15 @@
 package co.prior.iam.module.system.model.respone;
 
+import lombok.Builder;
+import lombok.Data;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import lombok.Getter;
-import lombok.Setter;
-
-@Getter
-@Setter
-@JsonIgnoreProperties(ignoreUnknown = true)
+@Data
+@Builder
 public class SystemRespone{
 
-    private Long systemId;
+    private long systemId;
     private String systemCode;
     private String systemName;
     private String systemIcon;
-
 
 }

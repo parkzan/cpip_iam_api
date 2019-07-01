@@ -1,18 +1,19 @@
 package co.prior.iam.module.role.model.respone;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import lombok.Getter;
-import lombok.Setter;
-
 import java.util.ArrayList;
 import java.util.List;
 
-@Getter
-@Setter
-@JsonIgnoreProperties(ignoreUnknown = true)
+import lombok.Builder;
+import lombok.Data;
+
+@Data
+@Builder
 public class ObjectModel {
 
     private long objectId;
     private String objectName;
+    
+    @Builder.Default
     private List<ObjectModel> objects = new ArrayList<>();
+    
 }

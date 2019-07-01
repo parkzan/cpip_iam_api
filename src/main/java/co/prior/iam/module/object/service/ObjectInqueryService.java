@@ -34,11 +34,13 @@ public class ObjectInqueryService {
 			for (IamMsObject object : listModel) {
 				if (object.getObjectParent() == null) {
 					long count = 0 ;
-					ObjectRespone respone = new ObjectRespone();
-					respone.setSystemId(object.getIamMsSystem().getSystemId());
-					respone.setObjectCode(object.getObjectCode());
-					respone.setObjectId(object.getObjectId());
-					respone.setObjectTotalChild(countObjectChild(object , listModel ,count));
+					ObjectRespone respone = ObjectRespone.builder()
+							.systemId(object.getIamMsSystem().getSystemId())
+							.objectId(object.getObjectId())
+							.objectCode(object.getObjectCode())
+							.objectName(object.getObjectName())
+							.objectTotalChild(countObjectChild(object , listModel ,count))
+							.build();
 					list.add(respone);
 				}
 			}

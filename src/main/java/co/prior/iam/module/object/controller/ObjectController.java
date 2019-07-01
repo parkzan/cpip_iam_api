@@ -1,6 +1,5 @@
 package co.prior.iam.module.object.controller;
 
-
 import java.util.List;
 
 import org.springframework.http.ResponseEntity;
@@ -29,21 +28,16 @@ import lombok.extern.slf4j.Slf4j;
 @RequestMapping(path = "/api")
 public class ObjectController {
 
-
     private final ObjectCreateService objectCreateService;
-
-
     private final ObjectEditService objectEditService;
-
-
     private final ObjectInqueryService objectInqueryService;
-
-
     private final ObjectDeleteService objectDeleteService;
-
     private final ObjectChildInqueryService objectChildInqueryService;
 
-    public ObjectController(ObjectCreateService objectCreateService, ObjectEditService objectEditService, ObjectInqueryService objectInqueryService, ObjectDeleteService objectDeleteService, ObjectChildInqueryService objectChildInqueryService) {
+    public ObjectController(ObjectCreateService objectCreateService, ObjectEditService objectEditService, 
+    		ObjectInqueryService objectInqueryService, ObjectDeleteService objectDeleteService, 
+    		ObjectChildInqueryService objectChildInqueryService) {
+    	
         this.objectCreateService = objectCreateService;
         this.objectEditService = objectEditService;
         this.objectInqueryService = objectInqueryService;
@@ -51,63 +45,49 @@ public class ObjectController {
         this.objectChildInqueryService = objectChildInqueryService;
     }
 
-
     @PostMapping("/object")
     public ResponseEntity<Void> createObject(@RequestBody ObjectCreateReq objectCreateReq) {
         log.info("Controller createObject: {}", objectCreateReq);
-        objectCreateService.createObject(objectCreateReq);
-
+        
+        this.objectCreateService.createObject(objectCreateReq);
 
         return ResponseEntity.created(null).build();
-
-
     }
 
     @PutMapping("/object")
     public ResponseEntity<Void> editObject(@RequestBody ObjectEditReq objectEditReq) {
-
         log.info("Controller editObject: {}", objectEditReq);
-        objectEditService.editObject(objectEditReq);
-
+        
+        this.objectEditService.editObject(objectEditReq);
 
         return ResponseEntity.noContent().build();
-
     }
 
     @DeleteMapping("/object")
-    public ResponseEntity<Void> deleteObject(@RequestBody ObjectDeleteReq objectDeleteReq) throws  Exception {
-
+    public ResponseEntity<Void> deleteObject(@RequestBody ObjectDeleteReq objectDeleteReq) {
         log.info("Controller deleteObject: {}", objectDeleteReq);
-        objectDeleteService.deleteObject(objectDeleteReq);
+        
+        this.objectDeleteService.deleteObject(objectDeleteReq);
 
         return ResponseEntity.noContent().build();
-
     }
 
-
     @GetMapping("/objects/system/{systemId}")
-    public ResponseEntity<List<ObjectRespone>> inqueryObject(@PathVariable Long systemId) {
-        log.info("Controller inqueryObject: {}", systemId);
-        List<ObjectRespone> list = objectInqueryService.inqueryObject(systemId);
+    public ResponseEntity<List<ObjectRespone>> inqueryObject(@PathVariable long systemId) {
+        log.info("Controller inqueryObject systemId: {}", systemId);
+        
+        List<ObjectRespone> list = this.objectInqueryService.inqueryObject(systemId);
 
-
-            return ResponseEntity.ok(list);
-
-
-
-
+        return ResponseEntity.ok(list);
     }
 
     @GetMapping("/objects/{objectId}/system/{systemId}")
-    public ResponseEntity<List<ObjectRespone>> inqueryChildObject(@PathVariable Long systemId ,@PathVariable  Long objectId) {
-        log.info("Controller inqueryChildObject: {}", objectId );
-        List<ObjectRespone> list = objectChildInqueryService.inqueryChildObject(systemId ,objectId);
-
+    public ResponseEntity<List<ObjectRespone>> inqueryChildObject(@PathVariable long systemId, @PathVariable long objectId) {
+        log.info("Controller inqueryChildObject systemId: {}, objectId: {}", systemId, objectId);
+        
+        List<ObjectRespone> list = this.objectChildInqueryService.inqueryChildObject(systemId ,objectId);
 
         return ResponseEntity.ok(list);
-
-
-
-
     }
+    
 }

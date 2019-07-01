@@ -26,7 +26,7 @@ public class ObjectChildInqueryService {
 
 	@Transactional
 	public List<ObjectRespone> inqueryChildObject(long systemId, long objectId) {
-		log.info("Service inqueryChildObject: {}", objectId);
+		log.info("Service inqueryChildObject systemId: {}, objectId: {}", systemId, objectId);
 
 		List<IamMsObject> listObject = objectRepository.findByIamMsSystem_SystemIdAndObjectParent_ObjectIdAndIsDeleted(
 				systemId, objectId, AnswerFlag.N.toString());
@@ -41,12 +41,14 @@ public class ObjectChildInqueryService {
 		
 		for (IamMsObject object : listObject) {
 			long count = 0;
-			ObjectRespone respone = new ObjectRespone();
-			respone.setSystemId(object.getIamMsSystem().getSystemId());
-			respone.setObjectCode(object.getObjectCode());
-			respone.setObjectId(object.getObjectId());
-			respone.setObjectParentId(object.getObjectParent().getObjectId());
-			respone.setObjectTotalChild(countObjectChild(object, listAllObject, count));
+			ObjectRespone respone = ObjectRespone.builder()
+					.systemId(object.getIamMsSystem().getSystemId())
+					.objectId(object.getObjectId())
+					.objectCode(object.getObjectCode())
+					.objectName(object.getObjectName())
+					.objectParentId(object.getObjectParent().getObjectId())
+					.objectTotalChild(countObjectChild(object, listAllObject, count))
+					.build();
 			list.add(respone);
 		}
 		

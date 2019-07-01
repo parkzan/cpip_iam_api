@@ -1,21 +1,17 @@
 package co.prior.iam.module.object.model.respone;
 
+import lombok.Builder;
+import lombok.Data;
 
-import co.prior.iam.entity.IamMsObject;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import lombok.Getter;
-import lombok.Setter;
-
-import java.util.List;
-
-@Getter
-@Setter
-@JsonIgnoreProperties(ignoreUnknown = true)
+@Data
+@Builder
 public class ObjectRespone {
 
     private long systemId;
     private long objectId;
     private String objectCode;
+    private String objectName;
     private long objectParentId;
     private long objectTotalChild;
+    
 }

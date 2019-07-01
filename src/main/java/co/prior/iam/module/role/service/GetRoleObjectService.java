@@ -30,30 +30,30 @@ public class GetRoleObjectService {
     }
 
     @Transactional
-    public RoleMapObjectRespone getRoleObject(long systemId, long roleId) {
-        log.info("Service getRoleObject systemId: {}, roleId: {}", systemId, roleId);
+    public RoleMapObjectRespone getRoleObject(long roleId) {
+        log.info("Service getRoleObject roleId: {}", roleId);
 
-		IamMsRole iamMsRole = this.roleRepository.findByIamMsSystem_SystemIdAndRoleIdAndIsDeleted(
-				systemId, roleId, AnswerFlag.N.toString())
+		IamMsRole iamMsRole = this.roleRepository.findByRoleIdAndIsDeleted(roleId, AnswerFlag.N.toString())
                 .orElseThrow(() -> new DataNotFoundException(ErrorCode.ROLE_NOT_FOUND));
 
         List<IamMsRoleObject> objectList = this.roleObjectRepository.findByIamMsRoleAndIsDeleted(iamMsRole,AnswerFlag.N.toString());
         List<ObjectModel> listChid = new ArrayList<>();
-        RoleMapObjectRespone respone = new RoleMapObjectRespone();
-
-        respone.setSystemId(iamMsRole.getIamMsSystem().getSystemId());
-        respone.setRoleId(iamMsRole.getRoleId());
-        respone.setRoleName(iamMsRole.getRoleName());
+        RoleMapObjectRespone respone = RoleMapObjectRespone.builder()
+        		.systemId(iamMsRole.getIamMsSystem().getSystemId())
+        		.roleId(iamMsRole.getRoleId())
+        		.roleName(iamMsRole.getRoleName())
+        		.build();
 
         if (objectList.isEmpty()) {
         	throw new DataNotFoundException(ErrorCode.ROLE_OBJECT_NOT_FOUND);
         }
         
         for (IamMsRoleObject obj : objectList) {
-            ObjectModel objectModel = new ObjectModel();
             if (obj.getIamMsObject().getObjectParent() == null) {
-                objectModel.setObjectId(obj.getIamMsObject().getObjectId());
-                objectModel.setObjectName(obj.getIamMsObject().getObjectName());
+            	ObjectModel objectModel = ObjectModel.builder()
+            			.objectId(obj.getIamMsObject().getObjectId())
+            			.objectName(obj.getIamMsObject().getObjectName())
+            			.build();
                 setObjectChild(obj, objectList ,objectModel.getObjects());
                 listChid.add(objectModel);
             }
@@ -76,18 +76,19 @@ public class GetRoleObjectService {
         for (IamMsRole role : listRole){
             List<IamMsRoleObject> objectList = this.roleObjectRepository.findByIamMsRoleAndIsDeleted(role, AnswerFlag.N.toString());
             List<ObjectModel> listChid = new ArrayList<>();
-            RoleMapObjectRespone respone = new RoleMapObjectRespone();
-
-            respone.setSystemId(role.getIamMsSystem().getSystemId());
-            respone.setRoleId(role.getRoleId());
-            respone.setRoleName(role.getRoleName());
+            RoleMapObjectRespone respone = RoleMapObjectRespone.builder()
+            		.systemId(role.getIamMsSystem().getSystemId())
+            		.roleId(role.getRoleId())
+            		.roleName(role.getRoleName())
+            		.build();
 
             if (!objectList.isEmpty()) {
                 for (IamMsRoleObject obj : objectList) {
-                    ObjectModel objectModel = new ObjectModel();
                     if (obj.getIamMsObject().getObjectParent() == null) {
-                        objectModel.setObjectId(obj.getIamMsObject().getObjectId());
-                        objectModel.setObjectName(obj.getIamMsObject().getObjectName());
+                    	ObjectModel objectModel = ObjectModel.builder()
+                    			.objectId(obj.getIamMsObject().getObjectId())
+                    			.objectName(obj.getIamMsObject().getObjectName())
+                    			.build();
                         setObjectChild(obj, objectList ,objectModel.getObjects());
                         listChid.add(objectModel);
                     }
@@ -102,11 +103,12 @@ public class GetRoleObjectService {
     }
 
     private void setObjectChild(IamMsRoleObject root, List<IamMsRoleObject> list, List<ObjectModel> listChild) {
-    	ObjectModel childObjectModel = new ObjectModel();
         for (IamMsRoleObject obj : list) {
             if (obj.getIamMsObject().getObjectParent() == root.getIamMsObject()) {
-                childObjectModel.setObjectId(obj.getIamMsObject().getObjectId());
-                childObjectModel.setObjectName(obj.getIamMsObject().getObjectName());
+            	ObjectModel childObjectModel = ObjectModel.builder()
+            			.objectId(obj.getIamMsObject().getObjectId())
+            			.objectName(obj.getIamMsObject().getObjectName())
+            			.build();
                 listChild.add(childObjectModel);
                 setObjectChild(obj, list , childObjectModel.getObjects() );
             }
