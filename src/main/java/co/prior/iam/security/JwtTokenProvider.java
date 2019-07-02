@@ -39,13 +39,13 @@ public class JwtTokenProvider {
         Calendar jwtExpiredDateTime = Calendar.getInstance();
         jwtExpiredDateTime.add(Calendar.MINUTE, jwtExpirationTime / 60);
 
-        List<UserRoleObject> userRoleObjects = this.userRoleService.getUserRoleObject(userPrincipal.getUserId());
+        List<UserRoleObject> payload = this.userRoleService.getUserRoleObject(userPrincipal.getUserId());
         return Jwts.builder()
                 .setSubject(userPrincipal.getUserCode())
                 .setIssuedAt(new Date())
                 .setExpiration(jwtExpiredDateTime.getTime())
                 .signWith(SignatureAlgorithm.HS512, jwtSecret.getBytes())
-                .claim("roles", userRoleObjects)
+                .claim("roles", payload)
                 .compact();
     }
     
