@@ -11,6 +11,7 @@ import lombok.Data;
 public class ObjectModel {
 
     private long objectId;
+    private String objectCode;
     private String objectName;
     
     @Builder.Default

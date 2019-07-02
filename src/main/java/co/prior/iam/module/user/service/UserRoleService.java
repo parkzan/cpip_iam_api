@@ -2,6 +2,7 @@ package co.prior.iam.module.user.service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,11 +15,16 @@ import co.prior.iam.error.exception.DataDuplicateException;
 import co.prior.iam.error.exception.DataNotFoundException;
 import co.prior.iam.model.AnswerFlag;
 import co.prior.iam.model.ErrorCode;
+import co.prior.iam.module.role.model.respone.ObjectModel;
+import co.prior.iam.module.role.model.respone.RoleMapObjectRespone;
+import co.prior.iam.module.role.service.GetRoleObjectService;
 import co.prior.iam.module.user.model.request.CreateUserRoleRequest;
 import co.prior.iam.module.user.model.response.GetRoleUsersResponse;
 import co.prior.iam.module.user.model.response.GetUserRolesResponse;
 import co.prior.iam.module.user.model.response.UserData;
+import co.prior.iam.module.user.model.response.UserObject;
 import co.prior.iam.module.user.model.response.UserRole;
+import co.prior.iam.module.user.model.response.UserRoleObject;
 import co.prior.iam.repository.IamMsUserRepository;
 import co.prior.iam.repository.IamMsUserRoleRepository;
 import co.prior.iam.repository.RoleRepository;
@@ -29,14 +35,17 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 public class UserRoleService {
 
+	private final GetRoleObjectService getRoleObjectService;
 	private final SystemRepository iamMsSystemRepository;
 	private final IamMsUserRepository iamMsUserRepository;
 	private final RoleRepository iamMsRoleRepository;
 	private final IamMsUserRoleRepository iamMsUserRoleRepository;
 	
-	public UserRoleService(SystemRepository iamMsSystemRepository, IamMsUserRepository iamMsUserRepository, 
-			RoleRepository iamMsRoleRepository, IamMsUserRoleRepository iamMsUserRoleRepository) {
+	public UserRoleService(GetRoleObjectService getRoleObjectService, SystemRepository iamMsSystemRepository, 
+			IamMsUserRepository iamMsUserRepository, RoleRepository iamMsRoleRepository, 
+			IamMsUserRoleRepository iamMsUserRoleRepository) {
 		
+		this.getRoleObjectService = getRoleObjectService;
 		this.iamMsSystemRepository = iamMsSystemRepository;
 		this.iamMsUserRepository = iamMsUserRepository;
 		this.iamMsRoleRepository = iamMsRoleRepository;
@@ -160,6 +169,45 @@ public class UserRoleService {
 		
 		iamMsUserRole.setIsDeleted(AnswerFlag.Y.toString());
 		this.iamMsUserRoleRepository.save(iamMsUserRole);
+	}
+	
+	public List<UserRoleObject> getUserRoleObject(long userId) {
+		log.info("Service getUserRoleObject userId: {}", userId);
+		
+		List<UserRoleObject> userRoleObjects = new ArrayList<>();
+		List<IamMsUserRole> iamMsUserRoles = this.iamMsUserRoleRepository.findByIamMsUser_UserIdAndIsDeleted(
+				userId, AnswerFlag.N.toString());
+		
+		for (IamMsUserRole userRole : iamMsUserRoles) {
+			IamMsRole iamMsRole = userRole.getIamMsRole();
+			List<UserObject> userObjects = new ArrayList<>();
+			Optional<RoleMapObjectRespone> roleMapObjectOpt = this.getRoleObjectService.getRoleMapObject(iamMsRole.getRoleId());
+			if (roleMapObjectOpt.isPresent()) {
+				List<ObjectModel> roleObjects = roleMapObjectOpt.get().getObjects();
+				this.addObjects(userObjects, roleObjects);
+			}
+			userRoleObjects.add(UserRoleObject.builder()
+					.role(iamMsRole.getRoleCode())
+					.objects(userObjects)
+					.build());
+		}
+		
+		return userRoleObjects;
+	}
+	
+	private void addObjects(List<UserObject> userObjects, List<ObjectModel> roleObjects) {
+		for (ObjectModel roleObject : roleObjects) {
+			List<UserObject> objects = new ArrayList<>();
+			List<ObjectModel> list = roleObject.getObjects();
+			if (!list.isEmpty()) {
+				this.addObjects(objects, list);
+			}
+			
+			userObjects.add(UserObject.builder()
+					.object(roleObject.getObjectCode())
+					.objects(objects)
+					.build());
+		}
 	}
 	
 }

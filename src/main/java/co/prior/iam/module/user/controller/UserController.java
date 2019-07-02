@@ -3,6 +3,7 @@ package co.prior.iam.module.user.controller;
 import javax.validation.Valid;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -41,7 +42,7 @@ public class UserController {
     }
 	
 	@PostMapping("/users")
-//    @PreAuthorize("hasRole('ROLE_IAM_ADMIN')")
+    @PreAuthorize("hasRole('ROLE_IAM_ADMIN')")
     public ResponseEntity<IamMsUserPage> getUsers(@RequestBody GetUsersRequest request) {
 		log.info("Controller getUsers systemId: {}", request.getSystemId());
 		
@@ -51,7 +52,7 @@ public class UserController {
     }
 	
 	@GetMapping("/user/{user_id}")
-//    @PreAuthorize("hasRole('ROLE_IAM_ADMIN')")
+    @PreAuthorize("hasRole('ROLE_IAM_ADMIN')")
     public ResponseEntity<GetUserResponse> getUser(@PathVariable(value = "user_id") long userId) {
 		log.info("Controller getUser userId: {}", userId);
 		
@@ -61,7 +62,7 @@ public class UserController {
     }
 	
 	@PutMapping("/user")
-//  @PreAuthorize("hasRole('ROLE_IAM_ADMIN')")
+	@PreAuthorize("hasRole('ROLE_IAM_ADMIN')")
 	public ResponseEntity<Void> editUser(@Valid @RequestBody EditUserRequest request) {
 		log.info("Controller editUser userId: {}", request.getUserId());
 		
@@ -71,7 +72,7 @@ public class UserController {
 	}
 	
 	@DeleteMapping("/user")
-//	@PreAuthorize("hasRole('ROLE_IAM_ADMIN')")
+	@PreAuthorize("hasRole('ROLE_IAM_ADMIN')")
 	public ResponseEntity<Void> deleteUser(@RequestBody DeleteUserRequest request) {
 		log.info("Controller deleteUser userId: {}", request.getUserId());
 		

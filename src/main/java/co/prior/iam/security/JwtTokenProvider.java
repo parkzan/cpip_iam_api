@@ -2,10 +2,14 @@ package co.prior.iam.security;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 
+import co.prior.iam.module.user.model.response.UserRoleObject;
+import co.prior.iam.module.user.service.UserRoleService;
+import co.prior.iam.module.user.service.UserService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
@@ -19,6 +23,14 @@ import lombok.extern.slf4j.Slf4j;
 @Component
 public class JwtTokenProvider {
 
+	private final UserService userService;
+	private final UserRoleService userRoleService;
+	
+	public JwtTokenProvider(UserService userService, UserRoleService userRoleService) {
+		this.userService = userService;
+		this.userRoleService = userRoleService;
+	}
+	
     public String generateToken(Authentication authentication, String jwtSecret, int jwtExpirationTime) {
     	log.info("Common generateToken");
     	
@@ -27,30 +39,32 @@ public class JwtTokenProvider {
         Calendar jwtExpiredDateTime = Calendar.getInstance();
         jwtExpiredDateTime.add(Calendar.MINUTE, jwtExpirationTime / 60);
 
+        List<UserRoleObject> userRoleObjects = this.userRoleService.getUserRoleObject(userPrincipal.getUserId());
         return Jwts.builder()
-                .setSubject(String.valueOf(userPrincipal.getUserId()))
+                .setSubject(userPrincipal.getUserCode())
                 .setIssuedAt(new Date())
                 .setExpiration(jwtExpiredDateTime.getTime())
-                .signWith(SignatureAlgorithm.HS512, jwtSecret)
+                .signWith(SignatureAlgorithm.HS512, jwtSecret.getBytes())
+                .claim("roles", userRoleObjects)
                 .compact();
     }
     
-    public Long getUserIdFromJWT(String token, String jwtSecret) {
+    public long getUserIdFromJWT(String token, String jwtSecret) {
     	log.info("Common getUserIdFromJWT token: {}", token);
     	
     	Claims claims = Jwts.parser()
-                .setSigningKey(jwtSecret)
+                .setSigningKey(jwtSecret.getBytes())
                 .parseClaimsJws(token)
                 .getBody();
 
-        return Long.parseLong(claims.getSubject());
+        return this.userService.getUserId(claims.getSubject());
     }
 
     public boolean validateToken(String token, String jwtSecret) {
     	log.info("Common validateToken token: {}", token);
     	
         try {
-            Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(token);
+            Jwts.parser().setSigningKey(jwtSecret.getBytes()).parseClaimsJws(token);
             return true;
             
         } catch (SignatureException ex) {
