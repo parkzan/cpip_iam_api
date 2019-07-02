@@ -187,7 +187,7 @@ public class UserRoleService {
 				this.addObjects(userObjects, roleObjects);
 			}
 			userRoleObjects.add(UserRoleObject.builder()
-					.role(iamMsRole.getRoleCode())
+					.name(iamMsRole.getRoleCode())
 					.objects(userObjects)
 					.build());
 		}
@@ -204,7 +204,7 @@ public class UserRoleService {
 			}
 			
 			userObjects.add(UserObject.builder()
-					.object(roleObject.getObjectCode())
+					.name(roleObject.getObjectCode())
 					.objects(objects)
 					.build());
 		}
