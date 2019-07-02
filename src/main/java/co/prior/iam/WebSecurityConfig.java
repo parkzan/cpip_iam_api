@@ -50,16 +50,15 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 				.and()
 				.authorizeRequests()
 				.antMatchers(HttpMethod.GET, 
+						"/actuator/health", 
 						"/v2/api-docs", 
 						"/swagger-resources/**", 
-						"/swagger-ui.html**",
+						"/swagger-ui.html**", 
 						"/webjars/**")
 				.permitAll()
 				.antMatchers("/auth/**")
 				.permitAll()
 				.antMatchers("/preference/**")
-				.permitAll()
-				.antMatchers("/**")
 				.permitAll()
 				.anyRequest().authenticated()
 				.and()
