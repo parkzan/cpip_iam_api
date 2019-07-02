@@ -1,6 +1,7 @@
 package co.prior.iam.module.role.service;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -49,17 +50,23 @@ public class RoleMapObjectService {
 			}
 
 			for (long newObj : roleMapObjectReq.getNewObjectId()) {
-				IamMsRoleObject iamMsObject = this.roleObjectRepository
+				Optional<IamMsRoleObject> iamMsObject = this.roleObjectRepository
 						.findByIamMsSystem_SystemIdAndIamMsRole_RoleIdAndIamMsObject_ObjectIdAndIsDeleted(
 								objectsList.get(0).getIamMsSystem().getSystemId(),
-								objectsList.get(0).getIamMsRole().getRoleId(), newObj, AnswerFlag.N.toString())
-						.orElseThrow(() -> new DataNotFoundException(ErrorCode.ROLE_OBJECT_NOT_FOUND));
-				if (!objectsList.contains(iamMsObject)) {
-					IamMsRoleObject model = new IamMsRoleObject();
-					model.setIamMsObject(iamMsObject.getIamMsObject());
-					model.setIamMsSystem(iamMsObject.getIamMsSystem());
-					model.setIamMsRole(objectsList.get(0).getIamMsRole());
-					this.roleObjectRepository.save(model);
+								objectsList.get(0).getIamMsRole().getRoleId(), newObj, AnswerFlag.N.toString());
+
+				if(!iamMsObject.isPresent()){
+						IamMsObject newIamObject = this.objectRepository.findByIamMsSystem_SystemIdAndObjectIdAndIsDeleted(
+								objectsList.get(0).getIamMsSystem().getSystemId(),
+								newObj, AnswerFlag.N.toString()).orElseThrow(()-> new DataNotFoundException(ErrorCode.OBJECT_NOT_FOUND));
+
+						IamMsRoleObject model = new IamMsRoleObject();
+						model.setIamMsObject(newIamObject);
+						model.setIamMsSystem(newIamObject.getIamMsSystem());
+						model.setIamMsRole(objectsList.get(0).getIamMsRole());
+						this.roleObjectRepository.save(model);
+
+
 				}
 			}
 		} else if (roleMapObjectReq.getNewObjectId() != null) {
