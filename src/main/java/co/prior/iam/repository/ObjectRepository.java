@@ -20,7 +20,7 @@ public interface ObjectRepository extends JpaRepository<IamMsObject, Long> {
 
 	Optional<IamMsObject> findByIamMsSystem_SystemIdAndObjectCodeAndIsDeleted(long systemId, String objectCode, String isDelete);
 
-	List<IamMsObject> findByIamMsSystem_SystemIdAndIsDeleted(long systemId, String isDelete);
+	List<IamMsObject> findByIamMsSystem_SystemIdAndIsDeletedOrderByObjectId(long systemId, String isDelete);
 
 	List<IamMsObject> findByIamMsSystem_SystemIdAndObjectParent_ObjectIdAndIsDeleted(long systemId, long objectId, String isDelete);
 	

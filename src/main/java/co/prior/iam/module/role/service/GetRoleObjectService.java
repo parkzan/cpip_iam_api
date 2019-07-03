@@ -71,7 +71,7 @@ public class GetRoleObjectService {
     public List<RoleMapObjectRespone> allRoleMapObject(long systemId) {
     	log.info("Service allRoleMapObject systemId: {}", systemId);
     	
-        List<IamMsRole> listRole = this.roleRepository.findByIamMsSystem_SystemIdAndIsDeleted(systemId, AnswerFlag.N.toString());
+        List<IamMsRole> listRole = this.roleRepository.findByIamMsSystem_SystemIdAndIsDeletedOrderByRoleId(systemId, AnswerFlag.N.toString());
         List<RoleMapObjectRespone> listRespone = new ArrayList<>();
         if (listRole.isEmpty()){
         	throw new DataNotFoundException(ErrorCode.ROLE_NOT_FOUND);

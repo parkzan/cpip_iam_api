@@ -24,7 +24,7 @@ public class RoleInqueryService {
 	public List<IamMsRole> inqueryRole(long systemId) {
 		log.info("Service inqueryRole systemId: {}", systemId);
 
-		List<IamMsRole> roleList = this.roleRepository.findByIamMsSystem_SystemIdAndIsDeleted(systemId, AnswerFlag.N.toString());
+		List<IamMsRole> roleList = this.roleRepository.findByIamMsSystem_SystemIdAndIsDeletedOrderByRoleId(systemId, AnswerFlag.N.toString());
 		if (roleList.isEmpty()) {
 			throw new DataNotFoundException(ErrorCode.ROLE_NOT_FOUND);
 		}

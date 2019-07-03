@@ -16,11 +16,10 @@ public interface RoleRepository extends JpaRepository<IamMsRole, Long> {
 
 	Optional<IamMsRole> findByRoleCodeAndIamMsSystem_SystemIdAndIsDeleted(String roleCode, long systemId, String isDelete);
 
-	List<IamMsRole> findByIamMsSystemAndIsDeleted(IamMsSystem iamMsSystem, String isDelete);
 
-	List<IamMsRole> findByIamMsSystem_SystemIdAndIsDeleted(long systemId, String isDelete);
+	List<IamMsRole> findByIamMsSystem_SystemIdAndIsDeletedOrderByRoleId(long systemId, String isDelete);
 
 	Optional<IamMsRole> findByRoleIdAndIsDeleted(long roleId, String isDelete);
 
-	Optional<IamMsRole> findByIamMsSystem_SystemIdAndRoleIdAndIsDeleted(long systemId, long roleId, String isDelete);
+
 }

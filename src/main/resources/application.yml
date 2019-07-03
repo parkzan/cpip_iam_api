@@ -29,5 +29,5 @@ security:
          expirationTime: 1800 # second(s)
       refresh:
          secret: jwt-refresh-secret
-         expirationTime: 3600 # second(s)
+         expirationTime: 86400 # second(s)
          
