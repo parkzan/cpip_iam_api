@@ -12,6 +12,7 @@ public class RoleMapObjectRespone {
 
    private long systemId;
    private long roleId;
+   private String roleCode;
    private String roleName;
    
    @Builder.Default

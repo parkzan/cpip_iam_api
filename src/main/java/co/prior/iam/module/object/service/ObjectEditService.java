@@ -1,6 +1,5 @@
 package co.prior.iam.module.object.service;
 
-
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

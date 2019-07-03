@@ -1,10 +1,9 @@
 package co.prior.iam.module.system.controller;
 
-
-
 import java.util.List;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -23,25 +22,20 @@ import co.prior.iam.module.system.service.SystemEditService;
 import co.prior.iam.module.system.service.SystemInqueryService;
 import lombok.extern.slf4j.Slf4j;
 
-
 @Slf4j
 @RestController
 @RequestMapping(path = "/api")
+@PreAuthorize("hasRole('ROLE_IAM_ADMIN')")
 public class SystemController {
 
-
     private final SystemCreateService systemCreateService;
-
-
     private final SystemDeleteService systemDeleteService;
-
-
     private final SystemEditService systemEditService;
-
-
     private final SystemInqueryService systemInqueryService;
 
-    public SystemController(SystemCreateService systemCreateService, SystemDeleteService systemDeleteService, SystemEditService systemEditService, SystemInqueryService systemInqueryService) {
+    public SystemController(SystemCreateService systemCreateService, SystemDeleteService systemDeleteService, 
+    		SystemEditService systemEditService, SystemInqueryService systemInqueryService) {
+    	
         this.systemCreateService = systemCreateService;
         this.systemDeleteService = systemDeleteService;
         this.systemEditService = systemEditService;
@@ -50,44 +44,38 @@ public class SystemController {
 
     @PostMapping("/system")
     public ResponseEntity<Void> createSystem(@RequestBody SystemAddReq systemAddReq) {
-
-        log.info("Controller createSystem: {}", systemAddReq );
-        systemCreateService.createSystem(systemAddReq);
+        log.info("Controller createSystem: {}", systemAddReq);
+        
+        this.systemCreateService.createSystem(systemAddReq);
 
         return ResponseEntity.created(null).build();
-
     }
 
     @DeleteMapping("/system")
     public ResponseEntity<Void> deleteSystem(@RequestBody SystemDeleteReq systemDeleteReq) {
-
-        log.info("Controller deleteSystem: {}", systemDeleteReq );
-        systemDeleteService.deleteSystem(systemDeleteReq);
+        log.info("Controller deleteSystem: {}", systemDeleteReq);
+        
+        this.systemDeleteService.deleteSystem(systemDeleteReq);
 
         return ResponseEntity.noContent().build();
-
     }
 
     @PutMapping("/system")
     public ResponseEntity<Void> editSystem(@RequestBody SystemEditReq systemEditReq) {
-        log.info("Controller editSystem: {}", systemEditReq );
-        systemEditService.editSystem(systemEditReq);
+        log.info("Controller editSystem: {}", systemEditReq);
+        
+        this.systemEditService.editSystem(systemEditReq);
 
         return  ResponseEntity.noContent().build();
-
     }
 
     @GetMapping("/systems")
     public ResponseEntity<List<IamMsSystem>> inquerySystem() {
-        log.info("Controller inquerySystem: {}");
-        List<IamMsSystem> list = systemInqueryService.inquerySystem();
+        log.info("Controller inquerySystem");
+        
+        List<IamMsSystem> list = this.systemInqueryService.inquerySystem();
 
-
-            return ResponseEntity.ok(list);
-
-
-
+        return ResponseEntity.ok(list);
     }
-
 
 }

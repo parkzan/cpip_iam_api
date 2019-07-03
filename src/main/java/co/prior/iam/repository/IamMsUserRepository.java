@@ -12,7 +12,8 @@ import co.prior.iam.entity.IamMsUser;
 @Repository
 public interface IamMsUserRepository extends PagingAndSortingRepository<IamMsUser, Long> {
 	
-	Page<IamMsUser> findPageableByIamMsSystem_SystemIdAndIsDeleted(long systemId, String isDeleted, Pageable pageable);
+	Page<IamMsUser> findPageableByIamMsSystem_SystemIdAndIsIamAdminAndIsDeleted(
+			long systemId, String isIamAdmin, String isDeleted, Pageable pageable);
 	
 	Optional<IamMsUser> findByUserIdAndIsDeleted(long userId, String isDeleted);
 	
