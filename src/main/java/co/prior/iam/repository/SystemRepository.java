@@ -13,7 +13,7 @@ public interface SystemRepository  extends JpaRepository<IamMsSystem,Long> {
 
    Optional<IamMsSystem>  findBySystemCodeAndIsDeleted(String systeamCode , String isDelete);
 
-   List<IamMsSystem>  findByIsDeleted(String isDelete);
+   List<IamMsSystem>  findByIsDeletedOrderBySystemId(String isDelete);
 
    Optional<IamMsSystem> findBySystemIdAndIsDeleted(Long systemId,String isDelete);
 }

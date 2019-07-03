@@ -31,7 +31,7 @@ public class ObjectChildInqueryService {
 		List<IamMsObject> listObject = objectRepository.findByIamMsSystem_SystemIdAndObjectParent_ObjectIdAndIsDeleted(
 				systemId, objectId, AnswerFlag.N.toString());
 
-		List<IamMsObject> listAllObject = objectRepository.findByIamMsSystem_SystemIdAndIsDeleted(
+		List<IamMsObject> listAllObject = objectRepository.findByIamMsSystem_SystemIdAndIsDeletedOrderByObjectId(
 				systemId, AnswerFlag.N.toString());
 
 		List<ObjectRespone> list = new ArrayList<>();
