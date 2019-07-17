@@ -167,6 +167,7 @@ public class AuthService {
     	}
     	
     	iamMsUser.setUserPassword(passwordEncoder.encode(request.getNewPassword()));
+    	iamMsUser.setNoOfFailTimes(0);
     	this.iamMsUserRepository.save(iamMsUser);
     }
     
