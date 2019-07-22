@@ -24,7 +24,7 @@ public class SystemCreateService {
 	}
 
 	@Transactional
-	public void createSystem(SystemAddReq systemAddReq) {
+	public IamMsSystem createSystem(SystemAddReq systemAddReq) {
 		log.info("Service createSystem: {}", systemAddReq);
 
 		Optional<IamMsSystem> check = this.systemRepository.findBySystemCodeAndIsDeleted(
@@ -38,7 +38,11 @@ public class SystemCreateService {
 		iamMsSystem.setSystemCode(systemAddReq.getSystemCode());
 		iamMsSystem.setSystemIcon(systemAddReq.getSystemIcon());
 		iamMsSystem.setSystemName(systemAddReq.getSystemName());
+		iamMsSystem.setUpdatedBy(null);
+		iamMsSystem.setUpdatedDate(null);
 		this.systemRepository.save(iamMsSystem);
+
+		return  iamMsSystem;
     }
 
 }

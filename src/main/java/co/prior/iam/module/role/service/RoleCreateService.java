@@ -48,6 +48,8 @@ public class RoleCreateService {
 		model.setRoleName(roleCreateReq.getRoleName());
 		model.setRoleIcon(roleCreateReq.getRoleIcon());
 		model.setIamMsSystem(iamMsSystem);
+		model.setUpdatedBy(null);
+		model.setUpdatedDate(null);
 		this.roleRepository.save(model);
 	}
 	
