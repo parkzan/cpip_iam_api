@@ -21,6 +21,7 @@ spring:
             default_schema: iam2
             temp:
                use_jdbc_metadata_defaults: false
+
                
 security:
    jwt:

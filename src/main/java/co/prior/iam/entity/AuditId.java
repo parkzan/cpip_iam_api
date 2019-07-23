@@ -13,12 +13,12 @@ import java.io.Serializable;
 @Data
 public class AuditId implements Serializable {
 
-    @GeneratedValue(generator = "iam_audit_trail_audit_id_seq")
+    @GeneratedValue(generator = "audit_id_seq")
     @GenericGenerator(
-            name = "iam_audit_trail_audit_id_seq",
+            name = "audit_id_seq",
             strategy = "org.hibernate.id.enhanced.SequenceStyleGenerator",
             parameters = {
-                    @org.hibernate.annotations.Parameter(name = "sequence_name", value = "audit_id"),
+                    @org.hibernate.annotations.Parameter(name = "sequence_name", value = "iam_audit_trail_audit_id_seq"),
                     @org.hibernate.annotations.Parameter(name = "initial_value", value = "1"),
                     @org.hibernate.annotations.Parameter(name = "increment_size", value = "1")
             }
