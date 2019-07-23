@@ -43,13 +43,12 @@ public class SystemController {
     }
 
     @PostMapping("/system")
-    public ResponseEntity<Void> createSystem(@RequestBody SystemAddReq systemAddReq) {
+    public ResponseEntity<IamMsSystem> createSystem(@RequestBody SystemAddReq systemAddReq) {
         log.info("Controller createSystem: {}", systemAddReq);
-        
-        this.systemCreateService.createSystem(systemAddReq);
 
-        return ResponseEntity.created(null).build();
+        return ResponseEntity.created(null).body(this.systemCreateService.createSystem(systemAddReq));
     }
+
 
     @DeleteMapping("/system")
     public ResponseEntity<Void> deleteSystem(@RequestBody SystemDeleteReq systemDeleteReq) {
