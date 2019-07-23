@@ -1,10 +1,11 @@
 package co.prior.iam.entity;
 
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import lombok.Data;
 import org.hibernate.annotations.GenericGenerator;
-import org.springframework.data.annotation.Id;
+import org.hibernate.annotations.Parameter;
+
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -13,16 +14,17 @@ import java.io.Serializable;
 @Data
 public class AuditId implements Serializable {
 
-    @GeneratedValue(generator = "audit_id_seq")
+
     @GenericGenerator(
             name = "audit_id_seq",
             strategy = "org.hibernate.id.enhanced.SequenceStyleGenerator",
             parameters = {
-                    @org.hibernate.annotations.Parameter(name = "sequence_name", value = "iam_audit_trail_audit_id_seq"),
-                    @org.hibernate.annotations.Parameter(name = "initial_value", value = "1"),
-                    @org.hibernate.annotations.Parameter(name = "increment_size", value = "1")
+                    @Parameter(name = "sequence_name", value = "iam_audit_trail_audit_id_seq"),
+                    @Parameter(name = "initial_value", value = "1"),
+                    @Parameter(name = "increment_size", value = "1")
             }
     )
+    @GeneratedValue(generator = "audit_id_seq")
     private Long auditId ;
 
 
@@ -30,4 +32,10 @@ public class AuditId implements Serializable {
     private Integer runningNo;
 
 
+    public AuditId(Long auditId ,Integer runningNo) {
+        this.auditId = auditId;
+        this.runningNo = runningNo;
+    }
+
+    public AuditId(){}
 }
