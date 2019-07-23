@@ -7,6 +7,7 @@ import java.util.Optional;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import co.prior.iam.entity.IamMsParameterGroup;
@@ -111,6 +112,7 @@ public class ParamService {
 		// clear all parameter cache
 	}
 	
+	@Transactional(propagation = Propagation.REQUIRED, readOnly = true)
 	public Optional<ParamInfoData> getErrorMessage(ErrorCode errorCode) {
 		log.info("Service getErrorMessage errorCode: {}", errorCode);
 		
@@ -121,7 +123,7 @@ public class ParamService {
 		if (paramOpt.isPresent()) {
 			GetParamsResponse param = paramOpt.get();
 			return param.getParamInfoList().stream()
-					.filter(paramInfo -> errorCode.toString().equalsIgnoreCase(paramInfo.getParamInfo()))
+					.filter(paramInfo -> errorCode.code().equalsIgnoreCase(paramInfo.getParamInfo()))
 					.findFirst();
 		}
 		

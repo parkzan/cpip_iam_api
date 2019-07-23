@@ -28,7 +28,7 @@ public class ObjectInqueryService {
 	public List<ObjectRespone> inqueryObject(long systemId) {
 		log.info("Service inqueryObject systemId: {}", systemId);
 
-		List<IamMsObject> listModel = this.objectRepository.findByIamMsSystem_SystemIdAndIsDeleted(systemId, AnswerFlag.N.toString());
+		List<IamMsObject> listModel = this.objectRepository.findByIamMsSystem_SystemIdAndIsDeletedOrderByObjectId(systemId, AnswerFlag.N.toString());
 		List<ObjectRespone> list = new ArrayList<>();
 		if (!listModel.isEmpty()) {
 			for (IamMsObject object : listModel) {

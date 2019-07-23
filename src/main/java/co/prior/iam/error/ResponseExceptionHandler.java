@@ -33,7 +33,7 @@ public class ResponseExceptionHandler extends ResponseEntityExceptionHandler {
 		log.error(ex.getCode().toString(), ex);
 		
 		ParamInfoData paramInfo = this.getErrorMessage(ex.getCode());
-		ErrorModel errorModel = new ErrorModel(ex.getCode(), paramInfo.getParamEnMessage(), paramInfo.getParamLocalMessage());
+		ErrorModel errorModel = new ErrorModel(ex.getCode().code(), paramInfo.getParamEnMessage(), paramInfo.getParamLocalMessage());
 		
 		return new ResponseEntity<>(errorModel, HttpStatus.BAD_REQUEST);
 	}
@@ -43,7 +43,7 @@ public class ResponseExceptionHandler extends ResponseEntityExceptionHandler {
 		log.error(ex.getCode().toString(), ex);
 		
 		ParamInfoData paramInfo = this.getErrorMessage(ex.getCode());
-		ErrorModel errorModel = new ErrorModel(ex.getCode(), paramInfo.getParamEnMessage(), paramInfo.getParamLocalMessage());
+		ErrorModel errorModel = new ErrorModel(ex.getCode().code(), paramInfo.getParamEnMessage(), paramInfo.getParamLocalMessage());
 		
 		return new ResponseEntity<>(errorModel, HttpStatus.NOT_FOUND);
 	}
@@ -53,7 +53,7 @@ public class ResponseExceptionHandler extends ResponseEntityExceptionHandler {
 		log.error(ex.getCode().toString(), ex);
 
 		ParamInfoData paramInfo = this.getErrorMessage(ex.getCode());
-		ErrorModel errorModel = new ErrorModel(ex.getCode(), paramInfo.getParamEnMessage(), paramInfo.getParamLocalMessage());
+		ErrorModel errorModel = new ErrorModel(ex.getCode().code(), paramInfo.getParamEnMessage(), paramInfo.getParamLocalMessage());
 		
 		return new ResponseEntity<>(errorModel, HttpStatus.CONFLICT);
 	}
@@ -63,7 +63,7 @@ public class ResponseExceptionHandler extends ResponseEntityExceptionHandler {
 		logger.error(ex.getCode().toString(), ex);
 		
 		ParamInfoData paramInfo = this.getErrorMessage(ex.getCode());
-		ErrorModel errorModel = new ErrorModel(ex.getCode(), paramInfo.getParamEnMessage(), paramInfo.getParamLocalMessage());
+		ErrorModel errorModel = new ErrorModel(ex.getCode().code(), paramInfo.getParamEnMessage(), paramInfo.getParamLocalMessage());
 		
 		return new ResponseEntity<>(errorModel, HttpStatus.UNAUTHORIZED);
 	}
@@ -73,7 +73,7 @@ public class ResponseExceptionHandler extends ResponseEntityExceptionHandler {
 		logger.error(ex.getCode().toString(), ex);
 		
 		ParamInfoData paramInfo = this.getErrorMessage(ex.getCode());
-		ErrorModel errorModel = new ErrorModel(ex.getCode(), paramInfo.getParamEnMessage(), paramInfo.getParamLocalMessage());
+		ErrorModel errorModel = new ErrorModel(ex.getCode().code(), paramInfo.getParamEnMessage(), paramInfo.getParamLocalMessage());
 		
 		return new ResponseEntity<>(errorModel, HttpStatus.FORBIDDEN);
 	}
@@ -83,7 +83,7 @@ public class ResponseExceptionHandler extends ResponseEntityExceptionHandler {
 		logger.error(ex.getLocalizedMessage(), ex);
 
 		ParamInfoData paramInfo = this.getErrorMessage(ErrorCode.ACCESS_DENIED);
-		ErrorModel errorModel = new ErrorModel(ErrorCode.ACCESS_DENIED, paramInfo.getParamEnMessage(), paramInfo.getParamLocalMessage());
+		ErrorModel errorModel = new ErrorModel(ErrorCode.ACCESS_DENIED.code(), paramInfo.getParamEnMessage(), paramInfo.getParamLocalMessage());
 
 		return new ResponseEntity<>(errorModel, HttpStatus.FORBIDDEN);
 	}
@@ -93,7 +93,7 @@ public class ResponseExceptionHandler extends ResponseEntityExceptionHandler {
 		logger.error(ex.getLocalizedMessage(), ex);
 
 		ParamInfoData paramInfo = this.getErrorMessage(ErrorCode.INTERNAL_SERVER_ERROR);
-		ErrorModel errorModel = new ErrorModel(ErrorCode.INTERNAL_SERVER_ERROR, paramInfo.getParamEnMessage(), paramInfo.getParamLocalMessage());
+		ErrorModel errorModel = new ErrorModel(ErrorCode.INTERNAL_SERVER_ERROR.code(), paramInfo.getParamEnMessage(), paramInfo.getParamLocalMessage());
 
 		return new ResponseEntity<>(errorModel, HttpStatus.INTERNAL_SERVER_ERROR);
 	}

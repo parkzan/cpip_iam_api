@@ -24,7 +24,7 @@ public class SystemInqueryService {
 	public List<IamMsSystem> inquerySystem() {
 		log.info("Service inquerySystem");
 
-		List<IamMsSystem> iamMsSystemList = this.systemRepository.findByIsDeleted(AnswerFlag.N.toString());
+		List<IamMsSystem> iamMsSystemList = this.systemRepository.findByIsDeletedOrderBySystemId(AnswerFlag.N.toString());
 
 		if (iamMsSystemList.isEmpty()) {
 			throw new DataNotFoundException(ErrorCode.SYSTEM_NOT_FOUND);

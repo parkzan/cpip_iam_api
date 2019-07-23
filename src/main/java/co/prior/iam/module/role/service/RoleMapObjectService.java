@@ -56,19 +56,18 @@ public class RoleMapObjectService {
 								objectsList.get(0).getIamMsRole().getRoleId(), newObj, AnswerFlag.N.toString());
 
 				if(!iamMsObject.isPresent()){
-						IamMsObject newIamObject = this.objectRepository.findByIamMsSystem_SystemIdAndObjectIdAndIsDeleted(
-								objectsList.get(0).getIamMsSystem().getSystemId(),
-								newObj, AnswerFlag.N.toString()).orElseThrow(()-> new DataNotFoundException(ErrorCode.OBJECT_NOT_FOUND));
+					IamMsObject newIamObject = this.objectRepository.findByIamMsSystem_SystemIdAndObjectIdAndIsDeleted(
+							objectsList.get(0).getIamMsSystem().getSystemId(), newObj, AnswerFlag.N.toString())
+							.orElseThrow(() -> new DataNotFoundException(ErrorCode.OBJECT_NOT_FOUND));
 
-						IamMsRoleObject model = new IamMsRoleObject();
-						model.setIamMsObject(newIamObject);
-						model.setIamMsSystem(newIamObject.getIamMsSystem());
-						model.setIamMsRole(objectsList.get(0).getIamMsRole());
-						this.roleObjectRepository.save(model);
-
-
+					IamMsRoleObject model = new IamMsRoleObject();
+					model.setIamMsObject(newIamObject);
+					model.setIamMsSystem(newIamObject.getIamMsSystem());
+					model.setIamMsRole(objectsList.get(0).getIamMsRole());
+					this.roleObjectRepository.save(model);
 				}
 			}
+			
 		} else if (roleMapObjectReq.getNewObjectId() != null) {
 			IamMsRole iamMsRole = roleRepository.findByRoleIdAndIsDeleted(roleMapObjectReq.getRoleId(), AnswerFlag.N.toString())
 					.orElseThrow(() -> new DataNotFoundException(ErrorCode.ROLE_NOT_FOUND));

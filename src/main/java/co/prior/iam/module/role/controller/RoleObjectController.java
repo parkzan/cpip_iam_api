@@ -3,6 +3,7 @@ package co.prior.iam.module.role.controller;
 import java.util.List;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -19,6 +20,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @RestController
 @RequestMapping(path = "/api")
+@PreAuthorize("hasRole('ROLE_IAM_ADMIN')")
 public class RoleObjectController {
 
     private final GetRoleObjectService getRoleObjectService;

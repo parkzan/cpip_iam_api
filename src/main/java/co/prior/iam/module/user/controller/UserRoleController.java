@@ -3,6 +3,7 @@ package co.prior.iam.module.user.controller;
 import java.net.URI;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -23,7 +24,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @RestController
 @RequestMapping(path = "/api")
-//@PreAuthorize("hasRole('ROLE_IAM_ADMIN')")
+@PreAuthorize("hasRole('ROLE_IAM_ADMIN')")
 public class UserRoleController {
 
 	private final UserRoleService userRoleService;

@@ -3,6 +3,7 @@ package co.prior.iam.module.role.controller;
 import java.util.List;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -25,6 +26,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @RestController
 @RequestMapping(path = "/api")
+@PreAuthorize("hasRole('ROLE_IAM_ADMIN')")
 public class RoleController {
 
     private final RoleCreateService roleCreateService;
@@ -72,7 +74,7 @@ public class RoleController {
     public ResponseEntity<List<IamMsRole>> inqueryRole(@PathVariable long systemId) {
         log.info("Controller inqueryRole systemId: {}", systemId);
         
-        List<IamMsRole> list = roleInqueryService.inqueryRole(systemId);
+        List<IamMsRole> list = this.roleInqueryService.inqueryRole(systemId);
 
         return ResponseEntity.ok(list);
     }

@@ -2,6 +2,7 @@ package co.prior.iam.module.role.service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -36,11 +37,13 @@ public class GetRoleObjectService {
 		IamMsRole iamMsRole = this.roleRepository.findByRoleIdAndIsDeleted(roleId, AnswerFlag.N.toString())
                 .orElseThrow(() -> new DataNotFoundException(ErrorCode.ROLE_NOT_FOUND));
 
-        List<IamMsRoleObject> objectList = this.roleObjectRepository.findByIamMsRoleAndIsDeleted(iamMsRole,AnswerFlag.N.toString());
+        List<IamMsRoleObject> objectList = this.roleObjectRepository.findByIamMsRole_RoleIdAndIsDeleted(
+        		roleId, AnswerFlag.N.toString());
         List<ObjectModel> listChid = new ArrayList<>();
         RoleMapObjectRespone respone = RoleMapObjectRespone.builder()
         		.systemId(iamMsRole.getIamMsSystem().getSystemId())
         		.roleId(iamMsRole.getRoleId())
+        		.roleCode(iamMsRole.getRoleCode())
         		.roleName(iamMsRole.getRoleName())
         		.build();
 
@@ -52,6 +55,7 @@ public class GetRoleObjectService {
             if (obj.getIamMsObject().getObjectParent() == null) {
             	ObjectModel objectModel = ObjectModel.builder()
             			.objectId(obj.getIamMsObject().getObjectId())
+            			.objectCode(obj.getIamMsObject().getObjectCode())
             			.objectName(obj.getIamMsObject().getObjectName())
             			.build();
                 setObjectChild(obj, objectList ,objectModel.getObjects());
@@ -67,18 +71,20 @@ public class GetRoleObjectService {
     public List<RoleMapObjectRespone> allRoleMapObject(long systemId) {
     	log.info("Service allRoleMapObject systemId: {}", systemId);
     	
-        List<IamMsRole> listRole = this.roleRepository.findByIamMsSystem_SystemIdAndIsDeleted(systemId, AnswerFlag.N.toString());
+        List<IamMsRole> listRole = this.roleRepository.findByIamMsSystem_SystemIdAndIsDeletedOrderByRoleId(systemId, AnswerFlag.N.toString());
         List<RoleMapObjectRespone> listRespone = new ArrayList<>();
         if (listRole.isEmpty()){
         	throw new DataNotFoundException(ErrorCode.ROLE_NOT_FOUND);
         }
 
         for (IamMsRole role : listRole){
-            List<IamMsRoleObject> objectList = this.roleObjectRepository.findByIamMsRoleAndIsDeleted(role, AnswerFlag.N.toString());
+            List<IamMsRoleObject> objectList = this.roleObjectRepository.findByIamMsRole_RoleIdAndIsDeleted(
+            		role.getRoleId(), AnswerFlag.N.toString());
             List<ObjectModel> listChid = new ArrayList<>();
             RoleMapObjectRespone respone = RoleMapObjectRespone.builder()
             		.systemId(role.getIamMsSystem().getSystemId())
             		.roleId(role.getRoleId())
+            		.roleCode(role.getRoleCode())
             		.roleName(role.getRoleName())
             		.build();
 
@@ -87,6 +93,7 @@ public class GetRoleObjectService {
                     if (obj.getIamMsObject().getObjectParent() == null) {
                     	ObjectModel objectModel = ObjectModel.builder()
                     			.objectId(obj.getIamMsObject().getObjectId())
+                    			.objectCode(obj.getIamMsObject().getObjectCode())
                     			.objectName(obj.getIamMsObject().getObjectName())
                     			.build();
                         setObjectChild(obj, objectList ,objectModel.getObjects());
@@ -101,12 +108,50 @@ public class GetRoleObjectService {
         
         return listRespone;
     }
+    
+    public Optional<RoleMapObjectRespone> getRoleMapObject(long roleId) {
+        log.info("Service getRoleMapObject roleId: {}", roleId);
+
+        Optional<IamMsRole> iamMsRoleOpt = this.roleRepository.findByRoleIdAndIsDeleted(roleId, AnswerFlag.N.toString());
+        
+        List<IamMsRoleObject> objectList = this.roleObjectRepository.findByIamMsRole_RoleIdAndIsDeleted(
+        		roleId, AnswerFlag.N.toString());
+
+        if (iamMsRoleOpt.isPresent() && !objectList.isEmpty()) {
+        	List<ObjectModel> listChid = new ArrayList<>();
+        	IamMsRole iamMsRole = iamMsRoleOpt.get();
+            RoleMapObjectRespone respone = RoleMapObjectRespone.builder()
+            		.systemId(iamMsRole.getIamMsSystem().getSystemId())
+            		.roleId(iamMsRole.getRoleId())
+            		.roleCode(iamMsRole.getRoleCode())
+            		.roleName(iamMsRole.getRoleName())
+            		.build();
+            
+            for (IamMsRoleObject obj : objectList) {
+                if (obj.getIamMsObject().getObjectParent() == null) {
+                	ObjectModel objectModel = ObjectModel.builder()
+                			.objectId(obj.getIamMsObject().getObjectId())
+                			.objectCode(obj.getIamMsObject().getObjectCode())
+                			.objectName(obj.getIamMsObject().getObjectName())
+                			.build();
+                    setObjectChild(obj, objectList ,objectModel.getObjects());
+                    listChid.add(objectModel);
+                }
+            }
+            
+            respone.setObjects(listChid);
+            return Optional.of(respone);
+        }
+        
+        return Optional.empty();
+    }
 
     private void setObjectChild(IamMsRoleObject root, List<IamMsRoleObject> list, List<ObjectModel> listChild) {
         for (IamMsRoleObject obj : list) {
             if (obj.getIamMsObject().getObjectParent() == root.getIamMsObject()) {
             	ObjectModel childObjectModel = ObjectModel.builder()
             			.objectId(obj.getIamMsObject().getObjectId())
+            			.objectCode(obj.getIamMsObject().getObjectCode())
             			.objectName(obj.getIamMsObject().getObjectName())
             			.build();
                 listChild.add(childObjectModel);

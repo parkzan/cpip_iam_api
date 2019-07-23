@@ -49,8 +49,8 @@ public class UserService {
 		}
 		
 		Pageable records = PageRequest.of(page, size, sort);
-		Page<IamMsUser> userPage = this.iamMsUserRepository.findPageableByIamMsSystem_SystemIdAndIsDeleted(
-				request.getSystemId(), AnswerFlag.N.toString(), records);
+		Page<IamMsUser> userPage = this.iamMsUserRepository.findPageableByIamMsSystem_SystemIdAndIsIamAdminAndIsDeleted(
+				request.getSystemId(), AnswerFlag.N.toString(), AnswerFlag.N.toString(), records);
 		List<GetUserResponse> data = new ArrayList<>();
 		for (IamMsUser user : userPage.getContent()) {
 			data.add(GetUserResponse.builder()
@@ -126,6 +126,15 @@ public class UserService {
 		
 		iamMsUser.setIsDeleted(AnswerFlag.Y.toString());
 		this.iamMsUserRepository.save(iamMsUser);
+	}
+	
+	public long getUserId(String userCode) {
+		log.info("Service getUserId userCode: {}", userCode);
+		
+		IamMsUser iamMsUser = this.iamMsUserRepository.findByUserCodeAndIsDeleted(userCode, AnswerFlag.N.toString())
+				.orElseThrow(() -> new DataNotFoundException(ErrorCode.USER_NOT_FOUND));
+		
+		return iamMsUser.getUserId();
 	}
 	
 }
