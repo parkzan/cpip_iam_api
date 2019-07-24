@@ -11,6 +11,6 @@ import co.prior.iam.entity.IamAuditTrail;
 public interface IamAuditTrailRepository extends JpaRepository<IamAuditTrail, AuditId> {
 
 
-        @Query(value = "select nextval('audit_id_seq')" , nativeQuery = true)
-        long getAuditId();
+        @Query(value = "select last_value from iam2.iam_audit_trail_audit_id_seq" , nativeQuery = true)
+        Long getAuditId();
 }
