@@ -167,6 +167,7 @@ public class AuthService {
     	}
     	
     	iamMsUser.setUserPassword(passwordEncoder.encode(request.getNewPassword()));
+    	iamMsUser.setNoOfFailTimes(0);
     	this.iamMsUserRepository.save(iamMsUser);
     }
     
@@ -174,7 +175,7 @@ public class AuthService {
     	log.info("Service refreshToken token: {}", token);
     	
     	if (StringUtils.hasText(token) && jwtTokenProvider.validateToken(token, refreshSecret)) {
-            Long userId = jwtTokenProvider.getUserIdFromJWT(token, refreshSecret);
+            long userId = jwtTokenProvider.getUserIdFromJWT(token, refreshSecret);
             UserDetails userDetails = userDetailsService.loadUserById(userId);
             UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
             		userDetails, null, null);
