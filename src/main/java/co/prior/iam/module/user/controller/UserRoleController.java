@@ -1,7 +1,10 @@
 package co.prior.iam.module.user.controller;
 
 import java.net.URI;
+import java.util.List;
 
+import co.prior.iam.module.user.model.response.UserRole;
+import co.prior.iam.module.user.model.response.UserRoleSystemRespone;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -41,6 +44,27 @@ public class UserRoleController {
 		
         return ResponseEntity.ok(response);
     }
+
+	@GetMapping("/user/system/{system_id}")
+	public ResponseEntity<List<UserRole>> getUserRolesBySystem(@PathVariable(value = "system_id") long systemId) {
+		log.info("Controller getUserRoles systemId: {}", systemId);
+
+
+
+		return ResponseEntity.ok(this.userRoleService.getUserRolesBySystem(systemId));
+	}
+
+
+	@GetMapping("/user/{user_id}/roles/system")
+	public ResponseEntity<List<UserRoleSystemRespone> > getAllUserRoles(@PathVariable(value = "user_id") long userId) {
+		log.info("Controller getUserRoles userId: {}", userId);
+
+		List<UserRoleSystemRespone>  response = this.userRoleService.getAllUserRoles(userId);
+
+		return ResponseEntity.ok(response);
+	}
+
+
 	
 	@GetMapping("/role/{role_id}/users")
     public ResponseEntity<GetRoleUsersResponse> getRoleUsers(@PathVariable(value = "role_id") long roleId) {

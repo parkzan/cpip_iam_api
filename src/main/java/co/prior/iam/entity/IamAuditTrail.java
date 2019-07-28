@@ -27,11 +27,11 @@ public class IamAuditTrail {
 	@Id
 	@GenericGenerator(
 			name = "audit_id_seq",
-			strategy = "assigned",
+			strategy = "enhanced-sequence",
 			parameters = {
 					@org.hibernate.annotations.Parameter(name = "sequence_name", value = "iam_audit_trail_audit_id_seq"),
 					@org.hibernate.annotations.Parameter(name = "initial_value", value = "1"),
-					@org.hibernate.annotations.Parameter(name = SequenceStyleGenerator.INCREMENT_PARAM, value = "1"),
+					@org.hibernate.annotations.Parameter(name = SequenceStyleGenerator.INCREMENT_PARAM, value = "0"),
 
 			}
 	)

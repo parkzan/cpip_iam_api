@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import co.prior.iam.module.user.model.response.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,17 +20,14 @@ import co.prior.iam.module.role.model.respone.ObjectModel;
 import co.prior.iam.module.role.model.respone.RoleMapObjectRespone;
 import co.prior.iam.module.role.service.GetRoleObjectService;
 import co.prior.iam.module.user.model.request.CreateUserRoleRequest;
-import co.prior.iam.module.user.model.response.GetRoleUsersResponse;
-import co.prior.iam.module.user.model.response.GetUserRolesResponse;
-import co.prior.iam.module.user.model.response.UserData;
-import co.prior.iam.module.user.model.response.UserObject;
-import co.prior.iam.module.user.model.response.UserRole;
-import co.prior.iam.module.user.model.response.UserRoleObject;
 import co.prior.iam.repository.IamMsUserRepository;
 import co.prior.iam.repository.IamMsUserRoleRepository;
 import co.prior.iam.repository.RoleRepository;
 import co.prior.iam.repository.SystemRepository;
 import lombok.extern.slf4j.Slf4j;
+
+import javax.management.Query;
+import javax.persistence.EntityManager;
 
 @Slf4j
 @Service
@@ -51,6 +49,36 @@ public class UserRoleService {
 		this.iamMsRoleRepository = iamMsRoleRepository;
 		this.iamMsUserRoleRepository = iamMsUserRoleRepository;
 	}
+
+	public  List<UserRole> getUserRolesBySystem(long systemId){
+		log.info("Service getUserRoles systemId: {}", systemId);
+
+
+		List<IamMsUserRole> iamMsUserRoles = this.iamMsUserRoleRepository.findByIamMsSystem_SystemIdAndIsDeleted(
+				systemId, AnswerFlag.N.toString());
+
+		List<UserRole> list = new ArrayList<>();
+
+		if (iamMsUserRoles.isEmpty()) {
+			throw new DataNotFoundException(ErrorCode.USER_ROLE_NOT_FOUND);
+		}
+
+		for (IamMsUserRole userRole : iamMsUserRoles){
+
+			UserRole respone = UserRole.builder().roleCode(userRole.getIamMsRole().getRoleCode())
+													.roleId(userRole.getIamMsRole().getRoleId())
+													.userRoleId(userRole.getUserRoleId())
+													.roleName(userRole.getIamMsRole().getRoleName())
+													.build();
+
+			list.add(respone);
+		}
+
+
+		return  list;
+
+	}
+
 	
 	public GetUserRolesResponse getUserRoles(long userId) {
 		log.info("Service getUserRoles userId: {}", userId);
@@ -90,7 +118,63 @@ public class UserRoleService {
 				.userRoles(userRoles)
 				.build();
 	}
-	
+
+	public List<UserRoleSystemRespone>  getAllUserRoles(long userId) {
+		log.info("Service getAllUserRoles userId: {}", userId);
+
+//		List<IamMsUserRole> iamMsUserRoles = this.iamMsUserRoleRepository.findByIamMsUser_UserIdAndIsDeleted(
+//				userId, AnswerFlag.N.toString());
+
+		List<Long> listSystemId = iamMsUserRoleRepository.getListSystemId(userId);
+
+		List<UserRoleSystemRespone> list = new ArrayList<>();
+
+
+
+
+
+		if (listSystemId.isEmpty()) {
+			throw new DataNotFoundException(ErrorCode.USER_ROLE_NOT_FOUND);
+		}
+
+
+
+			for (Long systemId : listSystemId){
+
+				List<IamMsUserRole> userRoles = iamMsUserRoleRepository.findByIamMsSystem_SystemIdAndIsDeleted(systemId,AnswerFlag.N.toString());
+				if (userRoles.isEmpty()) {
+					throw new DataNotFoundException(ErrorCode.USER_ROLE_NOT_FOUND);
+				}
+				List<UserRole> userRoleList = new ArrayList<>();
+				for (IamMsUserRole user : userRoles) {
+
+						UserRole userRoleModel = UserRole.builder().userRoleId(user.getUserRoleId())
+								.roleCode(user.getIamMsRole().getRoleCode())
+								.roleId(user.getIamMsRole().getRoleId())
+								.roleName(user.getIamMsRole().getRoleName())
+								.build();
+						userRoleList.add(userRoleModel);
+
+
+					}
+				UserRoleSystemRespone respone = UserRoleSystemRespone.builder().systemCode(userRoles.get(0).getIamMsSystem().getSystemCode())
+						.systemId(userRoles.get(0).getIamMsSystem().getSystemId())
+						.systemName(userRoles.get(0).getIamMsSystem().getSystemName())
+						.systemIcon(userRoles.get(0).getIamMsSystem().getSystemIcon())
+						.userRoles(userRoleList)
+						.build();
+
+
+				list.add(respone);
+
+
+
+			}
+
+
+
+		return list;
+	}
 	public GetRoleUsersResponse getRoleUsers(long roleId) {
 		log.info("Service getRoleUsers roleId: {}", roleId);
 		

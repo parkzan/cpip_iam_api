@@ -2,6 +2,7 @@ package co.prior.iam.module.system.controller;
 
 import java.util.List;
 
+import co.prior.iam.module.system.model.respone.SystemRespone;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -70,10 +71,10 @@ public class SystemController {
     }
 
     @GetMapping("/systems")
-    public ResponseEntity<List<IamMsSystem>> inquerySystem() {
+    public ResponseEntity<List<SystemRespone>> inquerySystem() {
         log.info("Controller inquerySystem");
         
-        List<IamMsSystem> list = this.systemInqueryService.inquerySystem();
+        List<SystemRespone> list = this.systemInqueryService.inquerySystem();
 
         return ResponseEntity.ok(list);
     }
