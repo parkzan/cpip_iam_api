@@ -114,8 +114,8 @@ public class AuthService {
             throw new DataDuplicateException(ErrorCode.USER_DUPLICATED);
         }
 
-    	IamMsSystem iamMsSystem = this.iamMsSystemRepository.findBySystemIdAndIsDeleted(request.getSystemId(), AnswerFlag.N.toString())
-    			.orElseThrow(() -> new DataNotFoundException(ErrorCode.SYSTEM_NOT_FOUND));
+//    	IamMsSystem iamMsSystem = this.iamMsSystemRepository.findBySystemIdAndIsDeleted(request.getSystemId(), AnswerFlag.N.toString())
+//    			.orElseThrow(() -> new DataNotFoundException(ErrorCode.SYSTEM_NOT_FOUND));
     			
     	String isIamAdmin = request.getIsIamAdmin().toString();
         IamMsUser iamMsUser = IamMsUser.builder()
@@ -130,7 +130,7 @@ public class AuthService {
         		.isIamAdmin(isIamAdmin)
         		.noOfFailTimes(0)
         		.disableFlag(AnswerFlag.N.toString())
-        		.iamMsSystem(iamMsSystem)
+//        		.iamMsSystem(iamMsSystem)
         		.build();
         
         iamMsUser.setUserPassword(passwordEncoder.encode(request.getPassword()));

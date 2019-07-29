@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import co.prior.iam.entity.IamMsUserRole;
@@ -15,7 +16,13 @@ public interface IamMsUserRoleRepository extends JpaRepository<IamMsUserRole, Lo
 	
 	List<IamMsUserRole> findByIamMsUser_UserIdAndIsDeleted(long userId, String isDeleted);
 
+	List<IamMsUserRole> findByIamMsSystem_SystemIdAndIsDeleted(long systemId, String isDeleted);
+
 	List<IamMsUserRole> findByIamMsRole_RoleIdAndIsDeleted(long roleId, String isDeleted);
+
+
+	@Query(value = " select system_id from iam2.iam_ms_user_role where user_id = ?1 group by  system_id" , nativeQuery = true )
+	List<Long> getListSystemId(long user_id);
 	
 	boolean existsByIamMsSystem_SystemIdAndIamMsUser_UserIdAndIamMsRole_RoleIdAndIsDeleted(
 			long systemId, long userId, long roleId, String isDeleted);

@@ -55,6 +55,8 @@ public class ObjectCreateService {
 		model.setObjectName(objectCreateReq.getObjectName());
 		model.setIamMsSystem(iamMsSystem);
 		model.setObjectParent(parentObject);
+		model.setUpdatedBy(null);
+		model.setUpdatedDate(null);
 		this.objectRepository.save(model);
 	}
 
