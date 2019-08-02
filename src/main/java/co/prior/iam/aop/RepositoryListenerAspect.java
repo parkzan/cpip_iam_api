@@ -10,7 +10,7 @@ import java.util.stream.Collectors;
 import javax.persistence.*;
 
 
-import co.prior.iam.entity.AuditId;
+
 import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.Aspect;
 import org.hibernate.annotations.GenericGenerator;
@@ -53,7 +53,8 @@ public class RepositoryListenerAspect {
 
 		if (primaryFieldOpt.isPresent()) {
 			int runningNo = 1;
-			long auditIdValue = 0 ;
+			long id = 0 ;
+
 
 
 			Field primaryField = primaryFieldOpt.get();
@@ -65,24 +66,25 @@ public class RepositoryListenerAspect {
 					.collect(Collectors.toList());
 
 			for (Field field : fields) {
+				Optional<IamAuditTrail> opt = this.saveAuditTrail(clazz, field, previousState, currentState, runningNo, primaryKey ,id );
 
-				if(runningNo == 1){
-					auditIdValue = iamAuditTrailRepository.getAuditId()+1;
-				}
+				if (opt.isPresent()) {
+					if(runningNo == 1 ){
 
-				if (this.saveAuditTrail(clazz, field, previousState, currentState, runningNo, primaryKey , auditIdValue).isPresent()) {
+						id = opt.get().getAuditId();
+					}
 					runningNo++;
 
 				}
 			}
 
 			Field isDeletedField = ReflectionUtils.findField(clazz, "isDeleted");
-			this.saveAuditTrail(clazz, isDeletedField, previousState, currentState, runningNo, primaryKey ,auditIdValue);
+			this.saveAuditTrail(clazz, isDeletedField, previousState, currentState, runningNo, primaryKey , id);
 		}
 	}
 
 	private Optional<IamAuditTrail> saveAuditTrail(Class<?> clazz, Field field, Object previousState, Object currentState,
-												   int runningNo, long primaryKey , long auditIdValue ) {
+												   int runningNo, long primaryKey , long id ) {
 
 		String columnName = field.getName().replaceAll("(.)(\\p{Upper})", "$1_$2").toLowerCase();
 		ReflectionUtils.makeAccessible(field);
@@ -98,7 +100,6 @@ public class RepositoryListenerAspect {
 					.findFirst();
 			if (fkFieldOpt.isPresent()) {
 				Field fkField = fkFieldOpt.get();
-//				columnName = fkField.getName().replaceAll("(.)(\\p{Upper})", "$1_$2").toLowerCase();
 				ReflectionUtils.makeAccessible(fkField);
 				oldValue = oldValue == null? null : ReflectionUtils.getField(fkField, oldValue);
 				newValue = ReflectionUtils.getField(fkField, newValue);
@@ -116,11 +117,11 @@ public class RepositoryListenerAspect {
 			IamAuditTrail iamAuditTrail = new IamAuditTrail();
 			String tableName = clazz.getAnnotation(Table.class).name();
 
-
-				iamAuditTrail.setAuditId(auditIdValue);
-			log.info("id: {}", iamAuditTrail.getAuditId());
-
 			iamAuditTrail.setRunningNo(runningNo);
+
+			if ( runningNo>1){
+				iamAuditTrail.setAuditId(id);
+			}
 
 
 

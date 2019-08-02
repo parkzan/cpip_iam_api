@@ -9,7 +9,7 @@ import lombok.Data;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class GetUsersRequest {
 
-	private long systemId;
+
 	private PageableRequest pageable;
 	
 }

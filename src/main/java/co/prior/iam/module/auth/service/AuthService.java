@@ -106,10 +106,10 @@ public class AuthService {
     
     @Transactional
     public IamMsUser signUp(SignUpRequest request) {
-    	log.info("Service signUp systemId: {}, userCode: {}", request.getSystemId(), request.getUserCode());
+    	log.info("Service signUp systemId: {}, userCode: {}",request.getUserCode());
     	
-    	if(this.iamMsUserRepository.existsByIamMsSystem_SystemIdAndUserCodeAndIsDeleted(
-    			request.getSystemId(), request.getUserCode(), AnswerFlag.N.toString())) {
+    	if(this.iamMsUserRepository.existsByUserCodeAndIsDeleted(
+    			request.getUserCode(), AnswerFlag.N.toString())) {
     		
             throw new DataDuplicateException(ErrorCode.USER_DUPLICATED);
         }

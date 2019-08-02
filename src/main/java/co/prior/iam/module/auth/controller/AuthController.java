@@ -43,7 +43,7 @@ public class AuthController {
 
     @PostMapping("/sign-up")
     public ResponseEntity<Void> signUp(@Valid @RequestBody SignUpRequest request) {
-    	log.info("Controller signUp systemId: {}, userCode: {}", request.getSystemId(), request.getUserCode());
+    	log.info("Controller signUp systemId: {}, userCode: {}",  request.getUserCode());
     	
     	IamMsUser iamMsUser = this.authService.signUp(request);
     	
