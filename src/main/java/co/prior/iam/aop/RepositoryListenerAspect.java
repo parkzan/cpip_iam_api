@@ -67,11 +67,12 @@ public class RepositoryListenerAspect {
 
 			for (Field field : fields) {
 				Optional<IamAuditTrail> opt = this.saveAuditTrail(clazz, field, previousState, currentState, runningNo, primaryKey ,id );
-				if(runningNo ==1 ){
-					id = opt.get().getAuditId();
-				}
-				if (opt.isPresent()) {
 
+				if (opt.isPresent()) {
+					if(runningNo == 1 ){
+
+						id = opt.get().getAuditId();
+					}
 					runningNo++;
 
 				}

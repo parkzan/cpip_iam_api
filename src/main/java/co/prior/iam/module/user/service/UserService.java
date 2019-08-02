@@ -34,7 +34,7 @@ public class UserService {
 	}
 	
 	public IamMsUserPage getUsers(GetUsersRequest request) {
-		log.info("Service getUsers systemId: {}", request.getSystemId());
+		log.info("Service getUsers systemId: {}", request);
 		
 		PageableRequest pageableRequest = request.getPageable();
 		int page = pageableRequest.getPage() - 1;
@@ -49,12 +49,11 @@ public class UserService {
 		}
 		
 		Pageable records = PageRequest.of(page, size, sort);
-		Page<IamMsUser> userPage = this.iamMsUserRepository.findPageableByIamMsSystem_SystemIdAndIsIamAdminAndIsDeleted(
-				request.getSystemId(), AnswerFlag.N.toString(), AnswerFlag.N.toString(), records);
+		Page<IamMsUser> userPage = this.iamMsUserRepository.findPageableByIsIamAdminAndIsDeletedOrderByUserCode(
+				 AnswerFlag.N.toString(), AnswerFlag.N.toString(), records);
 		List<GetUserResponse> data = new ArrayList<>();
 		for (IamMsUser user : userPage.getContent()) {
 			data.add(GetUserResponse.builder()
-					.systemId(user.getIamMsSystem().getSystemId())
 					.userId(user.getUserId())
 					.userCode(user.getUserCode())
 					.localFirstName(user.getLocalFirstName())
@@ -86,7 +85,6 @@ public class UserService {
 				.orElseThrow(() -> new DataNotFoundException(ErrorCode.USER_NOT_FOUND));
 		
 		return GetUserResponse.builder()
-				.systemId(iamMsUser.getIamMsSystem().getSystemId())
 				.userId(iamMsUser.getUserId())
 				.userCode(iamMsUser.getUserCode())
 				.localFirstName(iamMsUser.getLocalFirstName())
@@ -97,6 +95,10 @@ public class UserService {
 				.engLastName(iamMsUser.getEngLastName())
 				.isIamAdmin(iamMsUser.getIsIamAdmin())
 				.disableFlag(iamMsUser.getDisableFlag())
+				.createdBy(iamMsUser.getCreatedBy())
+				.createdDate(iamMsUser.getCreatedDate())
+				.updatedBy(iamMsUser.getUpdatedBy())
+				.updatedDate(iamMsUser.getUpdatedDate())
 				.build();
 	}
 	

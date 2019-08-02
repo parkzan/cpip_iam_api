@@ -44,7 +44,7 @@ public class UserController {
 	@PostMapping("/users")
     @PreAuthorize("hasRole('ROLE_IAM_ADMIN')")
     public ResponseEntity<IamMsUserPage> getUsers(@RequestBody GetUsersRequest request) {
-		log.info("Controller getUsers systemId: {}", request.getSystemId());
+		log.info("Controller getUsers systemId: {}", request);
 		
 		IamMsUserPage response = this.userService.getUsers(request);
 		

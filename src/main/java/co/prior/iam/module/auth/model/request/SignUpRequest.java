@@ -11,7 +11,7 @@ import lombok.Data;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class SignUpRequest {
 
-	private long systemId;
+
 	
 	@NotBlank
 	private String userCode;
