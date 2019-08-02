@@ -3,8 +3,7 @@ package co.prior.iam.module.user.controller;
 import java.net.URI;
 import java.util.List;
 
-import co.prior.iam.module.user.model.response.UserRole;
-import co.prior.iam.module.user.model.response.UserRoleSystemRespone;
+import co.prior.iam.module.user.model.response.*;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -19,8 +18,6 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import co.prior.iam.entity.IamMsUserRole;
 import co.prior.iam.module.user.model.request.CreateUserRoleRequest;
 import co.prior.iam.module.user.model.request.DeleteUserRoleRequest;
-import co.prior.iam.module.user.model.response.GetRoleUsersResponse;
-import co.prior.iam.module.user.model.response.GetUserRolesResponse;
 import co.prior.iam.module.user.service.UserRoleService;
 import lombok.extern.slf4j.Slf4j;
 
@@ -46,7 +43,7 @@ public class UserRoleController {
     }
 
 	@GetMapping("/user/system/{system_id}")
-	public ResponseEntity<List<UserRole>> getUserRolesBySystem(@PathVariable(value = "system_id") long systemId) {
+	public ResponseEntity<List<GetUserRoleSystemRespone>> getUserRolesBySystem(@PathVariable(value = "system_id") long systemId) {
 		log.info("Controller getUserRoles systemId: {}", systemId);
 
 
