@@ -64,6 +64,10 @@ public class UserService {
 					.engLastName(user.getEngLastName())
 					.isIamAdmin(user.getIsIamAdmin())
 					.disableFlag(user.getDisableFlag())
+					.updatedDate(user.getUpdatedDate())
+					.updatedBy(user.getUpdatedBy())
+					.createdDate(user.getCreatedDate())
+					.createdBy(user.getCreatedBy())
 					.build());
 		}
 		
