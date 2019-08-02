@@ -50,14 +50,14 @@ public class UserRoleService {
 		this.iamMsUserRoleRepository = iamMsUserRoleRepository;
 	}
 
-	public  List<UserRole> getUserRolesBySystem(long systemId){
+	public  List<GetUserRoleSystemRespone> getUserRolesBySystem(long systemId){
 		log.info("Service getUserRoles systemId: {}", systemId);
 
 
 		List<IamMsUserRole> iamMsUserRoles = this.iamMsUserRoleRepository.findByIamMsSystem_SystemIdAndIsDeleted(
 				systemId, AnswerFlag.N.toString());
 
-		List<UserRole> list = new ArrayList<>();
+		List<GetUserRoleSystemRespone> list = new ArrayList<>();
 
 		if (iamMsUserRoles.isEmpty()) {
 			throw new DataNotFoundException(ErrorCode.USER_ROLE_NOT_FOUND);
@@ -65,10 +65,20 @@ public class UserRoleService {
 
 		for (IamMsUserRole userRole : iamMsUserRoles){
 
-			UserRole respone = UserRole.builder().roleCode(userRole.getIamMsRole().getRoleCode())
+
+
+			GetUserRoleSystemRespone respone = GetUserRoleSystemRespone.builder().roleCode(userRole.getIamMsRole().getRoleCode())
 													.roleId(userRole.getIamMsRole().getRoleId())
 													.userRoleId(userRole.getUserRoleId())
 													.roleName(userRole.getIamMsRole().getRoleName())
+													.userId(userRole.getIamMsUser().getUserId())
+													.userCode(userRole.getIamMsUser().getUserCode())
+													.engFirstName(userRole.getIamMsUser().getEngFirstName())
+													.engLastName(userRole.getIamMsUser().getEngLastName())
+													.engMiddleName(userRole.getIamMsUser().getEngMiddleName())
+													.localFirstName(userRole.getIamMsUser().getLocalFirstName())
+													.localLastName(userRole.getIamMsUser().getLocalLastName())
+													.localMiddleName(userRole.getIamMsUser().getLocalMiddleName())
 													.build();
 
 			list.add(respone);
