@@ -34,9 +34,9 @@ public class SystemController {
     private final SystemEditService systemEditService;
     private final SystemInqueryService systemInqueryService;
 
-    public SystemController(SystemCreateService systemCreateService, SystemDeleteService systemDeleteService, 
-    		SystemEditService systemEditService, SystemInqueryService systemInqueryService) {
-    	
+    public SystemController(SystemCreateService systemCreateService, SystemDeleteService systemDeleteService,
+                            SystemEditService systemEditService, SystemInqueryService systemInqueryService) {
+
         this.systemCreateService = systemCreateService;
         this.systemDeleteService = systemDeleteService;
         this.systemEditService = systemEditService;
@@ -44,18 +44,17 @@ public class SystemController {
     }
 
     @PostMapping("/system")
-    public ResponseEntity<Void> createSystem(@RequestBody SystemAddReq systemAddReq) {
+    public ResponseEntity<IamMsSystem> createSystem(@RequestBody SystemAddReq systemAddReq) {
         log.info("Controller createSystem: {}", systemAddReq);
-        
-        this.systemCreateService.createSystem(systemAddReq);
 
-        return ResponseEntity.created(null).build();
+        return ResponseEntity.created(null).body(this.systemCreateService.createSystem(systemAddReq));
     }
+
 
     @DeleteMapping("/system")
     public ResponseEntity<Void> deleteSystem(@RequestBody SystemDeleteReq systemDeleteReq) {
         log.info("Controller deleteSystem: {}", systemDeleteReq);
-        
+
         this.systemDeleteService.deleteSystem(systemDeleteReq);
 
         return ResponseEntity.noContent().build();
@@ -64,7 +63,7 @@ public class SystemController {
     @PutMapping("/system")
     public ResponseEntity<Void> editSystem(@RequestBody SystemEditReq systemEditReq) {
         log.info("Controller editSystem: {}", systemEditReq);
-        
+
         this.systemEditService.editSystem(systemEditReq);
 
         return  ResponseEntity.noContent().build();
@@ -73,7 +72,7 @@ public class SystemController {
     @GetMapping("/systems")
     public ResponseEntity<List<SystemRespone>> inquerySystem() {
         log.info("Controller inquerySystem");
-        
+
         List<SystemRespone> list = this.systemInqueryService.inquerySystem();
 
         return ResponseEntity.ok(list);

@@ -17,6 +17,7 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 public class SystemCreateService {
 
+
 	private final SystemRepository systemRepository;
 
 	public SystemCreateService(SystemRepository systemRepository) {
@@ -24,21 +25,25 @@ public class SystemCreateService {
 	}
 
 	@Transactional
-	public void createSystem(SystemAddReq systemAddReq) {
+	public IamMsSystem createSystem(SystemAddReq systemAddReq) {
 		log.info("Service createSystem: {}", systemAddReq);
 
 		Optional<IamMsSystem> check = this.systemRepository.findBySystemCodeAndIsDeleted(
 				systemAddReq.getSystemCode(), AnswerFlag.N.toString());
 
 		if (check.isPresent()) {
-			throw new DataDuplicateException(ErrorCode.SYSTEM_DUPLICATED);	
+			throw new DataDuplicateException(ErrorCode.SYSTEM_DUPLICATED);
 		}
 
 		IamMsSystem iamMsSystem = new IamMsSystem();
 		iamMsSystem.setSystemCode(systemAddReq.getSystemCode());
 		iamMsSystem.setSystemIcon(systemAddReq.getSystemIcon());
 		iamMsSystem.setSystemName(systemAddReq.getSystemName());
+		iamMsSystem.setUpdatedBy(null);
+		iamMsSystem.setUpdatedDate(null);
 		this.systemRepository.save(iamMsSystem);
-    }
 
+		return iamMsSystem;
+	}
 }
+
