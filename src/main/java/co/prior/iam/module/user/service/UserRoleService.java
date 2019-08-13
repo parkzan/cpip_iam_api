@@ -151,7 +151,7 @@ public class UserRoleService {
 
 			for (Long systemId : listSystemId){
 
-				List<IamMsUserRole> userRoles = iamMsUserRoleRepository.findByIamMsSystem_SystemIdAndIsDeleted(systemId,AnswerFlag.N.toString());
+				List<IamMsUserRole> userRoles = iamMsUserRoleRepository.findByIamMsSystem_SystemIdAndIamMsUser_UserIdAndIsDeleted(systemId,userId,AnswerFlag.N.toString());
 				if (userRoles.isEmpty()) {
 					throw new DataNotFoundException(ErrorCode.USER_ROLE_NOT_FOUND);
 				}
