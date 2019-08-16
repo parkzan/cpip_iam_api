@@ -5,13 +5,7 @@ import java.util.List;
 import co.prior.iam.module.system.model.respone.SystemRespone;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import co.prior.iam.entity.IamMsSystem;
 import co.prior.iam.module.system.model.request.SystemAddReq;
@@ -68,6 +62,7 @@ public class SystemController {
 
         return  ResponseEntity.noContent().build();
     }
+
 
     @GetMapping("/systems")
     public ResponseEntity<List<SystemRespone>> inquerySystem() {
