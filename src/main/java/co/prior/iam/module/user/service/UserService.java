@@ -34,7 +34,7 @@ public class UserService {
 	}
 	
 	public IamMsUserPage getUsers(GetUsersRequest request) {
-		log.info("Service getUsers systemId: {}", request);
+		log.info("Services getUsers systemId: {}", request);
 		
 		PageableRequest pageableRequest = request.getPageable();
 		int page = pageableRequest.getPage() - 1;
