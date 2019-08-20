@@ -23,5 +23,6 @@ public class GetUserResponse {
 	private String createdBy;
 	private LocalDateTime updatedDate;
 	private String updatedBy;
+	private Integer noOfFailTimes;
 	
 }
