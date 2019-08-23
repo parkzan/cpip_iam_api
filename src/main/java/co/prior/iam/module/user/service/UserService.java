@@ -3,6 +3,7 @@ package co.prior.iam.module.user.service;
 import java.util.ArrayList;
 import java.util.List;
 
+import co.prior.iam.module.user.model.request.ResignUserRequest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -144,5 +145,17 @@ public class UserService {
 		
 		return iamMsUser.getUserId();
 	}
-	
+
+	@Transactional
+	public void resignUser(ResignUserRequest request) {
+		log.info("Service resignUser userId: {}", request.getUserId());
+
+		IamMsUser iamMsUser = this.iamMsUserRepository.findByUserIdAndIsDeleted(request.getUserId(), AnswerFlag.N.toString())
+				.orElseThrow(() -> new DataNotFoundException(ErrorCode.USER_NOT_FOUND));
+
+		iamMsUser.setDisableFlag(AnswerFlag.N.toString().equalsIgnoreCase(
+				request.getDisabledFlag())?AnswerFlag.N.toString():AnswerFlag.Y.toString());
+
+		this.iamMsUserRepository.save(iamMsUser);
+	}
 }

@@ -4,7 +4,9 @@ import java.net.URI;
 
 import javax.validation.Valid;
 
+import co.prior.iam.module.auth.model.request.*;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -12,11 +14,6 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import co.prior.iam.entity.IamMsUser;
-import co.prior.iam.module.auth.model.request.ActivateUserRequest;
-import co.prior.iam.module.auth.model.request.ChangePasswordRequest;
-import co.prior.iam.module.auth.model.request.RefreshTokenRequest;
-import co.prior.iam.module.auth.model.request.SignInRequest;
-import co.prior.iam.module.auth.model.request.SignUpRequest;
 import co.prior.iam.module.auth.model.response.AuthResponse;
 import co.prior.iam.module.auth.service.AuthService;
 import lombok.extern.slf4j.Slf4j;
@@ -56,7 +53,7 @@ public class AuthController {
     
     @PostMapping("/activate")
     public ResponseEntity<Void> activateUser(@Valid @RequestBody ActivateUserRequest request) {
-    	log.info("Controller activateUser systemId: {}, userCode: {}", request.getSystemId(), request.getUserCode());
+    	log.info("Controller activateUser , userCode: {}", request.getUserCode());
     	
     	this.authService.activateUser(request);
     	
@@ -71,6 +68,16 @@ public class AuthController {
     	
         return ResponseEntity.noContent().build();
     }
+
+    @PostMapping("/password/newByAdmin")
+    @PreAuthorize("hasRole('ROLE_IAM_ADMIN')")
+    public ResponseEntity<Void> changePasswordByAdmin(@Valid @RequestBody ChangePasswordByAdminRequest request) {
+        log.info("Controller changePasswordByAdmin userId: {}", request.getUserId());
+
+        this.authService.changePasswordByAdmin(request);
+
+        return ResponseEntity.noContent().build();
+    }
     
     @PostMapping("/refresh")
     public ResponseEntity<AuthResponse> refreshToken(@Valid @RequestBody RefreshTokenRequest request) {
@@ -79,6 +86,15 @@ public class AuthController {
     	AuthResponse response = this.authService.refreshToken(request.getRefreshToken());
     	
     	return ResponseEntity.ok(response);
+    }
+    @PostMapping("/reset")
+    @PreAuthorize("hasRole('ROLE_IAM_ADMIN')")
+    public ResponseEntity<Void> resetWrongLoginUsers(@RequestBody ResetUserRequest request) {
+        log.info("Controller resetWrongLoginUsers userId: {}", request);
+
+        this.authService.resetWrongLoginUsers(request);
+
+        return ResponseEntity.noContent().build();
     }
     
 }
