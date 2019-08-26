@@ -78,11 +78,15 @@ public class AuthService {
 	        IamMsUser iamMsUser = this.iamMsUserRepository.findByUserCodeAndIsIamAdminAndIsDeleted(
 	        		userCode, isIamAdmin, AnswerFlag.N.toString())
 	        		.orElseThrow(() -> new UnauthorizedException(ErrorCode.USER_OR_PASSWORD_INCORRECT));
-			log.info("Service signIn iamMsUser.getUserPassword(): {}", iamMsUser.getUserPassword());
-			log.info("Service signIn passwordEncoder.encode(password): {}", passwordEncoder.encode(password));
+			log.debug("iamMsUser.getUserPassword(): {}", iamMsUser.getUserPassword());
+			log.debug("passwordEncoder.encode(password): {}", passwordEncoder.encode(password));
 
 			if (!passwordEncoder.matches(password, iamMsUser.getUserPassword())) {
-				throw new BadRequestException(ErrorCode.PASSWORD_INCORRECT);
+				int failedAttempt = iamMsUser.getNoOfFailTimes() + 1;
+				iamMsUser.setNoOfFailTimes(failedAttempt);
+				this.iamMsUserRepository.save(iamMsUser);
+
+				throw new UnauthorizedException(ErrorCode.PASSWORD_INCORRECT);
 			}
 			if(AnswerFlag.Y.toString().equalsIgnoreCase(iamMsUser.getFirstTimeLogin())){
 				throw new UnauthorizedException(ErrorCode.USER_DISABLED);

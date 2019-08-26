@@ -69,7 +69,7 @@ public class AuthController {
         return ResponseEntity.noContent().build();
     }
 
-    @PostMapping("/password/newByAdmin")
+    @PostMapping("/admin/password/new")
     @PreAuthorize("hasRole('ROLE_IAM_ADMIN')")
     public ResponseEntity<Void> changePasswordByAdmin(@Valid @RequestBody ChangePasswordByAdminRequest request) {
         log.info("Controller changePasswordByAdmin userId: {}", request.getUserId());
@@ -90,7 +90,7 @@ public class AuthController {
     @PostMapping("/reset")
     @PreAuthorize("hasRole('ROLE_IAM_ADMIN')")
     public ResponseEntity<Void> resetWrongLoginUsers(@RequestBody ResetUserRequest request) {
-        log.info("Controller resetWrongLoginUsers userId: {}", request);
+        log.info("Controller resetWrongLoginUsers userId: {}", request.getUserId());
 
         this.authService.resetWrongLoginUsers(request);
 
