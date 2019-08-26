@@ -31,8 +31,9 @@ public class CustomDetailsService implements UserDetailsService {
     			.orElseThrow(() -> new UsernameNotFoundException("user not found with code: " + userCode));
     	
     	boolean isAccountNonLocked = iamMsUser.getNoOfFailTimes() >= 3? Boolean.FALSE : Boolean.TRUE;
-    	boolean isEnabled = AnswerFlag.Y.toString().equalsIgnoreCase(iamMsUser.getFirstTimeLogin())
-    			|| AnswerFlag.Y.toString().equalsIgnoreCase(iamMsUser.getDisableFlag())? Boolean.FALSE : Boolean.TRUE;
+//    	boolean isEnabled = AnswerFlag.Y.toString().equalsIgnoreCase(iamMsUser.getFirstTimeLogin())
+//    			|| AnswerFlag.Y.toString().equalsIgnoreCase(iamMsUser.getDisableFlag())? Boolean.FALSE : Boolean.TRUE;
+		boolean isEnabled = AnswerFlag.Y.toString().equalsIgnoreCase(iamMsUser.getDisableFlag())? Boolean.FALSE : Boolean.TRUE;
     	
         return UserPrincipal.builder()
         		.userId(iamMsUser.getUserId())

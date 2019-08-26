@@ -2,6 +2,7 @@ package co.prior.iam.module.user.controller;
 
 import javax.validation.Valid;
 
+import co.prior.iam.module.user.model.request.ResignUserRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -80,5 +81,14 @@ public class UserController {
 		
 		return ResponseEntity.noContent().build();
 	}
-	
+
+	@PostMapping("/resign")
+	@PreAuthorize("hasRole('ROLE_IAM_ADMIN')")
+	public ResponseEntity<Void> resignUser(@Valid @RequestBody ResignUserRequest request) {
+		log.info("Controller changePassword userId: {}", request.getUserId());
+
+		this.userService.resignUser(request);
+
+		return ResponseEntity.noContent().build();
+	}
 }

@@ -9,8 +9,7 @@ import lombok.Data;
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ActivateUserRequest {
-	
-	private long systemId;
+
 	
 	@NotBlank
 	private String userCode;

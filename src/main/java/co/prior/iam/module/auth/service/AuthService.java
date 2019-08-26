@@ -2,6 +2,7 @@ package co.prior.iam.module.auth.service;
 
 import java.util.Calendar;
 
+import co.prior.iam.module.auth.model.request.*;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -24,9 +25,6 @@ import co.prior.iam.error.exception.DataNotFoundException;
 import co.prior.iam.error.exception.UnauthorizedException;
 import co.prior.iam.model.AnswerFlag;
 import co.prior.iam.model.ErrorCode;
-import co.prior.iam.module.auth.model.request.ActivateUserRequest;
-import co.prior.iam.module.auth.model.request.ChangePasswordRequest;
-import co.prior.iam.module.auth.model.request.SignUpRequest;
 import co.prior.iam.module.auth.model.response.AuthResponse;
 import co.prior.iam.repository.IamMsUserRepository;
 import co.prior.iam.repository.SystemRepository;
@@ -71,8 +69,8 @@ public class AuthService {
     
     @Transactional(noRollbackFor = UnauthorizedException.class)
     public AuthResponse signIn(String userCode, String password, String isIamAdmin) {
-    	log.info("Service signIn userCode: {}, isIamAdmin: {}", userCode, isIamAdmin);
-    	
+    	log.info("Service signIn userCode: {}, isIamAdmin: {}, password: {}", userCode, isIamAdmin,password);
+
     	try {
 	    	Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(userCode, password));
 	        SecurityContextHolder.getContext().setAuthentication(authentication);
@@ -80,8 +78,21 @@ public class AuthService {
 	        IamMsUser iamMsUser = this.iamMsUserRepository.findByUserCodeAndIsIamAdminAndIsDeleted(
 	        		userCode, isIamAdmin, AnswerFlag.N.toString())
 	        		.orElseThrow(() -> new UnauthorizedException(ErrorCode.USER_OR_PASSWORD_INCORRECT));
-	        
+			log.debug("iamMsUser.getUserPassword(): {}", iamMsUser.getUserPassword());
+			log.debug("passwordEncoder.encode(password): {}", passwordEncoder.encode(password));
+
+			if (!passwordEncoder.matches(password, iamMsUser.getUserPassword())) {
+				int failedAttempt = iamMsUser.getNoOfFailTimes() + 1;
+				iamMsUser.setNoOfFailTimes(failedAttempt);
+				this.iamMsUserRepository.save(iamMsUser);
+
+				throw new UnauthorizedException(ErrorCode.PASSWORD_INCORRECT);
+			}
+			if(AnswerFlag.Y.toString().equalsIgnoreCase(iamMsUser.getFirstTimeLogin())){
+				throw new UnauthorizedException(ErrorCode.USER_DISABLED);
+			}
 	        iamMsUser.setNoOfFailTimes(0);
+
 	        this.iamMsUserRepository.save(iamMsUser);
 	        
 	        return this.generateAuthResponse(authentication);
@@ -95,7 +106,7 @@ public class AuthService {
 	        });
     		
         	throw new UnauthorizedException(ErrorCode.USER_OR_PASSWORD_INCORRECT);
-		
+
         } catch (DisabledException e) {
         	throw new UnauthorizedException(ErrorCode.USER_DISABLED);
         	
@@ -140,10 +151,10 @@ public class AuthService {
     
     @Transactional
     public void activateUser(ActivateUserRequest request) {
-    	log.info("Service activateUser systemId: {}, userCode: {}", request.getSystemId(), request.getUserCode());
+    	log.info("Service activateUser userCode: {}", request.getUserCode());
     	
-    	IamMsUser iamMsUser = this.iamMsUserRepository.findByIamMsSystem_SystemIdAndUserCodeAndIsDeleted(
-    			request.getSystemId(), request.getUserCode(), AnswerFlag.N.toString())
+    	IamMsUser iamMsUser = this.iamMsUserRepository.findByUserCodeAndIsDeleted(
+    			request.getUserCode(), AnswerFlag.N.toString())
     			.orElseThrow(() -> new DataNotFoundException(ErrorCode.USER_NOT_FOUND));
     	
     	if (!passwordEncoder.matches(request.getOldPassword(), iamMsUser.getUserPassword())) {
@@ -154,7 +165,7 @@ public class AuthService {
     	iamMsUser.setFirstTimeLogin(AnswerFlag.N.toString());
     	this.iamMsUserRepository.save(iamMsUser);
     }
-    
+
     @Transactional
     public void changePassword(ChangePasswordRequest request) {
     	log.info("Service changePassword userId: {}", request.getUserId());
@@ -170,6 +181,17 @@ public class AuthService {
     	iamMsUser.setNoOfFailTimes(0);
     	this.iamMsUserRepository.save(iamMsUser);
     }
+
+	@Transactional
+    public void changePasswordByAdmin(ChangePasswordByAdminRequest request){
+		log.info("Service changePassword userId: {}", request.getUserId());
+		IamMsUser iamMsUser = this.iamMsUserRepository.findByUserIdAndIsDeleted(request.getUserId(), AnswerFlag.N.toString())
+				.orElseThrow(() -> new DataNotFoundException(ErrorCode.USER_NOT_FOUND));
+		iamMsUser.setUserPassword(passwordEncoder.encode(request.getNewPassword()));
+		iamMsUser.setFirstTimeLogin(AnswerFlag.Y.toString());
+		iamMsUser.setNoOfFailTimes(0);
+		this.iamMsUserRepository.save(iamMsUser);
+	}
     
     public AuthResponse refreshToken(String token) {
     	log.info("Service refreshToken token: {}", token);
@@ -203,5 +225,14 @@ public class AuthService {
 				.refreshExpiresAt(refreshExpiredDateTime.getTimeInMillis() / 1000)
 				.build();
 	}
-    
+	@Transactional
+	public void resetWrongLoginUsers(ResetUserRequest request) {
+		log.info("Service resetWrongLoginUsers userId: {}", request.getUserId());
+
+		IamMsUser iamMsUser = this.iamMsUserRepository.findByUserIdAndIsDeleted(request.getUserId(), AnswerFlag.N.toString())
+				.orElseThrow(() -> new DataNotFoundException(ErrorCode.USER_NOT_FOUND));
+
+		iamMsUser.setNoOfFailTimes(0);
+		this.iamMsUserRepository.save(iamMsUser);
+	}
 }

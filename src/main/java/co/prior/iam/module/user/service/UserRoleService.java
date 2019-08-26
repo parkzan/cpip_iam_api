@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import co.prior.iam.module.user.model.request.DeleteAllUserRoleInUserRequest;
 import co.prior.iam.module.user.model.response.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -263,6 +264,22 @@ public class UserRoleService {
 		
 		iamMsUserRole.setIsDeleted(AnswerFlag.Y.toString());
 		this.iamMsUserRoleRepository.save(iamMsUserRole);
+	}
+
+	@Transactional
+	public void deleteAllUserRole(DeleteAllUserRoleInUserRequest request) {
+		log.info("Service deleteAllUserRole userRoleId: {}", request.getUserId());
+
+		List<IamMsUserRole> iamMsUserRoles = this.iamMsUserRoleRepository.findByIamMsUser_UserIdAndIsDeleted(request.getUserId(), AnswerFlag.N.toString());
+		if (iamMsUserRoles.isEmpty()) {
+			throw new DataNotFoundException(ErrorCode.USER_ROLE_NOT_FOUND);
+		}
+		for (IamMsUserRole userRole : iamMsUserRoles) {
+			if (userRole.getIamMsSystem().getSystemId().equals(request.getSystemId())) {
+				userRole.setIsDeleted(AnswerFlag.Y.toString());
+				this.iamMsUserRoleRepository.save(userRole);
+			}
+		}
 	}
 	
 	public List<UserRoleObject> getUserRoleObject(long userId) {

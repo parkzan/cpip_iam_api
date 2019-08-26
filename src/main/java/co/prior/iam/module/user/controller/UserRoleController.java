@@ -3,6 +3,7 @@ package co.prior.iam.module.user.controller;
 import java.net.URI;
 import java.util.List;
 
+import co.prior.iam.module.user.model.request.DeleteAllUserRoleInUserRequest;
 import co.prior.iam.module.user.model.response.*;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -93,5 +94,13 @@ public class UserRoleController {
 		
 		return ResponseEntity.noContent().build();
 	}
-	
+
+	@DeleteMapping("/user/roles")
+	public ResponseEntity<Void> deleteAllUserRole(@RequestBody DeleteAllUserRoleInUserRequest request) {
+		log.info("Controller deleteUserRole userId: {}", request.getUserId());
+
+		this.userRoleService.deleteAllUserRole(request);
+
+		return ResponseEntity.noContent().build();
+	}
 }
