@@ -31,7 +31,7 @@ import lombok.ToString;
 public class IamMsParameterGroup extends BaseEntity<IamMsParameterGroup> {
 
 	@Id
-	@SequenceGenerator(name = "param_group_id_seq", sequenceName = "iam_ms_parameter_group_param_group_id_seq", allocationSize = 1)
+	@SequenceGenerator(name = "param_group_id_seq", sequenceName = "iam_ms_parameter_group_seq", allocationSize = 1)
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "param_group_id_seq")
 	private Long paramGroupId;
 	private String paramGroup;

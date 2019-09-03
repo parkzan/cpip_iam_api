@@ -33,7 +33,7 @@ import lombok.ToString;
 public class IamMsUser extends BaseEntity<IamMsUser> {
 
 	@Id
-    @SequenceGenerator(name = "user_id_seq", sequenceName = "iam_ms_user_user_id_seq", allocationSize = 1)
+    @SequenceGenerator(name = "user_id_seq", sequenceName = "iam_ms_user_seq", allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user_id_seq")
 	private Long userId;
 	private String userCode;
@@ -54,9 +54,9 @@ public class IamMsUser extends BaseEntity<IamMsUser> {
 	@OneToMany(mappedBy = "iamMsUser", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	private Set<IamMsUserRole> iamMsUserRoleSet;
 	
-	@ToString.Exclude
-	@ManyToOne
-	@JoinColumn(name = "system_id")
-    private IamMsSystem iamMsSystem;
+//	@ToString.Exclude
+//	@ManyToOne
+//	@JoinColumn(name = "system_id")
+//    private IamMsSystem iamMsSystem;
 	
 }

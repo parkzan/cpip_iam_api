@@ -29,7 +29,7 @@ public class IamAuditTrail {
 			name = "audit_id_seq",
 			strategy = "co.prior.iam.entity.CustomSequenceGenerator",
 			parameters = {
-					@org.hibernate.annotations.Parameter(name = "sequence_name", value = "iam_audit_trail_audit_id_seq"),
+					@org.hibernate.annotations.Parameter(name = "sequence_name", value = "iam_audit_trail_seq"),
 					@org.hibernate.annotations.Parameter(name = "increment_size", value = "1")
 
 

@@ -10,15 +10,18 @@ spring:
 spring:
    profiles: dev
    datasource:
-      url: jdbc:postgresql://prod-db.droppointcrm.com:15432/prior_db_iam
-      username: prior_iam
-      password: priorP@ssw0rdIAM
+      url: jdbc:oracle:thin:@prior-db.cmbcolowaua6.ap-southeast-1.rds.amazonaws.com:1922:ORCL
+      username: prior_db
+      password: P@5sw0rd
+      driver-class-oracle:
+        jdbc:
+        driver: OracleDriver
    jpa:
-      database: POSTGRESQL
+      database: oracle
       show-sql: false
       properties:
          hibernate:
-            default_schema: iam2
+            default_schema: prior_db
             temp:
                use_jdbc_metadata_defaults: false
 

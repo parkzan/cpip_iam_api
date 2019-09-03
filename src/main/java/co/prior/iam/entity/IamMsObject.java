@@ -27,7 +27,7 @@ import lombok.ToString;
 public class IamMsObject extends BaseEntity<IamMsObject> {
 
     @Id
-    @SequenceGenerator(name = "object_id_seq", sequenceName = "iam_ms_object_object_id_seq",allocationSize = 1)
+    @SequenceGenerator(name = "object_id_seq", sequenceName = "iam_ms_object_seq",allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "object_id_seq")
     private Long objectId;
     private String objectCode;

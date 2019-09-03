@@ -26,7 +26,7 @@ import lombok.ToString;
 public class IamMsParameterInfo extends BaseEntity<IamMsParameterInfo> {
 
 	@Id
-	@SequenceGenerator(name = "param_info_id_seq", sequenceName = "iam_ms_parameter_info_param_info_id_seq", allocationSize = 1)
+	@SequenceGenerator(name = "param_info_id_seq", sequenceName = "iam_ms_parameter_info_seq", allocationSize = 1)
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "param_info_id_seq")
 	private Long paramInfoId;
 	private String paramInfo;
