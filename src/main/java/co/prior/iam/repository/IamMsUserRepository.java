@@ -21,7 +21,7 @@ public interface IamMsUserRepository extends PagingAndSortingRepository<IamMsUse
 
     Optional<IamMsUser> findByUserCodeAndIsIamAdminAndIsDeleted(String userCode, String isIamAdmin, String isDeleted);
     
-    Optional<IamMsUser> findByIamMsSystem_SystemIdAndUserCodeAndIsDeleted(long systemId, String userCode, String isDeleted);
+//    Optional<IamMsUser> findByIamMsSystem_SystemIdAndUserCodeAndIsDeleted(long systemId, String userCode, String isDeleted);
 
 
 

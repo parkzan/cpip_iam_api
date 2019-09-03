@@ -26,7 +26,7 @@ import lombok.ToString;
 public class IamMsUserRole extends BaseEntity<IamMsUserRole> {
 	
 	@Id
-    @SequenceGenerator(name = "user_role_id_seq", sequenceName = "iam_ms_user_role_user_role_id_seq", allocationSize = 1)
+    @SequenceGenerator(name = "user_role_id_seq", sequenceName = "iam_ms_user_role_seq", allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user_role_id_seq")
 	private Long userRoleId;
 	
