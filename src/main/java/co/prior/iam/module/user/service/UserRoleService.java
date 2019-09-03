@@ -133,10 +133,10 @@ public class UserRoleService {
 	public List<UserRoleSystemRespone>  getAllUserRoles(long userId) {
 		log.info("Service getAllUserRoles userId: {}", userId);
 
-//		List<IamMsUserRole> iamMsUserRoles = this.iamMsUserRoleRepository.findByIamMsUser_UserIdAndIsDeleted(
-//				userId, AnswerFlag.N.toString());
+		List<IamMsUserRole> iamMsUserRoles = this.iamMsUserRoleRepository.findByIamMsUser_UserIdAndIsDeleted(
+				userId, AnswerFlag.N.toString());
 
-		List<Long> listSystemId = iamMsUserRoleRepository.getListSystemId(userId);
+//		List<Long> listSystemId = iamMsUserRoleRepository.getListSystemId(userId);
 
 		List<UserRoleSystemRespone> list = new ArrayList<>();
 
@@ -144,15 +144,15 @@ public class UserRoleService {
 
 
 
-		if (listSystemId.isEmpty()) {
+		if (iamMsUserRoles.isEmpty()) {
 			throw new DataNotFoundException(ErrorCode.USER_ROLE_NOT_FOUND);
 		}
 
 
 
-			for (Long systemId : listSystemId){
+			for (IamMsUserRole iamMsUserRole : iamMsUserRoles){
 
-				List<IamMsUserRole> userRoles = iamMsUserRoleRepository.findByIamMsSystem_SystemIdAndIamMsUser_UserIdAndIsDeleted(systemId,userId,AnswerFlag.N.toString());
+				List<IamMsUserRole> userRoles = iamMsUserRoleRepository.findByIamMsSystem_SystemIdAndIamMsUser_UserIdAndIsDeleted(iamMsUserRole.getIamMsSystem().getSystemId(),userId,AnswerFlag.N.toString());
 				if (userRoles.isEmpty()) {
 					throw new DataNotFoundException(ErrorCode.USER_ROLE_NOT_FOUND);
 				}

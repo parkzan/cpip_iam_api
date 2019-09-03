@@ -21,10 +21,9 @@ public interface IamMsUserRoleRepository extends JpaRepository<IamMsUserRole, Lo
 
 	List<IamMsUserRole> findByIamMsRole_RoleIdAndIsDeleted(long roleId, String isDeleted);
 
+//	@Query(value = " select system_id from prior_db.iam_ms_user_role where user_id = ?1  and is_deleted = 'N' group by  system_id" , nativeQuery = true )
+//	List<Long> getListSystemId(long user_id);
 
-	@Query(value = " select system_id from prior_db.iam_ms_user_role where user_id = ?1  and is_deleted = 'N' group by  system_id" , nativeQuery = true )
-	List<Long> getListSystemId(long user_id);
-	
 	boolean existsByIamMsSystem_SystemIdAndIamMsUser_UserIdAndIamMsRole_RoleIdAndIsDeleted(
 			long systemId, long userId, long roleId, String isDeleted);
 }
