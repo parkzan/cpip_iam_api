@@ -58,7 +58,8 @@ pipeline {
           sh "mvn versions:set -DnewVersion=\$(cat VERSION)"
           sh "jx step tag --version \$(cat VERSION)"
 		  
-		  sh "mvn clean deploy"
+          sh "mvn install:install-file -Dfile=libs/ojdbc8.jar -DgroupId=com.oracle -DartifactId=ojdbc8 -Dversion=12.2.0.1 -Dpackaging=jar"
+		      sh "mvn clean deploy"
 		  
           //withSonarQubeEnv('sonarkube-sonarqube') {
             //sh "mvn clean org.jacoco:jacoco-maven-plugin:prepare-agent deploy -Dmaven.test.failure.ignore=false"
