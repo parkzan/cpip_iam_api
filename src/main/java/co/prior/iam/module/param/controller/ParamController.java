@@ -46,7 +46,7 @@ public class ParamController {
 	
 	@PostMapping("/param/info")
 	public ResponseEntity<Void> createParamInfo(@RequestBody CreateParamInfoRequest request) {
-		log.info("Controller createParamInfo paramInfo: {}", request.getParamInfo());
+		log.info("Controller createParamInfo paramInfo: {}", request.getParamCode());
 		
 		this.paramService.createParamInfo(request);
 

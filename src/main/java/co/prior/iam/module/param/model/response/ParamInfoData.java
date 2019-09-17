@@ -7,7 +7,7 @@ import lombok.Data;
 @Builder
 public class ParamInfoData {
 
-    String paramInfo;
+    String paramCode;
     String paramEnMessage;
     String paramLocalMessage;
     
