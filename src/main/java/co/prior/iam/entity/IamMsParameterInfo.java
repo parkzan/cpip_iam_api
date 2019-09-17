@@ -22,8 +22,7 @@ public class IamMsParameterInfo extends BaseEntity<IamMsParameterInfo> {
 	@SequenceGenerator(name = "param_info_id_seq", sequenceName = "iam_ms_parameter_info_seq", allocationSize = 1)
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "param_info_id_seq")
 	private Long paramInfoId;
-	@Column(name = "param_code")
-	private String paramInfo;
+	private String paramCode;
 	private String paramEnDescription;
 	private String paramLocalDescription;
 
