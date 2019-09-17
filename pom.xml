@@ -108,7 +108,7 @@
 				<artifactId>maven-surefire-plugin</artifactId>
 			</plugin>
 
-			<plugin>
+<!-- 			<plugin>
 				<groupId>org.sonarsource.scanner.maven</groupId>
 				<artifactId>sonar-maven-plugin</artifactId>
 			</plugin>
@@ -148,7 +148,7 @@
 										<limit>
 											<counter>LINE</counter>
 											<value>COVEREDRATIO</value>
-											<!-- <minimum>0.8</minimum> -->
+											<minimum>0.8</minimum>
 										</limit>
 									</limits>
 								</rule>
@@ -156,7 +156,7 @@
 						</configuration>
 					</execution>
 				</executions>
-			</plugin>
+			</plugin> -->
 		</plugins>
 	</build>
 
