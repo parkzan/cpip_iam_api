@@ -51,7 +51,7 @@ public class ParamService {
 			List<ParamInfoData> paramInfoList = new ArrayList<>();
 			for (IamMsParameterInfo paramInfo : paramGroup.getParamInfoSet()) {
 				paramInfoList.add(ParamInfoData.builder()
-						.paramCode(paramInfo.getParamCode())
+						.paramInfo(paramInfo.getParamInfo())
 						.paramEnMessage(paramInfo.getParamEnDescription())
 						.paramLocalMessage(paramInfo.getParamLocalDescription())
 						.build());
@@ -85,9 +85,9 @@ public class ParamService {
 
 	@Transactional
 	public void createParamInfo(CreateParamInfoRequest request) {
-		log.info("Service createParamInfo paramInfo: {}", request.getParamCode());
+		log.info("Service createParamInfo paramInfo: {}", request.getParamInfo());
 		
-		if (this.paramInfoRepository.existsByParamCodeAndIsDeleted(request.getParamCode(), AnswerFlag.N.toString())) {
+		if (this.paramInfoRepository.existsByParamInfoAndIsDeleted(request.getParamInfo(), AnswerFlag.N.toString())) {
 			throw new DataDuplicateException(ErrorCode.INTERNAL_SERVER_ERROR);
 		}
 		
@@ -96,7 +96,7 @@ public class ParamService {
 				.orElseThrow(() -> new DataNotFoundException(ErrorCode.INTERNAL_SERVER_ERROR));
 
 		this.paramInfoRepository.save(IamMsParameterInfo.builder()
-				.paramCode(request.getParamCode())
+				.paramInfo(request.getParamInfo())
 				.paramEnDescription(request.getParamEnDesc())
 				.paramLocalDescription(request.getParamLoaclDesc())
 				.paramGroup(iamMsParameterGroup)
@@ -123,7 +123,7 @@ public class ParamService {
 		if (paramOpt.isPresent()) {
 			GetParamsResponse param = paramOpt.get();
 			return param.getParamInfoList().stream()
-					.filter(paramInfo -> errorCode.code().equalsIgnoreCase(paramInfo.getParamCode()))
+					.filter(paramInfo -> errorCode.code().equalsIgnoreCase(paramInfo.getParamInfo()))
 					.findFirst();
 		}
 		
