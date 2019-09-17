@@ -30,11 +30,11 @@ resources:
     memory: 512Mi
 probePath: /iam/v2/actuator/health
 livenessProbe:
-  initialDelaySeconds: 60
-  periodSeconds: 10
+  initialDelaySeconds: 120
+  periodSeconds: 120
   successThreshold: 1
-  timeoutSeconds: 60
+  timeoutSeconds: 120
 readinessProbe:
-  periodSeconds: 10
+  periodSeconds: 120
   successThreshold: 1
-  timeoutSeconds: 60
+  timeoutSeconds: 120
