@@ -13,6 +13,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -53,7 +54,26 @@ public class IamMsUser extends BaseEntity<IamMsUser> {
 	@JsonIgnore
 	@OneToMany(mappedBy = "iamMsUser", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	private Set<IamMsUserRole> iamMsUserRoleSet;
-	
+
+	@ToString.Exclude
+	@ManyToOne
+	@JoinColumn(name = "PROVINCE_ID")
+	private PpiMsProvince province;
+
+	@ToString.Exclude
+	@ManyToOne
+	@JoinColumn(name = "SURVEY_ID")
+	private PpiMsSurvey survey;
+
+//	@ToString.Exclude
+//	@ManyToOne
+//	@JoinColumn(name = "PARAM_INFO_ID" )
+//	@NotNull
+//	private IamMsParameterInfo userType;
+
+	@NotNull
+	private Long userType;
+//
 //	@ToString.Exclude
 //	@ManyToOne
 //	@JoinColumn(name = "system_id")

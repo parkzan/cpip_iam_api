@@ -13,6 +13,8 @@ public interface ParamInfoRepository extends JpaRepository<IamMsParameterInfo, L
 
 	Optional<IamMsParameterInfo> findByParamCodeAndIsDeleted(String paramCode, String isDeleted);
 
+	Optional<IamMsParameterInfo> findByParamInfoIdAndIsDeleted(long paramInfoId,String isDeleted);
+
 	boolean existsByParamCodeAndIsDeleted(String paramCode, String isDeleted);
 	
 	List<IamMsParameterInfo> findByParamGroup_ParamGroupAndIsDeleted(String paramGroup, String isDeleted);

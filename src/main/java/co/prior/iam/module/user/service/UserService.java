@@ -3,6 +3,9 @@ package co.prior.iam.module.user.service;
 import java.util.ArrayList;
 import java.util.List;
 
+import co.prior.iam.model.*;
+import co.prior.iam.module.param.model.response.ParamInfoData;
+import co.prior.iam.module.param.service.ParamService;
 import co.prior.iam.module.user.model.request.ResignUserRequest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -13,10 +16,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import co.prior.iam.entity.IamMsUser;
 import co.prior.iam.error.exception.DataNotFoundException;
-import co.prior.iam.model.AnswerFlag;
-import co.prior.iam.model.ErrorCode;
-import co.prior.iam.model.PageableRequest;
-import co.prior.iam.model.SortedModel;
 import co.prior.iam.module.user.model.request.EditUserRequest;
 import co.prior.iam.module.user.model.request.GetUsersRequest;
 import co.prior.iam.module.user.model.response.GetUserResponse;
@@ -29,11 +28,12 @@ import lombok.extern.slf4j.Slf4j;
 public class UserService {
 
 	private final IamMsUserRepository iamMsUserRepository;
-	
+
+
 	public UserService(IamMsUserRepository iamMsUserRepository) {
 		this.iamMsUserRepository = iamMsUserRepository;
 	}
-	
+
 	public IamMsUserPage getUsers(GetUsersRequest request) {
 		log.info("Services getUsers systemId: {}", request);
 		
@@ -115,7 +115,11 @@ public class UserService {
 		
 		IamMsUser iamMsUser = this.iamMsUserRepository.findByUserIdAndIsDeleted(request.getUserId(), AnswerFlag.N.toString())
 				.orElseThrow(() -> new DataNotFoundException(ErrorCode.USER_NOT_FOUND));
-		
+
+//		if(iamMsUser.getUserType() != request.getUserType()){
+//
+//
+//		}
 		iamMsUser.setLocalFirstName(request.getLocalFirstName());
 		iamMsUser.setLocalMiddleName(request.getLocalMiddleName());
 		iamMsUser.setLocalLastName(request.getLocalLastName());
@@ -158,4 +162,7 @@ public class UserService {
 
 		this.iamMsUserRepository.save(iamMsUser);
 	}
+
+
+
 }

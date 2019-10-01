@@ -2,7 +2,12 @@ package co.prior.iam.module.auth.service;
 
 import java.util.Calendar;
 
+import co.prior.iam.entity.*;
+import co.prior.iam.model.UserType;
 import co.prior.iam.module.auth.model.request.*;
+import co.prior.iam.module.param.model.response.ParamInfoData;
+import co.prior.iam.module.param.service.ParamService;
+import co.prior.iam.repository.*;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -17,8 +22,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
-import co.prior.iam.entity.IamMsSystem;
-import co.prior.iam.entity.IamMsUser;
 import co.prior.iam.error.exception.BadRequestException;
 import co.prior.iam.error.exception.DataDuplicateException;
 import co.prior.iam.error.exception.DataNotFoundException;
@@ -26,8 +29,6 @@ import co.prior.iam.error.exception.UnauthorizedException;
 import co.prior.iam.model.AnswerFlag;
 import co.prior.iam.model.ErrorCode;
 import co.prior.iam.module.auth.model.response.AuthResponse;
-import co.prior.iam.repository.IamMsUserRepository;
-import co.prior.iam.repository.SystemRepository;
 import co.prior.iam.security.CustomDetailsService;
 import co.prior.iam.security.JwtTokenProvider;
 import lombok.extern.slf4j.Slf4j;
@@ -52,19 +53,25 @@ public class AuthService {
 	private final AuthenticationManager authenticationManager;
 	private final PasswordEncoder passwordEncoder;
 	private final JwtTokenProvider jwtTokenProvider;
-	private final SystemRepository iamMsSystemRepository;
     private final IamMsUserRepository iamMsUserRepository;
+    private final ParamInfoRepository paramInfoRepository;
+    private final PpiMsProvinceRepository ppiMsProvinceRepository;
+    private final PpiMsSurveyRepository ppiMsSurveyRepository;
+	private final ParamService paramService;
     
     public AuthService(CustomDetailsService userDetailsService, AuthenticationManager authenticationManager, 
-    		PasswordEncoder passwordEncoder, JwtTokenProvider jwtTokenProvider, 
-    		SystemRepository iamMsSystemRepository, IamMsUserRepository iamMsUserRepository) {
+    		PasswordEncoder passwordEncoder, JwtTokenProvider jwtTokenProvider, IamMsUserRepository iamMsUserRepository, ParamInfoRepository paramInfoRepository , PpiMsProvinceRepository ppiMsProvinceRepository
+	,PpiMsSurveyRepository ppiMsSurveyRepository , ParamService paramService) {
     	
     	this.userDetailsService = userDetailsService;
     	this.authenticationManager = authenticationManager;
     	this.passwordEncoder = passwordEncoder;
     	this.jwtTokenProvider = jwtTokenProvider;
-    	this.iamMsSystemRepository = iamMsSystemRepository;
     	this.iamMsUserRepository = iamMsUserRepository;
+    	this.paramInfoRepository=paramInfoRepository;
+    	this.ppiMsProvinceRepository = ppiMsProvinceRepository;
+    	this.ppiMsSurveyRepository = ppiMsSurveyRepository;
+    	this.paramService = paramService;
     }
     
     @Transactional(noRollbackFor = UnauthorizedException.class)
@@ -125,8 +132,16 @@ public class AuthService {
             throw new DataDuplicateException(ErrorCode.USER_DUPLICATED);
         }
 
-//    	IamMsSystem iamMsSystem = this.iamMsSystemRepository.findBySystemIdAndIsDeleted(request.getSystemId(), AnswerFlag.N.toString())
-//    			.orElseThrow(() -> new DataNotFoundException(ErrorCode.SYSTEM_NOT_FOUND));
+
+		IamMsParameterInfo userType = this.paramInfoRepository.findByParamInfoIdAndIsDeleted(request.getUserType(),AnswerFlag.N.toString())
+				.orElseThrow(() -> new DataNotFoundException(ErrorCode.INTERNAL_SERVER_ERROR));
+
+    	if(request.getProvinceId() != null){
+
+    	PpiMsProvince ppiMsProvince = this.ppiMsProvinceRepository.findByProvinceIdAndIsDeleted(request.getProvinceId(),AnswerFlag.N.toString())
+				.orElseThrow(() -> new DataNotFoundException(ErrorCode.INTERNAL_SERVER_ERROR));
+
+
     			
     	String isIamAdmin = request.getIsIamAdmin().toString();
         IamMsUser iamMsUser = IamMsUser.builder()
@@ -141,12 +156,61 @@ public class AuthService {
         		.isIamAdmin(isIamAdmin)
         		.noOfFailTimes(0)
         		.disableFlag(AnswerFlag.N.toString())
-//        		.iamMsSystem(iamMsSystem)
+				.userType(userType.getParamInfoId())
+				.province(ppiMsProvince)
         		.build();
         
         iamMsUser.setUserPassword(passwordEncoder.encode(request.getPassword()));
 
         return this.iamMsUserRepository.save(iamMsUser);
+    	}else if (request.getSurveyId() != null){
+			PpiMsSurvey ppiMsSurvey = this.ppiMsSurveyRepository.findBySurveyIdAndIsDeleted(request.getSurveyId(),AnswerFlag.N.toString())
+					.orElseThrow(() -> new DataNotFoundException(ErrorCode.INTERNAL_SERVER_ERROR));
+
+
+
+			String isIamAdmin = request.getIsIamAdmin().toString();
+			IamMsUser iamMsUser = IamMsUser.builder()
+					.userCode(request.getUserCode())
+					.localFirstName(request.getLocalFirstName())
+					.localMiddleName(request.getLocalMiddleName())
+					.localLastName(request.getLocalLastName())
+					.engFirstName(request.getEngFirstName())
+					.engMiddleName(request.getEngMiddleName())
+					.engLastName(request.getEngLastName())
+					.firstTimeLogin(AnswerFlag.Y.toString().equalsIgnoreCase(isIamAdmin)? AnswerFlag.N.toString() : AnswerFlag.Y.toString())
+					.isIamAdmin(isIamAdmin)
+					.noOfFailTimes(0)
+					.disableFlag(AnswerFlag.N.toString())
+					.userType(userType.getParamInfoId())
+					.survey(ppiMsSurvey)
+					.build();
+
+			iamMsUser.setUserPassword(passwordEncoder.encode(request.getPassword()));
+
+			return this.iamMsUserRepository.save(iamMsUser);
+		}
+
+
+		String isIamAdmin = request.getIsIamAdmin().toString();
+		IamMsUser iamMsUser = IamMsUser.builder()
+				.userCode(request.getUserCode())
+				.localFirstName(request.getLocalFirstName())
+				.localMiddleName(request.getLocalMiddleName())
+				.localLastName(request.getLocalLastName())
+				.engFirstName(request.getEngFirstName())
+				.engMiddleName(request.getEngMiddleName())
+				.engLastName(request.getEngLastName())
+				.firstTimeLogin(AnswerFlag.Y.toString().equalsIgnoreCase(isIamAdmin)? AnswerFlag.N.toString() : AnswerFlag.Y.toString())
+				.isIamAdmin(isIamAdmin)
+				.noOfFailTimes(0)
+				.disableFlag(AnswerFlag.N.toString())
+				.userType(userType.getParamInfoId())
+				.build();
+
+		iamMsUser.setUserPassword(passwordEncoder.encode(request.getPassword()));
+
+		return this.iamMsUserRepository.save(iamMsUser);
     }
     
     @Transactional
@@ -234,5 +298,13 @@ public class AuthService {
 
 		iamMsUser.setNoOfFailTimes(0);
 		this.iamMsUserRepository.save(iamMsUser);
+	}
+
+	private ParamInfoData getUserType(UserType type) {
+		return this.paramService.getUserType(type)
+				.orElse(ParamInfoData.builder()
+						.paramEnMessage("System error")
+						.paramLocalMessage("System error")
+						.build());
 	}
 }

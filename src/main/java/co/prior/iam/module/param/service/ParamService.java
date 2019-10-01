@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import co.prior.iam.model.UserType;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
@@ -129,5 +130,26 @@ public class ParamService {
 		
 		return Optional.empty();
 	}
+
+
+	@Transactional(propagation = Propagation.REQUIRED, readOnly = true)
+	public Optional<ParamInfoData> getUserType(UserType userType) {
+		log.info("Service getUserType errorCode: {}", userType);
+
+		Optional<GetParamsResponse> paramOpt = this.getParams().stream()
+				.filter(param -> ParamGroup.USER_TYPE.toString().equalsIgnoreCase(param.getParamGroup()))
+				.findFirst();
+
+		if (paramOpt.isPresent()) {
+			GetParamsResponse param = paramOpt.get();
+			return param.getParamInfoList().stream()
+					.filter(paramInfo -> userType.type().equalsIgnoreCase(paramInfo.getParamInfo()))
+					.findFirst();
+		}
+
+		return Optional.empty();
+	}
+
+
 
 }

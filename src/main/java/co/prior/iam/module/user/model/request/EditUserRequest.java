@@ -30,5 +30,11 @@ public class EditUserRequest {
 	private String engLastName;
 	
 	private AnswerFlag disableFlag;
+
+	private Long userType;
+
+	private Long surveyId;
+
+	private Long provinceId;
 	
 }

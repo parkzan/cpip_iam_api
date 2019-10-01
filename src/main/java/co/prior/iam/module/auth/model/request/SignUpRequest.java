@@ -36,5 +36,12 @@ public class SignUpRequest {
 	private String engLastName;
 	
 	private AnswerFlag isIamAdmin;
+
+
+	private Long userType;
+
+	private Long surveyId;
+
+	private Long provinceId;
 	
 }
