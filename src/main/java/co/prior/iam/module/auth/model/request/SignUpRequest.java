@@ -1,11 +1,13 @@
 package co.prior.iam.module.auth.model.request;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import co.prior.iam.model.AnswerFlag;
 import lombok.Data;
+import org.springframework.lang.Nullable;
 
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -37,11 +39,12 @@ public class SignUpRequest {
 	
 	private AnswerFlag isIamAdmin;
 
-
+	@NotNull
 	private Long userType;
 
+	@Nullable
 	private Long surveyId;
-
+	@Nullable
 	private Long provinceId;
 	
 }
