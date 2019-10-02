@@ -52,6 +52,7 @@ public class ParamService {
 			List<ParamInfoData> paramInfoList = new ArrayList<>();
 			for (IamMsParameterInfo paramInfo : paramGroup.getParamInfoSet()) {
 				paramInfoList.add(ParamInfoData.builder()
+						.paramInfoId(paramInfo.getParamInfoId())
 						.paramInfo(paramInfo.getParamCode())
 						.paramEnMessage(paramInfo.getParamEnDescription())
 						.paramLocalMessage(paramInfo.getParamLocalDescription())
