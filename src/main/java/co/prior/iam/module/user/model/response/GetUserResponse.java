@@ -21,6 +21,7 @@ public class GetUserResponse {
 	private String disableFlag;
 	private LocalDateTime createdDate;
 	private String createdBy;
+	private long userType;
 	private LocalDateTime updatedDate;
 	private String updatedBy;
 	private Integer noOfFailTimes;

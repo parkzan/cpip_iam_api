@@ -70,6 +70,7 @@ public class UserService {
 					.updatedBy(user.getUpdatedBy())
 					.createdDate(user.getCreatedDate())
 					.createdBy(user.getCreatedBy())
+					.userType(user.getUserType())
 					.build());
 		}
 		
