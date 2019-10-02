@@ -14,10 +14,6 @@ import java.util.TimeZone;
 @EnableCaching
 public class IAMApplication {
 
-	@PostConstruct
-	void started() {
-		TimeZone.setDefault(TimeZone.getTimeZone("UTC"));
-	}
 
 	public static void main(String[] args) {
 		SpringApplication.run(IAMApplication.class, args);
