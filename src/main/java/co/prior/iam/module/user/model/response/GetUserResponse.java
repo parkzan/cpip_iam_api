@@ -22,8 +22,8 @@ public class GetUserResponse {
 	private LocalDateTime createdDate;
 	private String createdBy;
 	private long userType;
-	private long provinceId;
-	private long surveyId;
+	private Long provinceId;
+	private Long surveyId;
 	private LocalDateTime updatedDate;
 	private String updatedBy;
 	private Integer noOfFailTimes;
