@@ -71,6 +71,8 @@ public class UserService {
 					.createdDate(user.getCreatedDate())
 					.createdBy(user.getCreatedBy())
 					.userType(user.getUserType())
+					.provinceId(user.getProvince().getProvinceId())
+					.surveyId(user.getSurvey().getSurveyId())
 					.build());
 		}
 		
@@ -107,6 +109,9 @@ public class UserService {
 				.createdDate(iamMsUser.getCreatedDate())
 				.updatedBy(iamMsUser.getUpdatedBy())
 				.updatedDate(iamMsUser.getUpdatedDate())
+				.userType(iamMsUser.getUserType())
+				.provinceId(iamMsUser.getProvince().getProvinceId())
+				.surveyId(iamMsUser.getSurvey().getSurveyId())
 				.build();
 	}
 	
