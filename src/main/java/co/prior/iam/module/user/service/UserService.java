@@ -2,11 +2,16 @@ package co.prior.iam.module.user.service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
+import co.prior.iam.entity.PpiMsProvince;
+import co.prior.iam.entity.PpiMsSurvey;
 import co.prior.iam.model.*;
 import co.prior.iam.module.param.model.response.ParamInfoData;
 import co.prior.iam.module.param.service.ParamService;
 import co.prior.iam.module.user.model.request.ResignUserRequest;
+import co.prior.iam.repository.PpiMsProvinceRepository;
+import co.prior.iam.repository.PpiMsSurveyRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -28,10 +33,13 @@ import lombok.extern.slf4j.Slf4j;
 public class UserService {
 
 	private final IamMsUserRepository iamMsUserRepository;
+	private final PpiMsSurveyRepository ppiMsSurveyRepository;
+	private final PpiMsProvinceRepository ppiMsProvinceRepository;
 
-
-	public UserService(IamMsUserRepository iamMsUserRepository) {
+	public UserService(IamMsUserRepository iamMsUserRepository, PpiMsSurveyRepository ppiMsSurveyRepository, PpiMsProvinceRepository ppiMsProvinceRepository) {
 		this.iamMsUserRepository = iamMsUserRepository;
+		this.ppiMsSurveyRepository = ppiMsSurveyRepository;
+		this.ppiMsProvinceRepository = ppiMsProvinceRepository;
 	}
 
 	public IamMsUserPage getUsers(GetUsersRequest request) {
@@ -54,26 +62,68 @@ public class UserService {
 				 AnswerFlag.N.toString(), AnswerFlag.N.toString(), records);
 		List<GetUserResponse> data = new ArrayList<>();
 		for (IamMsUser user : userPage.getContent()) {
-			data.add(GetUserResponse.builder()
-					.userId(user.getUserId())
-					.userCode(user.getUserCode())
-					.localFirstName(user.getLocalFirstName())
-					.localMiddleName(user.getLocalMiddleName())
-					.localLastName(user.getLocalLastName())
-					.engFirstName(user.getEngFirstName())
-					.engMiddleName(user.getEngMiddleName())
-					.engLastName(user.getEngLastName())
-					.isIamAdmin(user.getIsIamAdmin())
-					.disableFlag(user.getDisableFlag())
-					.noOfFailTimes(user.getNoOfFailTimes())
-					.updatedDate(user.getUpdatedDate())
-					.updatedBy(user.getUpdatedBy())
-					.createdDate(user.getCreatedDate())
-					.createdBy(user.getCreatedBy())
-					.userType(user.getUserType())
-					.provinceId(user.getProvince().getProvinceId())
-					.surveyId(user.getSurvey().getSurveyId())
-					.build());
+
+			if(user.getProvince() != null){
+				data.add(GetUserResponse.builder()
+						.userId(user.getUserId())
+						.userCode(user.getUserCode())
+						.localFirstName(user.getLocalFirstName())
+						.localMiddleName(user.getLocalMiddleName())
+						.localLastName(user.getLocalLastName())
+						.engFirstName(user.getEngFirstName())
+						.engMiddleName(user.getEngMiddleName())
+						.engLastName(user.getEngLastName())
+						.isIamAdmin(user.getIsIamAdmin())
+						.disableFlag(user.getDisableFlag())
+						.noOfFailTimes(user.getNoOfFailTimes())
+						.updatedDate(user.getUpdatedDate())
+						.updatedBy(user.getUpdatedBy())
+						.createdDate(user.getCreatedDate())
+						.createdBy(user.getCreatedBy())
+						.userType(user.getUserType())
+						.provinceId(user.getProvince().getProvinceId())
+						.build());
+			}else if(user.getSurvey() != null) {
+				data.add(GetUserResponse.builder()
+						.userId(user.getUserId())
+						.userCode(user.getUserCode())
+						.localFirstName(user.getLocalFirstName())
+						.localMiddleName(user.getLocalMiddleName())
+						.localLastName(user.getLocalLastName())
+						.engFirstName(user.getEngFirstName())
+						.engMiddleName(user.getEngMiddleName())
+						.engLastName(user.getEngLastName())
+						.isIamAdmin(user.getIsIamAdmin())
+						.disableFlag(user.getDisableFlag())
+						.noOfFailTimes(user.getNoOfFailTimes())
+						.updatedDate(user.getUpdatedDate())
+						.updatedBy(user.getUpdatedBy())
+						.createdDate(user.getCreatedDate())
+						.createdBy(user.getCreatedBy())
+						.userType(user.getUserType())
+						.surveyId(user.getSurvey().getSurveyId())
+						.build());
+			}else if(user.getSurvey() == null && user.getProvince() == null){
+				data.add(GetUserResponse.builder()
+						.userId(user.getUserId())
+						.userCode(user.getUserCode())
+						.localFirstName(user.getLocalFirstName())
+						.localMiddleName(user.getLocalMiddleName())
+						.localLastName(user.getLocalLastName())
+						.engFirstName(user.getEngFirstName())
+						.engMiddleName(user.getEngMiddleName())
+						.engLastName(user.getEngLastName())
+						.isIamAdmin(user.getIsIamAdmin())
+						.disableFlag(user.getDisableFlag())
+						.noOfFailTimes(user.getNoOfFailTimes())
+						.updatedDate(user.getUpdatedDate())
+						.updatedBy(user.getUpdatedBy())
+						.createdDate(user.getCreatedDate())
+						.createdBy(user.getCreatedBy())
+						.userType(user.getUserType())
+						.build());
+			}
+
 		}
 		
 		return IamMsUserPage.builder()
@@ -92,7 +142,48 @@ public class UserService {
 		
 		IamMsUser iamMsUser = this.iamMsUserRepository.findByUserIdAndIsDeleted(userId, AnswerFlag.N.toString())
 				.orElseThrow(() -> new DataNotFoundException(ErrorCode.USER_NOT_FOUND));
-		
+		if(iamMsUser.getProvince() != null){
+			return GetUserResponse.builder()
+					.userId(iamMsUser.getUserId())
+					.userCode(iamMsUser.getUserCode())
+					.localFirstName(iamMsUser.getLocalFirstName())
+					.localMiddleName(iamMsUser.getLocalMiddleName())
+					.localLastName(iamMsUser.getLocalLastName())
+					.engFirstName(iamMsUser.getEngFirstName())
+					.engMiddleName(iamMsUser.getEngMiddleName())
+					.engLastName(iamMsUser.getEngLastName())
+					.isIamAdmin(iamMsUser.getIsIamAdmin())
+					.disableFlag(iamMsUser.getDisableFlag())
+					.noOfFailTimes(iamMsUser.getNoOfFailTimes())
+					.createdBy(iamMsUser.getCreatedBy())
+					.createdDate(iamMsUser.getCreatedDate())
+					.updatedBy(iamMsUser.getUpdatedBy())
+					.updatedDate(iamMsUser.getUpdatedDate())
+					.userType(iamMsUser.getUserType())
+					.provinceId(iamMsUser.getProvince().getProvinceId())
+					.build();
+		}
+		else if(iamMsUser.getSurvey() != null){
+			return GetUserResponse.builder()
+					.userId(iamMsUser.getUserId())
+					.userCode(iamMsUser.getUserCode())
+					.localFirstName(iamMsUser.getLocalFirstName())
+					.localMiddleName(iamMsUser.getLocalMiddleName())
+					.localLastName(iamMsUser.getLocalLastName())
+					.engFirstName(iamMsUser.getEngFirstName())
+					.engMiddleName(iamMsUser.getEngMiddleName())
+					.engLastName(iamMsUser.getEngLastName())
+					.isIamAdmin(iamMsUser.getIsIamAdmin())
+					.disableFlag(iamMsUser.getDisableFlag())
+					.noOfFailTimes(iamMsUser.getNoOfFailTimes())
+					.createdBy(iamMsUser.getCreatedBy())
+					.createdDate(iamMsUser.getCreatedDate())
+					.updatedBy(iamMsUser.getUpdatedBy())
+					.updatedDate(iamMsUser.getUpdatedDate())
+					.userType(iamMsUser.getUserType())
+					.surveyId(iamMsUser.getSurvey().getSurveyId())
+					.build();
+		}
 		return GetUserResponse.builder()
 				.userId(iamMsUser.getUserId())
 				.userCode(iamMsUser.getUserCode())
@@ -110,8 +201,6 @@ public class UserService {
 				.updatedBy(iamMsUser.getUpdatedBy())
 				.updatedDate(iamMsUser.getUpdatedDate())
 				.userType(iamMsUser.getUserType())
-				.provinceId(iamMsUser.getProvince().getProvinceId())
-				.surveyId(iamMsUser.getSurvey().getSurveyId())
 				.build();
 	}
 	
@@ -122,10 +211,26 @@ public class UserService {
 		IamMsUser iamMsUser = this.iamMsUserRepository.findByUserIdAndIsDeleted(request.getUserId(), AnswerFlag.N.toString())
 				.orElseThrow(() -> new DataNotFoundException(ErrorCode.USER_NOT_FOUND));
 
-//		if(iamMsUser.getUserType() != request.getUserType()){
-//
-//
-//		}
+		if(request.getSurveyId() != null) {
+			Optional<PpiMsSurvey> survey = this.ppiMsSurveyRepository.findBySurveyIdAndIsDeleted(request.getSurveyId(), AnswerFlag.N.toString());
+			if(!survey.isPresent()){
+				throw new DataNotFoundException(ErrorCode.INTERNAL_SERVER_ERROR);
+			}
+			iamMsUser.setSurvey(survey.get());
+			iamMsUser.setProvince(null);
+
+		}else if(request.getProvinceId() != null){
+			Optional<PpiMsProvince> province = this.ppiMsProvinceRepository.findByProvinceIdAndIsDeleted(request.getProvinceId(),AnswerFlag.N.toString());
+			if(!province.isPresent()){
+				throw new DataNotFoundException(ErrorCode.INTERNAL_SERVER_ERROR);
+			}
+			iamMsUser.setSurvey(null);
+			iamMsUser.setProvince(province.get());
+		}else if(request.getProvinceId() == null && request.getSurveyId() == null){
+			iamMsUser.setSurvey(null);
+			iamMsUser.setProvince(null);
+		}
+
 		iamMsUser.setLocalFirstName(request.getLocalFirstName());
 		iamMsUser.setLocalMiddleName(request.getLocalMiddleName());
 		iamMsUser.setLocalLastName(request.getLocalLastName());
@@ -133,6 +238,7 @@ public class UserService {
 		iamMsUser.setEngMiddleName(request.getEngMiddleName());
 		iamMsUser.setEngLastName(request.getEngLastName());
 		iamMsUser.setDisableFlag(request.getDisableFlag().toString());
+		iamMsUser.setUserType(request.getUserType());
 		this.iamMsUserRepository.save(iamMsUser);
 	}
 	
