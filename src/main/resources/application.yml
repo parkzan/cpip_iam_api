@@ -1,7 +1,7 @@
 server:
    servlet:
       contextPath: /iam/v2
-   port: 8000
+   port: 8080
 spring:
    profiles:
       active: dev
@@ -21,11 +21,13 @@ spring:
       show-sql: false
       properties:
          hibernate:
+            jdbc:
+              time_zone: UTC
             default_schema: prior_db
             temp:
                use_jdbc_metadata_defaults: false
 
-               
+
 security:
    jwt:
       access:
@@ -34,6 +36,7 @@ security:
       refresh:
          secret: jwt-refresh-secret
          expirationTime: 3600 # second(s)
+
 
 
 
