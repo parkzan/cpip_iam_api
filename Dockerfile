@@ -3,10 +3,6 @@ ENV PORT 8080
 ENV CLASSPATH /opt/lib
 EXPOSE 8080
 
-#RUN date
-#RUN apk add tzdata
-#RUN cp /usr/share/zoneinfo/Asia/Bangkok /etc/localtime
-#RUN date
 
 # copy pom.xml and wildcards to avoid this command failing if there's no target/lib directory
 COPY pom.xml target/lib* /opt/lib/
