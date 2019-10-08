@@ -22,7 +22,7 @@ spring:
       properties:
          hibernate:
             jdbc:
-              time_zone: UTC
+               time_zone: UTC
             default_schema: prior_db
             temp:
                use_jdbc_metadata_defaults: false
@@ -40,4 +40,3 @@ security:
 
 
 
-         
