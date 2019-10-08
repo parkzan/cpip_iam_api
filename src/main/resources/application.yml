@@ -21,8 +21,6 @@ spring:
       show-sql: false
       properties:
          hibernate:
-            jdbc:
-               time_zone: UTC
             default_schema: prior_db
             temp:
                use_jdbc_metadata_defaults: false
