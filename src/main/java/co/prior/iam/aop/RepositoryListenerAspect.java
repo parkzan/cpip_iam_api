@@ -102,7 +102,7 @@ public class RepositoryListenerAspect {
 				Field fkField = fkFieldOpt.get();
 				ReflectionUtils.makeAccessible(fkField);
 				oldValue = oldValue == null? null : ReflectionUtils.getField(fkField, oldValue);
-				newValue = ReflectionUtils.getField(fkField, newValue);
+				newValue = newValue == null? null : ReflectionUtils.getField(fkField, newValue);
 			}
 		}
 
