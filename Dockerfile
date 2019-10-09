@@ -1,9 +1,9 @@
 FROM openjdk:8-jdk-slim
 
-#RUN date
-#RUN apk add tzdata
-#RUN cp /usr/share/zoneinfo/Asia/Bangkok /etc/localtime
-#RUN date
+RUN date
+RUN apk add tzdata
+RUN cp /usr/share/zoneinfo/Asia/Bangkok /etc/localtime
+RUN date
 
 ENV PORT 8080
 ENV CLASSPATH /opt/lib
