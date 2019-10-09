@@ -16,7 +16,7 @@ public class IAMApplication {
 
 	@PostConstruct
 	void started() {
-		TimeZone.setDefault(TimeZone.getTimeZone("UTC"));
+		TimeZone.setDefault(TimeZone.getTimeZone("UTC+7 hours"));
 	}
 	public static void main(String[] args) {
 		SpringApplication.run(IAMApplication.class, args);
