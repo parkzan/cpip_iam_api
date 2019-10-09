@@ -1,7 +1,10 @@
 server:
    servlet:
       contextPath: /iam/v2
-   port: 8000
+   port: 8080
+   jetty:
+     accesslog:
+       time-zone: UTC
 spring:
    profiles:
       active: dev
@@ -25,7 +28,7 @@ spring:
             temp:
                use_jdbc_metadata_defaults: false
 
-               
+
 security:
    jwt:
       access:
@@ -37,4 +40,4 @@ security:
 
 
 
-         
+
