@@ -11,7 +11,7 @@ spring:
 spring:
    profiles: dev
    datasource:
-      url: jdbc:oracle:thin:@prior-db.cmbcolowaua6.ap-southeast-1.rds.amazonaws.com:1922:ORCL
+      url: jdbc:oracle:thin:@prior-rds.cmbcolowaua6.ap-southeast-1.rds.amazonaws.com:1922:ORCL
       username: prior_db
       password: P@5sw0rd
       driver-class-oracle:
