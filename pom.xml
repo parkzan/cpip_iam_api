@@ -18,7 +18,7 @@
 		<repository>
 			<id>local-repo</id>
 			<name>Local Repository</name>
-			<url>file:///root/.m2/repository</url>
+			<url>file://root/.m2/repository</url>
 		</repository>
 		<repository>
 			<id>apache-repo</id>
