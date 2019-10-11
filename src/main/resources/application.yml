@@ -1,42 +1,51 @@
 server:
-   servlet:
-      contextPath: /iam/v2
-   port: 8080
+  servlet:
+    contextPath: /iam/v2
+  port: 8080
 
 spring:
-   profiles:
-      active: dev
+  profiles:
+    active: dev
 ---
 
 spring:
-   profiles: dev
-   datasource:
-      url: jdbc:oracle:thin:@prior-rds.cmbcolowaua6.ap-southeast-1.rds.amazonaws.com:1922:ORCL
-      username: prior_db
-      password: P@5sw0rd
-      driver-class-oracle:
-        jdbc:
-        driver: OracleDriver
-   jpa:
-      database: oracle
-      show-sql: false
-      properties:
-         hibernate:
-#            jdbc:
-#               time_zone: Asia/Bangkok
-            default_schema: prior_db
-            temp:
-               use_jdbc_metadata_defaults: false
+  profiles: dev
+  datasource:
+    url: jdbc:oracle:thin:@prior-rds.cmbcolowaua6.ap-southeast-1.rds.amazonaws.com:1922:ORCL
+    username: prior_db
+    password: P@5sw0rd
+    driver-class-name: oracle.jdbc.OracleDriver
+
+#    driver-class-oracle:
+#      jdbc:
+#      driver: OracleDriver
+
+    hikari:
+      maximum-pool-size: 5
+      connection-timeout: 20000
+
+
+  jpa:
+    database: oracle
+    show-sql: false
+    properties:
+      hibernate:
+        #            jdbc:
+        #               time_zone: Asia/Bangkok
+        default_schema: prior_db
+        temp:
+          use_jdbc_metadata_defaults: false
+    database-platform: org.hibernate.dialect.Oracle12cDialect
 
 
 security:
-   jwt:
-      access:
-         secret: jwt-access-secret
-         expirationTime: 1800 # second(s)
-      refresh:
-         secret: jwt-refresh-secret
-         expirationTime: 3600 # second(s)
+  jwt:
+    access:
+      secret: jwt-access-secret
+      expirationTime: 1800 # second(s)
+    refresh:
+      secret: jwt-refresh-secret
+      expirationTime: 3600 # second(s)
 
 
 
