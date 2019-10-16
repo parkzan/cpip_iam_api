@@ -1,14 +1,19 @@
 package co.prior.iam.module.auth.service;
 
+import java.time.LocalDateTime;
 import java.util.Calendar;
 
 import co.prior.iam.entity.*;
+import co.prior.iam.model.SystemConfig;
 import co.prior.iam.model.UserType;
 import co.prior.iam.module.auth.model.request.*;
 import co.prior.iam.module.param.model.response.ParamInfoData;
 import co.prior.iam.module.param.service.ParamService;
 import co.prior.iam.repository.*;
+import org.hibernate.event.spi.PostInsertEvent;
+import org.hibernate.event.spi.PostInsertEventListener;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.DisabledException;
@@ -73,59 +78,83 @@ public class AuthService {
     	this.ppiMsSurveyRepository = ppiMsSurveyRepository;
     	this.paramService = paramService;
     }
+
+
     
     @Transactional(noRollbackFor = UnauthorizedException.class)
     public AuthResponse signIn(String userCode, String password, String isIamAdmin) {
     	log.info("Service signIn userCode: {}, isIamAdmin: {}, password: {}", userCode, isIamAdmin,password);
 
-    	try {
-	    	Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(userCode, password));
-	        SecurityContextHolder.getContext().setAuthentication(authentication);
+    	ParamInfoData noFailTime = getSystemConfig(SystemConfig.NO_OF_FAIL_TIME);
 
-	        IamMsUser iamMsUser = this.iamMsUserRepository.findByUserCodeAndIsIamAdminAndIsDeleted(
-	        		userCode, isIamAdmin, AnswerFlag.N.toString())
-	        		.orElseThrow(() -> new UnauthorizedException(ErrorCode.USER_OR_PASSWORD_INCORRECT));
+		try{
+			Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(userCode, password));
+			SecurityContextHolder.getContext().setAuthentication(authentication);
+
+			IamMsUser iamMsUser = this.iamMsUserRepository.findByUserCodeAndIsIamAdminAndIsDeleted(
+					userCode, isIamAdmin, AnswerFlag.N.toString())
+					.orElseThrow(() -> new UnauthorizedException(ErrorCode.IS_NOT_ADMIN));
 			log.debug("iamMsUser.getUserPassword(): {}", iamMsUser.getUserPassword());
 			log.debug("passwordEncoder.encode(password): {}", passwordEncoder.encode(password));
 
+			if (iamMsUser.getDisableFlag().equals(AnswerFlag.Y.toString())) {
+				throw new UnauthorizedException(ErrorCode.USER_DISABLED);
+			}
 			if (!passwordEncoder.matches(password, iamMsUser.getUserPassword())) {
-				int failedAttempt = iamMsUser.getNoOfFailTimes() + 1;
-				iamMsUser.setNoOfFailTimes(failedAttempt);
-				this.iamMsUserRepository.save(iamMsUser);
+				if (iamMsUser.getNoOfFailTimes() <= Integer.parseInt(noFailTime.getParamEnMessage())) {
+					int failedAttempt = iamMsUser.getNoOfFailTimes() + 1;
+					if (failedAttempt == Integer.parseInt(noFailTime.getParamEnMessage())) {
+						iamMsUser.setDisableFlag(AnswerFlag.Y.toString());
+						iamMsUser.setNoOfFailTimes(failedAttempt);
+						this.iamMsUserRepository.save(iamMsUser);
+					} else {
+						iamMsUser.setNoOfFailTimes(failedAttempt);
+						this.iamMsUserRepository.save(iamMsUser);
+					}
+				}
+
 
 				throw new UnauthorizedException(ErrorCode.PASSWORD_INCORRECT);
 			}
-			if(AnswerFlag.Y.toString().equalsIgnoreCase(iamMsUser.getFirstTimeLogin())){
-				throw new UnauthorizedException(ErrorCode.USER_DISABLED);
-			}
-	        iamMsUser.setNoOfFailTimes(0);
+//			if(AnswerFlag.Y.toString().equalsIgnoreCase(iamMsUser.getFirstTimeLogin())){
+//				throw new UnauthorizedException(ErrorCode.USER_DISABLED);
+//			}
 
-	        this.iamMsUserRepository.save(iamMsUser);
-	        
-	        return this.generateAuthResponse(authentication);
-	        
+			iamMsUser.setNoOfFailTimes(0);
+			iamMsUser.setLastLoginTime(LocalDateTime.now());
+
+			this.iamMsUserRepository.save(iamMsUser);
+
+			return this.generateAuthResponse(authentication);
+
+
     	} catch (BadCredentialsException e) {
     		this.iamMsUserRepository.findByUserCodeAndIsIamAdminAndIsDeleted(
     				userCode, isIamAdmin, AnswerFlag.N.toString()).ifPresent(user -> {
     			int failedAttempt = user.getNoOfFailTimes() + 1;
-	        	user.setNoOfFailTimes(failedAttempt);
-	        	this.iamMsUserRepository.save(user);
+				if(failedAttempt == Integer.parseInt(noFailTime.getParamEnMessage())){
+					user.setDisableFlag(AnswerFlag.Y.toString());
+					user.setNoOfFailTimes(failedAttempt);
+					this.iamMsUserRepository.save(user);
+				}
+				else {
+					user.setNoOfFailTimes(failedAttempt);
+					this.iamMsUserRepository.save(user);
+				}
 	        });
-    		
-        	throw new UnauthorizedException(ErrorCode.USER_OR_PASSWORD_INCORRECT);
 
-        } catch (DisabledException e) {
+        	throw new UnauthorizedException(ErrorCode.PASSWORD_INCORRECT);
+
+        }  catch (LockedException e) {
         	throw new UnauthorizedException(ErrorCode.USER_DISABLED);
-        	
-        } catch (LockedException e) {
-        	throw new UnauthorizedException(ErrorCode.USER_LOCKED);
         }
     }
     
-    @Transactional
+    @Transactional()
     public IamMsUser signUp(SignUpRequest request) {
     	log.info("Service signUp systemId: {}, userCode: {}",request.getUserCode());
-    	
+
+    	ParamInfoData userTypeAdmin = getUserType(UserType.ADMIN);
     	if(this.iamMsUserRepository.existsByUserCodeAndIsDeleted(
     			request.getUserCode(), AnswerFlag.N.toString())) {
     		
@@ -139,7 +168,7 @@ public class AuthService {
     	if(request.getProvinceId() != null){
 
     	PpiMsProvince ppiMsProvince = this.ppiMsProvinceRepository.findByProvinceIdAndIsDeleted(request.getProvinceId(),AnswerFlag.N.toString())
-				.orElseThrow(() -> new DataNotFoundException(ErrorCode.INTERNAL_SERVER_ERROR));
+				.orElseThrow(() -> new DataNotFoundException(ErrorCode.PROVINCE_NOT_FOUND));
 
 
     			
@@ -159,13 +188,15 @@ public class AuthService {
 				.userType(userType.getParamInfoId())
 				.province(ppiMsProvince)
         		.build();
-        
+
+        iamMsUser.setUpdatedBy(null);
+        iamMsUser.setUpdatedDate(null);
         iamMsUser.setUserPassword(passwordEncoder.encode(request.getPassword()));
 
         return this.iamMsUserRepository.save(iamMsUser);
     	}else if (request.getSurveyId() != null){
 			PpiMsSurvey ppiMsSurvey = this.ppiMsSurveyRepository.findBySurveyIdAndIsDeleted(request.getSurveyId(),AnswerFlag.N.toString())
-					.orElseThrow(() -> new DataNotFoundException(ErrorCode.INTERNAL_SERVER_ERROR));
+					.orElseThrow(() -> new DataNotFoundException(ErrorCode.SURVEY_NOT_FOUND));
 
 
 
@@ -188,10 +219,9 @@ public class AuthService {
 
 			iamMsUser.setUserPassword(passwordEncoder.encode(request.getPassword()));
 
+
 			return this.iamMsUserRepository.save(iamMsUser);
 		}
-
-
 		String isIamAdmin = request.getIsIamAdmin().toString();
 		IamMsUser iamMsUser = IamMsUser.builder()
 				.userCode(request.getUserCode())
@@ -205,10 +235,19 @@ public class AuthService {
 				.isIamAdmin(isIamAdmin)
 				.noOfFailTimes(0)
 				.disableFlag(AnswerFlag.N.toString())
-				.userType(userType.getParamInfoId())
 				.build();
 
+		if(request.getIsIamAdmin().equals(AnswerFlag.Y.toString())){
+			iamMsUser.setUserType(userTypeAdmin.getParamInfoId());
+		}
+		else{
+			iamMsUser.setUserType(userType.getParamInfoId());
+		}
+
+
 		iamMsUser.setUserPassword(passwordEncoder.encode(request.getPassword()));
+
+
 
 		return this.iamMsUserRepository.save(iamMsUser);
     }
@@ -243,6 +282,7 @@ public class AuthService {
     	
     	iamMsUser.setUserPassword(passwordEncoder.encode(request.getNewPassword()));
     	iamMsUser.setNoOfFailTimes(0);
+		iamMsUser.setDisableFlag(AnswerFlag.N.toString());
     	this.iamMsUserRepository.save(iamMsUser);
     }
 
@@ -254,6 +294,7 @@ public class AuthService {
 		iamMsUser.setUserPassword(passwordEncoder.encode(request.getNewPassword()));
 		iamMsUser.setFirstTimeLogin(AnswerFlag.Y.toString());
 		iamMsUser.setNoOfFailTimes(0);
+		iamMsUser.setDisableFlag(AnswerFlag.N.toString());
 		this.iamMsUserRepository.save(iamMsUser);
 	}
     
@@ -302,6 +343,14 @@ public class AuthService {
 
 	private ParamInfoData getUserType(UserType type) {
 		return this.paramService.getUserType(type)
+				.orElse(ParamInfoData.builder()
+						.paramEnMessage("System error")
+						.paramLocalMessage("System error")
+						.build());
+	}
+
+	private ParamInfoData getSystemConfig(SystemConfig value) {
+		return this.paramService.getSystemConfig(value)
 				.orElse(ParamInfoData.builder()
 						.paramEnMessage("System error")
 						.paramLocalMessage("System error")

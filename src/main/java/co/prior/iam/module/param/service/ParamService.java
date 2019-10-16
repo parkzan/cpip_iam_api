@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import co.prior.iam.model.UserType;
+import co.prior.iam.model.*;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
@@ -15,9 +15,6 @@ import co.prior.iam.entity.IamMsParameterGroup;
 import co.prior.iam.entity.IamMsParameterInfo;
 import co.prior.iam.error.exception.DataDuplicateException;
 import co.prior.iam.error.exception.DataNotFoundException;
-import co.prior.iam.model.AnswerFlag;
-import co.prior.iam.model.ErrorCode;
-import co.prior.iam.model.ParamGroup;
 import co.prior.iam.module.param.model.request.CreateParamGroupRequest;
 import co.prior.iam.module.param.model.request.CreateParamInfoRequest;
 import co.prior.iam.module.param.model.response.GetParamsResponse;
@@ -50,14 +47,18 @@ public class ParamService {
 		List<GetParamsResponse> params = new ArrayList<>();
 		for (IamMsParameterGroup paramGroup : iamMsParameterGroups) {
 			List<ParamInfoData> paramInfoList = new ArrayList<>();
-			for (IamMsParameterInfo paramInfo : paramGroup.getParamInfoSet()) {
-				paramInfoList.add(ParamInfoData.builder()
-						.paramInfoId(paramInfo.getParamInfoId())
-						.paramInfo(paramInfo.getParamCode())
-						.paramEnMessage(paramInfo.getParamEnDescription())
-						.paramLocalMessage(paramInfo.getParamLocalDescription())
-						.build());
+			List<IamMsParameterInfo> parameterInfos = this.paramInfoRepository.findByParamGroup_ParamGroupAndIsDeleted(paramGroup.getParamGroup() , AnswerFlag.N.toString());
+			if(!parameterInfos.isEmpty()){
+				for (IamMsParameterInfo paramInfo : parameterInfos) {
+					paramInfoList.add(ParamInfoData.builder()
+							.paramInfoId(paramInfo.getParamInfoId())
+							.paramInfo(paramInfo.getParamCode())
+							.paramEnMessage(paramInfo.getParamEnDescription())
+							.paramLocalMessage(paramInfo.getParamLocalDescription())
+							.build());
+				}
 			}
+
 			params.add(GetParamsResponse.builder()
 					.paramGroup(paramGroup.getParamGroup())
 					.paramInfoList(paramInfoList)
@@ -124,6 +125,7 @@ public class ParamService {
 		
 		if (paramOpt.isPresent()) {
 			GetParamsResponse param = paramOpt.get();
+			log.info("param {}",param);
 			return param.getParamInfoList().stream()
 					.filter(paramInfo -> errorCode.code().equalsIgnoreCase(paramInfo.getParamInfo()))
 					.findFirst();
@@ -151,6 +153,24 @@ public class ParamService {
 		return Optional.empty();
 	}
 
+
+	@Transactional(propagation = Propagation.REQUIRED, readOnly = true)
+	public Optional<ParamInfoData> getSystemConfig(SystemConfig value) {
+		log.info("Service getSystemConfig: {}", value);
+
+		Optional<GetParamsResponse> paramOpt = this.getParams().stream()
+				.filter(param -> ParamGroup.SYSTEM_CONFIG.toString().equalsIgnoreCase(param.getParamGroup()))
+				.findFirst();
+
+		if (paramOpt.isPresent()) {
+			GetParamsResponse param = paramOpt.get();
+			return param.getParamInfoList().stream()
+					.filter(paramInfo -> value.value().equalsIgnoreCase(paramInfo.getParamInfo()))
+					.findFirst();
+		}
+
+		return Optional.empty();
+	}
 
 
 }

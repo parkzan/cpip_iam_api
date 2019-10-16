@@ -3,10 +3,7 @@ package co.prior.iam.entity;
 import java.io.IOException;
 import java.time.LocalDateTime;
 
-import javax.persistence.EntityListeners;
-import javax.persistence.MappedSuperclass;
-import javax.persistence.PostLoad;
-import javax.persistence.Transient;
+import javax.persistence.*;
 
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -25,18 +22,22 @@ import lombok.Data;
 @EntityListeners(AuditingEntityListener.class)
 public class BaseEntity<T> {
 
+    @Column(updatable = false, insertable = true)
     @JsonIgnore
     @CreationTimestamp
     protected LocalDateTime createdDate;
 
+    @Column(updatable = false, insertable = true)
     @JsonIgnore
     @CreatedBy
     protected String createdBy;
-    
+
+    @Column(updatable = true , insertable = false)
     @JsonIgnore
     @UpdateTimestamp
-    protected LocalDateTime updatedDate;
-    
+    protected LocalDateTime updatedDate ;
+
+    @Column(updatable = true , insertable = false)
     @JsonIgnore
     @LastModifiedBy
     protected String updatedBy;
@@ -59,5 +60,7 @@ public class BaseEntity<T> {
     public T getPreviousState(){
     	return previousState;
     }
-    
+
+
+
 }

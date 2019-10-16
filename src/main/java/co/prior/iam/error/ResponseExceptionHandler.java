@@ -53,6 +53,8 @@ public class ResponseExceptionHandler extends ResponseEntityExceptionHandler {
 		log.error(ex.getCode().toString(), ex);
 
 		ParamInfoData paramInfo = this.getErrorMessage(ex.getCode());
+
+		log.info("param info : {}" , paramInfo);
 		ErrorModel errorModel = new ErrorModel(ex.getCode().code(), paramInfo.getParamEnMessage(), paramInfo.getParamLocalMessage());
 		
 		return new ResponseEntity<>(errorModel, HttpStatus.CONFLICT);

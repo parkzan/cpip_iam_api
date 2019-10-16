@@ -214,7 +214,7 @@ public class UserService {
 		if(request.getSurveyId() != null) {
 			Optional<PpiMsSurvey> survey = this.ppiMsSurveyRepository.findBySurveyIdAndIsDeleted(request.getSurveyId(), AnswerFlag.N.toString());
 			if(!survey.isPresent()){
-				throw new DataNotFoundException(ErrorCode.INTERNAL_SERVER_ERROR);
+				throw new DataNotFoundException(ErrorCode.SURVEY_NOT_FOUND);
 			}
 			iamMsUser.setSurvey(survey.get());
 			iamMsUser.setProvince(null);
@@ -222,7 +222,7 @@ public class UserService {
 		}else if(request.getProvinceId() != null){
 			Optional<PpiMsProvince> province = this.ppiMsProvinceRepository.findByProvinceIdAndIsDeleted(request.getProvinceId(),AnswerFlag.N.toString());
 			if(!province.isPresent()){
-				throw new DataNotFoundException(ErrorCode.INTERNAL_SERVER_ERROR);
+				throw new DataNotFoundException(ErrorCode.PROVINCE_NOT_FOUND);
 			}
 			iamMsUser.setSurvey(null);
 			iamMsUser.setProvince(province.get());

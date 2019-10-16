@@ -1,5 +1,6 @@
 package co.prior.iam.entity;
 
+import java.time.LocalDateTime;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -17,6 +18,7 @@ import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -49,6 +51,10 @@ public class IamMsUser extends BaseEntity<IamMsUser> {
 	private String isIamAdmin;
 	private Integer noOfFailTimes;
 	private String disableFlag;
+
+
+	@JsonIgnore
+	private LocalDateTime lastLoginTime;
 	
 	@ToString.Exclude
 	@JsonIgnore
@@ -78,5 +84,8 @@ public class IamMsUser extends BaseEntity<IamMsUser> {
 //	@ManyToOne
 //	@JoinColumn(name = "system_id")
 //    private IamMsSystem iamMsSystem;
+
+
+
 	
 }

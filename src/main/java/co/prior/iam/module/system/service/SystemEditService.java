@@ -41,10 +41,9 @@ public class SystemEditService {
 		iamMsSystem.setSystemName(systemEditReq.getNewName());
 		iamMsSystem.setSystemIcon(systemEditReq.getNewIcon());
 
-		iamMsObject.setObjectName(systemEditReq.getNewName());
-
-
-
 		this.systemRepository.save(iamMsSystem);
+
+		iamMsObject.setObjectName(systemEditReq.getNewName());
+		this.objectRepository.save(iamMsObject);
 	}
 }
