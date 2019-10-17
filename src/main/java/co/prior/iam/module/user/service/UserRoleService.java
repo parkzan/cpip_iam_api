@@ -349,11 +349,11 @@ public class UserRoleService {
 
 	private void addObject(List<String> lists, List<ObjectModel> roleObjects) {
 		for (ObjectModel roleObject : roleObjects) {
-			List<String> objects = new ArrayList<>();
+//			List<String> objects = new ArrayList<>();
 			List<ObjectModel> list = roleObject.getObjects();
 			lists.add(roleObject.getObjectCode());
 			if (!list.isEmpty()) {
-				this.addObject(objects, list);
+				this.addObject(lists, list);
 			}
 
 

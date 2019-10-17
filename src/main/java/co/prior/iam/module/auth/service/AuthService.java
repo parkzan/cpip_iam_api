@@ -271,8 +271,10 @@ public class AuthService {
     	}
     	
     	iamMsUser.setUserPassword(passwordEncoder.encode(request.getNewPassword()));
-    	iamMsUser.setFirstTimeLogin(AnswerFlag.N.toString());
-		iamMsUser.setFirstTimeLogin(AnswerFlag.N.toString());
+    	iamMsUser.setFirstTimeLogin(AnswerFlag.Y.toString());
+		iamMsUser.setDisableFlag(AnswerFlag.N.toString());
+
+		log.info("user active : {}" , iamMsUser);
     	this.iamMsUserRepository.save(iamMsUser);
     }
 
