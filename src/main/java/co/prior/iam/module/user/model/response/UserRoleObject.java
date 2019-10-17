@@ -2,6 +2,7 @@ package co.prior.iam.module.user.model.response;
 
 import java.util.List;
 
+import co.prior.iam.entity.IamMsObject;
 import lombok.Builder;
 import lombok.Data;
 
@@ -9,7 +10,7 @@ import lombok.Data;
 @Builder
 public class UserRoleObject {
 
-	private String name;
+	private String roleCode;
 	
 	private List<UserObject> objects;
 	

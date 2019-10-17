@@ -100,6 +100,9 @@ public class AuthService {
 			if (iamMsUser.getDisableFlag().equals(AnswerFlag.Y.toString())) {
 				throw new UnauthorizedException(ErrorCode.USER_DISABLED);
 			}
+//			if(iamMsUser.getFirstTimeLogin().equals(AnswerFlag.N.toString())){
+//
+//			}
 			if (!passwordEncoder.matches(password, iamMsUser.getUserPassword())) {
 				if (iamMsUser.getNoOfFailTimes() <= Integer.parseInt(noFailTime.getParamEnMessage())) {
 					int failedAttempt = iamMsUser.getNoOfFailTimes() + 1;
@@ -147,7 +150,9 @@ public class AuthService {
 
         }  catch (LockedException e) {
         	throw new UnauthorizedException(ErrorCode.USER_DISABLED);
-        }
+        }catch (DisabledException e) {
+			throw new UnauthorizedException(ErrorCode.USER_DISABLED);
+		}
     }
     
     @Transactional()
@@ -184,7 +189,7 @@ public class AuthService {
         		.firstTimeLogin(AnswerFlag.Y.toString().equalsIgnoreCase(isIamAdmin)? AnswerFlag.N.toString() : AnswerFlag.Y.toString())
         		.isIamAdmin(isIamAdmin)
         		.noOfFailTimes(0)
-        		.disableFlag(AnswerFlag.N.toString())
+        		.disableFlag(AnswerFlag.Y.toString())
 				.userType(userType.getParamInfoId())
 				.province(ppiMsProvince)
         		.build();
@@ -212,7 +217,7 @@ public class AuthService {
 					.firstTimeLogin(AnswerFlag.Y.toString().equalsIgnoreCase(isIamAdmin)? AnswerFlag.N.toString() : AnswerFlag.Y.toString())
 					.isIamAdmin(isIamAdmin)
 					.noOfFailTimes(0)
-					.disableFlag(AnswerFlag.N.toString())
+					.disableFlag(AnswerFlag.Y.toString())
 					.userType(userType.getParamInfoId())
 					.survey(ppiMsSurvey)
 					.build();
@@ -234,14 +239,15 @@ public class AuthService {
 				.firstTimeLogin(AnswerFlag.Y.toString().equalsIgnoreCase(isIamAdmin)? AnswerFlag.N.toString() : AnswerFlag.Y.toString())
 				.isIamAdmin(isIamAdmin)
 				.noOfFailTimes(0)
-				.disableFlag(AnswerFlag.N.toString())
 				.build();
 
 		if(request.getIsIamAdmin().equals(AnswerFlag.Y.toString())){
 			iamMsUser.setUserType(userTypeAdmin.getParamInfoId());
+			iamMsUser.setDisableFlag(AnswerFlag.N.toString());
 		}
 		else{
 			iamMsUser.setUserType(userType.getParamInfoId());
+			iamMsUser.setDisableFlag(AnswerFlag.Y.toString());
 		}
 
 
@@ -266,6 +272,7 @@ public class AuthService {
     	
     	iamMsUser.setUserPassword(passwordEncoder.encode(request.getNewPassword()));
     	iamMsUser.setFirstTimeLogin(AnswerFlag.N.toString());
+		iamMsUser.setFirstTimeLogin(AnswerFlag.N.toString());
     	this.iamMsUserRepository.save(iamMsUser);
     }
 

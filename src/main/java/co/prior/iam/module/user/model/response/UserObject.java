@@ -9,8 +9,8 @@ import lombok.Data;
 @Builder
 public class UserObject {
 
-	private String name;
-	
+	private String objectCode;
 	private List<UserObject> objects;
+
 	
 }

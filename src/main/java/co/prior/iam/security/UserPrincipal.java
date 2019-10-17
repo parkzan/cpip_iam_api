@@ -1,7 +1,14 @@
 package co.prior.iam.security;
 
 import java.util.Collection;
+import java.util.List;
+import java.util.Set;
 
+import co.prior.iam.entity.IamMsObject;
+import co.prior.iam.entity.IamMsUserRole;
+import co.prior.iam.module.user.model.response.UserObject;
+import co.prior.iam.module.user.model.response.UserObjectRespone;
+import co.prior.iam.module.user.model.response.UserRoleObject;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -35,6 +42,10 @@ public class UserPrincipal implements UserDetails {
 	private String engMiddleName;
 	
 	private String engLastName;
+
+	private List<String> objects;
+
+	private List<UserRoleObject> userRoleObjects;
 	
 	@JsonIgnore
 	private boolean isAccountNonLocked;

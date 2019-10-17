@@ -3,6 +3,7 @@ package co.prior.iam.module.user.controller;
 import javax.validation.Valid;
 
 import co.prior.iam.module.user.model.request.ResignUserRequest;
+import co.prior.iam.module.user.service.UserRoleService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -30,14 +31,19 @@ import lombok.extern.slf4j.Slf4j;
 public class UserController {
 
 	private final UserService userService;
-	
-	public UserController(UserService userService) {
+	private final UserRoleService userRoleService;
+
+	public UserController(UserService userService, UserRoleService userRoleService) {
 		this.userService = userService;
+		this.userRoleService = userRoleService;
 	}
-	
+
 	@GetMapping("/user/me")
     public ResponseEntity<UserPrincipal> getCurrentUser(@CurrentUser UserPrincipal currentUser) {
 		log.info("Controller getCurrentUser userCode: {}", currentUser.getUserCode());
+
+		currentUser.setUserRoleObjects(userRoleService.getUserRoleObject(currentUser.getUserId()));
+		currentUser.setObjects(userRoleService.getUserObject(currentUser.getUserId()));
 		
         return ResponseEntity.ok(currentUser);
     }

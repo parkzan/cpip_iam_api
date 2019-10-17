@@ -27,9 +27,6 @@ import co.prior.iam.repository.RoleRepository;
 import co.prior.iam.repository.SystemRepository;
 import lombok.extern.slf4j.Slf4j;
 
-import javax.management.Query;
-import javax.persistence.EntityManager;
-
 @Slf4j
 @Service
 public class UserRoleService {
@@ -39,11 +36,11 @@ public class UserRoleService {
 	private final IamMsUserRepository iamMsUserRepository;
 	private final RoleRepository iamMsRoleRepository;
 	private final IamMsUserRoleRepository iamMsUserRoleRepository;
-	
-	public UserRoleService(GetRoleObjectService getRoleObjectService, SystemRepository iamMsSystemRepository, 
-			IamMsUserRepository iamMsUserRepository, RoleRepository iamMsRoleRepository, 
+
+	public UserRoleService(GetRoleObjectService getRoleObjectService, SystemRepository iamMsSystemRepository,
+			IamMsUserRepository iamMsUserRepository, RoleRepository iamMsRoleRepository,
 			IamMsUserRoleRepository iamMsUserRoleRepository) {
-		
+
 		this.getRoleObjectService = getRoleObjectService;
 		this.iamMsSystemRepository = iamMsSystemRepository;
 		this.iamMsUserRepository = iamMsUserRepository;
@@ -298,12 +295,41 @@ public class UserRoleService {
 				this.addObjects(userObjects, roleObjects);
 			}
 			userRoleObjects.add(UserRoleObject.builder()
-					.name(iamMsRole.getRoleCode())
+					.roleCode(iamMsRole.getRoleCode())
 					.objects(userObjects)
 					.build());
 		}
 		
 		return userRoleObjects;
+	}
+
+	public List<String> getUserObject(long userId){
+
+
+		List<IamMsUserRole> iamMsUserRoles = this.iamMsUserRoleRepository.findByIamMsUser_UserIdAndIsDeleted(
+				userId, AnswerFlag.N.toString());
+
+		List<String> list = new ArrayList<>();
+
+
+		for (IamMsUserRole userRole : iamMsUserRoles) {
+			IamMsRole iamMsRole = userRole.getIamMsRole();
+
+			Optional<RoleMapObjectRespone> roleMapObjectOpt = this.getRoleObjectService.getRoleMapObject(iamMsRole.getRoleId());
+			if (roleMapObjectOpt.isPresent()) {
+				List<ObjectModel> roleObjects = roleMapObjectOpt.get().getObjects();
+				this.addObject(list, roleObjects);
+			}
+
+
+
+
+		}
+
+
+
+
+ return  list ;
 	}
 	
 	private void addObjects(List<UserObject> userObjects, List<ObjectModel> roleObjects) {
@@ -315,10 +341,26 @@ public class UserRoleService {
 			}
 			
 			userObjects.add(UserObject.builder()
-					.name(roleObject.getObjectCode())
+					.objectCode(roleObject.getObjectCode())
 					.objects(objects)
 					.build());
 		}
 	}
+
+	private void addObject(List<String> lists, List<ObjectModel> roleObjects) {
+		for (ObjectModel roleObject : roleObjects) {
+			List<String> objects = new ArrayList<>();
+			List<ObjectModel> list = roleObject.getObjects();
+			lists.add(roleObject.getObjectCode());
+			if (!list.isEmpty()) {
+				this.addObject(objects, list);
+			}
+
+
+
+		}
+	}
+
+
 	
 }
