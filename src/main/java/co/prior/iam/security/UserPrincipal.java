@@ -17,6 +17,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Builder;
 import lombok.Data;
 
+import javax.persistence.Column;
+
 @Data
 @Builder
 public class UserPrincipal implements UserDetails {
@@ -42,6 +44,12 @@ public class UserPrincipal implements UserDetails {
 	private String engMiddleName;
 	
 	private String engLastName;
+
+	@Column(nullable = true)
+	private Long provinceId;
+	@Column(nullable = true)
+	private Long surveyId;
+	private Long userType;
 
 	private List<String> objects;
 

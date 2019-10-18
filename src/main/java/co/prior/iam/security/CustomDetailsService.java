@@ -34,7 +34,8 @@ public class CustomDetailsService implements UserDetailsService {
 //    	boolean isEnabled = AnswerFlag.Y.toString().equalsIgnoreCase(iamMsUser.getFirstTimeLogin())
 //    			|| AnswerFlag.Y.toString().equalsIgnoreCase(iamMsUser.getDisableFlag())? Boolean.FALSE : Boolean.TRUE;
 		boolean isEnabled = AnswerFlag.Y.toString().equalsIgnoreCase(iamMsUser.getDisableFlag())? Boolean.FALSE : Boolean.TRUE;
-    	
+
+		if(iamMsUser.getProvince() != null){
         return UserPrincipal.builder()
         		.userId(iamMsUser.getUserId())
         		.userCode(iamMsUser.getUserCode())
@@ -45,9 +46,44 @@ public class CustomDetailsService implements UserDetailsService {
         		.engFirstName(iamMsUser.getEngFirstName())
         		.engMiddleName(iamMsUser.getEngMiddleName())
         		.engLastName(iamMsUser.getEngLastName())
+				.provinceId(iamMsUser.getProvince().getProvinceId())
+				.userType(iamMsUser.getUserType())
         		.isAccountNonLocked(isAccountNonLocked)
         		.isEnabled(isEnabled)
         		.build();
+		}
+		else if(iamMsUser.getSurvey() != null){
+			return UserPrincipal.builder()
+					.userId(iamMsUser.getUserId())
+					.userCode(iamMsUser.getUserCode())
+					.userPassword(iamMsUser.getUserPassword())
+					.localFirstName(iamMsUser.getLocalFirstName())
+					.localMiddleName(iamMsUser.getLocalMiddleName())
+					.localLastName(iamMsUser.getLocalLastName())
+					.engFirstName(iamMsUser.getEngFirstName())
+					.engMiddleName(iamMsUser.getEngMiddleName())
+					.engLastName(iamMsUser.getEngLastName())
+					.surveyId(iamMsUser.getSurvey().getSurveyId())
+					.userType(iamMsUser.getUserType())
+					.isAccountNonLocked(isAccountNonLocked)
+					.isEnabled(isEnabled)
+					.build();
+		}
+
+		return UserPrincipal.builder()
+				.userId(iamMsUser.getUserId())
+				.userCode(iamMsUser.getUserCode())
+				.userPassword(iamMsUser.getUserPassword())
+				.localFirstName(iamMsUser.getLocalFirstName())
+				.localMiddleName(iamMsUser.getLocalMiddleName())
+				.localLastName(iamMsUser.getLocalLastName())
+				.engFirstName(iamMsUser.getEngFirstName())
+				.engMiddleName(iamMsUser.getEngMiddleName())
+				.engLastName(iamMsUser.getEngLastName())
+				.userType(iamMsUser.getUserType())
+				.isAccountNonLocked(isAccountNonLocked)
+				.isEnabled(isEnabled)
+				.build();
     }
     
     public UserDetails loadUserById(Long userId) {
@@ -56,19 +92,52 @@ public class CustomDetailsService implements UserDetailsService {
     	IamMsUser iamMsUser = this.iamMsUserRepository.findByUserIdAndIsDeleted(userId, AnswerFlag.N.toString())
         		.orElseThrow(() -> new UsernameNotFoundException("user not found with id: " + userId));
 
-        return UserPrincipal.builder()
-        		.userId(iamMsUser.getUserId())
-        		.userCode(iamMsUser.getUserCode())
-        		.userPassword(iamMsUser.getUserPassword())
-        		.localFirstName(iamMsUser.getLocalFirstName())
-        		.localMiddleName(iamMsUser.getLocalMiddleName())
-        		.localLastName(iamMsUser.getLocalLastName())
-        		.engFirstName(iamMsUser.getEngFirstName())
-        		.engMiddleName(iamMsUser.getEngMiddleName())
-        		.engLastName(iamMsUser.getEngLastName())
-        		.authorities(AnswerFlag.Y.toString().equals(iamMsUser.getIsIamAdmin())? 
-        				Arrays.asList(new SimpleGrantedAuthority("ROLE_IAM_ADMIN")) : null)
-        		.build();
+		if(iamMsUser.getProvince() != null){
+			return UserPrincipal.builder()
+					.userId(iamMsUser.getUserId())
+					.userCode(iamMsUser.getUserCode())
+					.userPassword(iamMsUser.getUserPassword())
+					.localFirstName(iamMsUser.getLocalFirstName())
+					.localMiddleName(iamMsUser.getLocalMiddleName())
+					.localLastName(iamMsUser.getLocalLastName())
+					.engFirstName(iamMsUser.getEngFirstName())
+					.engMiddleName(iamMsUser.getEngMiddleName())
+					.engLastName(iamMsUser.getEngLastName())
+					.provinceId(iamMsUser.getProvince().getProvinceId())
+					.userType(iamMsUser.getUserType())
+
+					.build();
+		}
+		else if(iamMsUser.getSurvey() != null){
+			return UserPrincipal.builder()
+					.userId(iamMsUser.getUserId())
+					.userCode(iamMsUser.getUserCode())
+					.userPassword(iamMsUser.getUserPassword())
+					.localFirstName(iamMsUser.getLocalFirstName())
+					.localMiddleName(iamMsUser.getLocalMiddleName())
+					.localLastName(iamMsUser.getLocalLastName())
+					.engFirstName(iamMsUser.getEngFirstName())
+					.engMiddleName(iamMsUser.getEngMiddleName())
+					.engLastName(iamMsUser.getEngLastName())
+					.surveyId(iamMsUser.getSurvey().getSurveyId())
+					.userType(iamMsUser.getUserType())
+
+					.build();
+		}
+
+		return UserPrincipal.builder()
+				.userId(iamMsUser.getUserId())
+				.userCode(iamMsUser.getUserCode())
+				.userPassword(iamMsUser.getUserPassword())
+				.localFirstName(iamMsUser.getLocalFirstName())
+				.localMiddleName(iamMsUser.getLocalMiddleName())
+				.localLastName(iamMsUser.getLocalLastName())
+				.engFirstName(iamMsUser.getEngFirstName())
+				.engMiddleName(iamMsUser.getEngMiddleName())
+				.engLastName(iamMsUser.getEngLastName())
+				.userType(iamMsUser.getUserType())
+
+				.build();
     }
     
 }
