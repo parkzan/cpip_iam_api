@@ -241,7 +241,7 @@ public class AuthService {
 				.noOfFailTimes(0)
 				.build();
 
-		if(request.getIsIamAdmin().equals(AnswerFlag.Y.toString())){
+		if(isIamAdmin.equals(AnswerFlag.Y.toString())){
 			iamMsUser.setUserType(userTypeAdmin.getParamInfoId());
 			iamMsUser.setDisableFlag(AnswerFlag.N.toString());
 		}

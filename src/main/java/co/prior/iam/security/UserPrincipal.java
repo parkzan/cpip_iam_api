@@ -43,7 +43,13 @@ public class UserPrincipal implements UserDetails {
 	
 	private String engLastName;
 
-	private List<String> objects;
+	private Long provinceId;
+
+	private Long surveyId;
+
+	private Long userType;
+
+	private Set<String> objects;
 
 	private List<UserRoleObject> userRoleObjects;
 	

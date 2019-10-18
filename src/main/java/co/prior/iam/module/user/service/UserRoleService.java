@@ -1,8 +1,6 @@
 package co.prior.iam.module.user.service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import co.prior.iam.module.user.model.request.DeleteAllUserRoleInUserRequest;
 import co.prior.iam.module.user.model.response.*;
@@ -303,13 +301,13 @@ public class UserRoleService {
 		return userRoleObjects;
 	}
 
-	public List<String> getUserObject(long userId){
+	public Set<String> getUserObject(long userId){
 
 
 		List<IamMsUserRole> iamMsUserRoles = this.iamMsUserRoleRepository.findByIamMsUser_UserIdAndIsDeleted(
 				userId, AnswerFlag.N.toString());
 
-		List<String> list = new ArrayList<>();
+		Set<String> list = new HashSet<>();
 
 
 		for (IamMsUserRole userRole : iamMsUserRoles) {
@@ -347,7 +345,7 @@ public class UserRoleService {
 		}
 	}
 
-	private void addObject(List<String> lists, List<ObjectModel> roleObjects) {
+	private void addObject(Set<String> lists, List<ObjectModel> roleObjects) {
 		for (ObjectModel roleObject : roleObjects) {
 //			List<String> objects = new ArrayList<>();
 			List<ObjectModel> list = roleObject.getObjects();
