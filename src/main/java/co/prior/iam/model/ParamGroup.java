@@ -4,5 +4,6 @@ public enum ParamGroup {
 
 	ERROR_MESSAGE,
 	USER_TYPE,
-	SYSTEM_CONFIG;
+	SYSTEM_CONFIG,
+	OBJECT_TYPE;
 }

@@ -39,5 +39,10 @@ public class IamMsParameterInfo extends BaseEntity<IamMsParameterInfo> {
 	@OneToMany(mappedBy = "userType",cascade = CascadeType.ALL ,fetch = FetchType.LAZY)
 	private Set<IamMsUser> iamMsUsers ;
 
+	@ToString.Exclude
+	@JsonIgnore
+	@OneToMany(mappedBy = "objectType",cascade = CascadeType.ALL ,fetch = FetchType.LAZY)
+	private Set<IamMsObject> iamMsObjectSet ;
+
 
 }

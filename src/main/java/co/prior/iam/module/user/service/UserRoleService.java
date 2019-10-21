@@ -2,15 +2,16 @@ package co.prior.iam.module.user.service;
 
 import java.util.*;
 
+import co.prior.iam.entity.*;
+import co.prior.iam.model.ObjectType;
+import co.prior.iam.module.param.model.response.ParamInfoData;
+import co.prior.iam.module.param.service.ParamService;
 import co.prior.iam.module.user.model.request.DeleteAllUserRoleInUserRequest;
 import co.prior.iam.module.user.model.response.*;
+import co.prior.iam.repository.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import co.prior.iam.entity.IamMsRole;
-import co.prior.iam.entity.IamMsSystem;
-import co.prior.iam.entity.IamMsUser;
-import co.prior.iam.entity.IamMsUserRole;
 import co.prior.iam.error.exception.DataDuplicateException;
 import co.prior.iam.error.exception.DataNotFoundException;
 import co.prior.iam.model.AnswerFlag;
@@ -19,10 +20,6 @@ import co.prior.iam.module.role.model.respone.ObjectModel;
 import co.prior.iam.module.role.model.respone.RoleMapObjectRespone;
 import co.prior.iam.module.role.service.GetRoleObjectService;
 import co.prior.iam.module.user.model.request.CreateUserRoleRequest;
-import co.prior.iam.repository.IamMsUserRepository;
-import co.prior.iam.repository.IamMsUserRoleRepository;
-import co.prior.iam.repository.RoleRepository;
-import co.prior.iam.repository.SystemRepository;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -34,16 +31,15 @@ public class UserRoleService {
 	private final IamMsUserRepository iamMsUserRepository;
 	private final RoleRepository iamMsRoleRepository;
 	private final IamMsUserRoleRepository iamMsUserRoleRepository;
+	private final ParamService paramService;
 
-	public UserRoleService(GetRoleObjectService getRoleObjectService, SystemRepository iamMsSystemRepository,
-			IamMsUserRepository iamMsUserRepository, RoleRepository iamMsRoleRepository,
-			IamMsUserRoleRepository iamMsUserRoleRepository) {
-
+	public UserRoleService(GetRoleObjectService getRoleObjectService, SystemRepository iamMsSystemRepository, IamMsUserRepository iamMsUserRepository, RoleRepository iamMsRoleRepository, IamMsUserRoleRepository iamMsUserRoleRepository, ParamService paramService) {
 		this.getRoleObjectService = getRoleObjectService;
 		this.iamMsSystemRepository = iamMsSystemRepository;
 		this.iamMsUserRepository = iamMsUserRepository;
 		this.iamMsRoleRepository = iamMsRoleRepository;
 		this.iamMsUserRoleRepository = iamMsUserRoleRepository;
+		this.paramService = paramService;
 	}
 
 	public  List<GetUserRoleSystemRespone> getUserRolesBySystem(long systemId){
@@ -293,6 +289,7 @@ public class UserRoleService {
 				this.addObjects(userObjects, roleObjects);
 			}
 			userRoleObjects.add(UserRoleObject.builder()
+					.systemCode(iamMsRole.getIamMsSystem().getSystemCode())
 					.roleCode(iamMsRole.getRoleCode())
 					.objects(userObjects)
 					.build());
@@ -301,6 +298,31 @@ public class UserRoleService {
 		return userRoleObjects;
 	}
 
+	public List<UserRoleObject> getMenuObject(long userId){
+
+		List<UserRoleObject> userMenuRoleObjects = new ArrayList<>();
+		List<IamMsUserRole> iamMsUserRoles = this.iamMsUserRoleRepository.findByIamMsUser_UserIdAndIsDeleted(
+				userId, AnswerFlag.N.toString());
+
+		for (IamMsUserRole iamMsUserRole : iamMsUserRoles){
+			IamMsRole iamMsRole = iamMsUserRole.getIamMsRole();
+			List<UserObject> userObjects = new ArrayList<>();
+			Optional<RoleMapObjectRespone> roleMapObjectOpt = this.getRoleObjectService.getRoleMapObject(iamMsRole.getRoleId());
+			if (roleMapObjectOpt.isPresent()) {
+				List<ObjectModel> roleObjects = roleMapObjectOpt.get().getObjects();
+				this.addMenuObjects(userObjects, roleObjects);
+			}
+			userMenuRoleObjects.add(UserRoleObject.builder()
+					.systemCode(iamMsRole.getIamMsSystem().getSystemCode())
+					.roleCode(iamMsRole.getRoleCode())
+					.objects(userObjects)
+					.build());
+
+		}
+
+		return userMenuRoleObjects;
+
+	}
 	public Set<String> getUserObject(long userId){
 
 
@@ -329,6 +351,8 @@ public class UserRoleService {
 
  return  list ;
 	}
+
+
 	
 	private void addObjects(List<UserObject> userObjects, List<ObjectModel> roleObjects) {
 		for (ObjectModel roleObject : roleObjects) {
@@ -340,8 +364,33 @@ public class UserRoleService {
 			
 			userObjects.add(UserObject.builder()
 					.objectCode(roleObject.getObjectCode())
+					.objectName(roleObject.getObjectName())
 					.objects(objects)
 					.build());
+		}
+	}
+
+	private void addMenuObjects(List<UserObject> userObjects, List<ObjectModel> roleObjects) {
+		log.info("role : {}",roleObjects );
+		ParamInfoData objType = this.getObjectType(ObjectType.MENU);
+		for (ObjectModel roleObject : roleObjects) {
+			List<UserObject> objects = new ArrayList<>();
+			List<ObjectModel> list = roleObject.getObjects();
+
+			for (ObjectModel objectModel : list){
+				 if(objectModel.getObjectType() == objType.getParamInfoId()){
+					 if (!list.isEmpty()) {
+						 this.addObjects(objects, list);
+					 }
+
+					 userObjects.add(UserObject.builder()
+							 .objectCode(roleObject.getObjectCode())
+							 .objectName(roleObject.getObjectName())
+							 .objects(objects)
+							 .build());
+				 }
+			}
+
 		}
 	}
 
@@ -359,6 +408,16 @@ public class UserRoleService {
 		}
 	}
 
+	private ParamInfoData getObjectType(ObjectType value) {
+		return this.paramService.getObjectType(value)
+				.orElse(ParamInfoData.builder()
+						.paramEnMessage("System error")
+						.paramLocalMessage("System error")
+						.build());
+	}
 
-	
+
+
+
+
 }

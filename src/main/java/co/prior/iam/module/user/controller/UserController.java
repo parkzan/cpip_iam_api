@@ -44,6 +44,7 @@ public class UserController {
 
 		currentUser.setUserRoleObjects(userRoleService.getUserRoleObject(currentUser.getUserId()));
 		currentUser.setObjects(userRoleService.getUserObject(currentUser.getUserId()));
+		currentUser.setMenuObject(userRoleService.getMenuObject(currentUser.getUserId()));
 		
         return ResponseEntity.ok(currentUser);
     }

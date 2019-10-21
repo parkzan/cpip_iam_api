@@ -10,6 +10,7 @@ import lombok.Data;
 public class UserObject {
 
 	private String objectCode;
+	private String objectName;
 	private List<UserObject> objects;
 
 	

@@ -57,6 +57,7 @@ public class GetRoleObjectService {
             			.objectId(obj.getIamMsObject().getObjectId())
             			.objectCode(obj.getIamMsObject().getObjectCode())
             			.objectName(obj.getIamMsObject().getObjectName())
+                        .objectType(obj.getIamMsObject().getObjectType().getParamInfoId())
             			.build();
                 setObjectChild(obj, objectList ,objectModel.getObjects());
                 listChid.add(objectModel);
@@ -133,6 +134,7 @@ public class GetRoleObjectService {
                 			.objectId(obj.getIamMsObject().getObjectId())
                 			.objectCode(obj.getIamMsObject().getObjectCode())
                 			.objectName(obj.getIamMsObject().getObjectName())
+                            .objectType(obj.getIamMsObject().getObjectType().getParamInfoId())
                 			.build();
                     setObjectChild(obj, objectList ,objectModel.getObjects());
                     listChid.add(objectModel);
@@ -153,6 +155,7 @@ public class GetRoleObjectService {
             			.objectId(obj.getIamMsObject().getObjectId())
             			.objectCode(obj.getIamMsObject().getObjectCode())
             			.objectName(obj.getIamMsObject().getObjectName())
+                        .objectType(obj.getIamMsObject().getObjectType().getParamInfoId())
             			.build();
                 listChild.add(childObjectModel);
                 setObjectChild(obj, list , childObjectModel.getObjects() );

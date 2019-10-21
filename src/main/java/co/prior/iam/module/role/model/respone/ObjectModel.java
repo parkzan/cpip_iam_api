@@ -13,6 +13,7 @@ public class ObjectModel {
     private long objectId;
     private String objectCode;
     private String objectName;
+    private long objectType;
     
     @Builder.Default
     private List<ObjectModel> objects = new ArrayList<>();

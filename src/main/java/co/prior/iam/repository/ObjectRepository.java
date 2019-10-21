@@ -28,4 +28,6 @@ public interface ObjectRepository extends JpaRepository<IamMsObject, Long> {
 
 	Optional<IamMsObject> findByIamMsSystem_SystemIdAndObjectIdAndIsDeleted(long systemId, long objectId, String isDelete);
 	Optional<IamMsObject> findByIamMsSystem_SystemCodeAndObjectParentNullAndIsDeleted(String SystemId ,String isDeleted);
+
+	Optional<IamMsObject> findByObjectCodeAndIsDeleted(String objectCode , String isDeleted);
 }

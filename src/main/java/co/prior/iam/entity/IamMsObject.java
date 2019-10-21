@@ -32,6 +32,7 @@ public class IamMsObject extends BaseEntity<IamMsObject> {
     private Long objectId;
     private String objectCode;
     private String objectName;
+    private String objectUrl;
 
     @ToString.Exclude
     @ManyToOne
@@ -47,6 +48,11 @@ public class IamMsObject extends BaseEntity<IamMsObject> {
     @ManyToOne
     @JoinColumn(name = "object_parent_id")
     private IamMsObject objectParent;
+
+    @ToString.Exclude
+    @ManyToOne
+    @JoinColumn(name = "OBJECT_TYPE")
+    private IamMsParameterInfo objectType;
 
     @ToString.Exclude
     @JsonIgnore

@@ -9,9 +9,8 @@ import lombok.Data;
 @Data
 @Builder
 public class UserRoleObject {
-
+	private String systemCode;
 	private String roleCode;
-	
 	private List<UserObject> objects;
 	
 }

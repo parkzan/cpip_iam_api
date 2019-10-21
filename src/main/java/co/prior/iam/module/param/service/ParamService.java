@@ -172,5 +172,23 @@ public class ParamService {
 		return Optional.empty();
 	}
 
+	@Transactional(propagation = Propagation.REQUIRED, readOnly = true)
+	public Optional<ParamInfoData> getObjectType(ObjectType value) {
+		log.info("Service getObjectType: {}", value);
+
+		Optional<GetParamsResponse> paramOpt = this.getParams().stream()
+				.filter(param -> ParamGroup.OBJECT_TYPE.toString().equalsIgnoreCase(param.getParamGroup()))
+				.findFirst();
+
+		if (paramOpt.isPresent()) {
+			GetParamsResponse param = paramOpt.get();
+			return param.getParamInfoList().stream()
+					.filter(paramInfo -> value.value().equalsIgnoreCase(paramInfo.getParamInfo()))
+					.findFirst();
+		}
+
+		return Optional.empty();
+	}
+
 
 }

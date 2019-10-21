@@ -6,6 +6,7 @@ import java.util.Set;
 
 import co.prior.iam.entity.IamMsObject;
 import co.prior.iam.entity.IamMsUserRole;
+import co.prior.iam.module.user.model.response.MenuObjectResponse;
 import co.prior.iam.module.user.model.response.UserObject;
 import co.prior.iam.module.user.model.response.UserObjectRespone;
 import co.prior.iam.module.user.model.response.UserRoleObject;
@@ -50,6 +51,9 @@ public class UserPrincipal implements UserDetails {
 	private Long userType;
 
 	private Set<String> objects;
+
+	private List<UserRoleObject> menuObject;
+
 
 	private List<UserRoleObject> userRoleObjects;
 	
