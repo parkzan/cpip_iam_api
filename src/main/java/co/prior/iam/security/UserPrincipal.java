@@ -18,6 +18,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Builder;
 import lombok.Data;
 
+import javax.persistence.Column;
+
 @Data
 @Builder
 public class UserPrincipal implements UserDetails {
@@ -44,6 +46,7 @@ public class UserPrincipal implements UserDetails {
 	
 	private String engLastName;
 
+
 	private Long provinceId;
 
 	private Long surveyId;
@@ -53,6 +56,7 @@ public class UserPrincipal implements UserDetails {
 	private Set<String> objects;
 
 	private List<UserRoleObject> menuObject;
+
 
 
 	private List<UserRoleObject> userRoleObjects;
