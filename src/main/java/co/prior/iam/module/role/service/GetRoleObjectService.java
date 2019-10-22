@@ -58,6 +58,7 @@ public class GetRoleObjectService {
             			.objectCode(obj.getIamMsObject().getObjectCode())
             			.objectName(obj.getIamMsObject().getObjectName())
                         .objectType(obj.getIamMsObject().getObjectType().getParamInfoId())
+                        .objectUrl(obj.getIamMsObject().getObjectUrl())
             			.build();
                 setObjectChild(obj, objectList ,objectModel.getObjects());
                 listChid.add(objectModel);
@@ -96,6 +97,7 @@ public class GetRoleObjectService {
                     			.objectId(obj.getIamMsObject().getObjectId())
                     			.objectCode(obj.getIamMsObject().getObjectCode())
                     			.objectName(obj.getIamMsObject().getObjectName())
+                                .objectUrl(obj.getIamMsObject().getObjectUrl())
                     			.build();
                         setObjectChild(obj, objectList ,objectModel.getObjects());
                         listChid.add(objectModel);
@@ -135,7 +137,11 @@ public class GetRoleObjectService {
                 			.objectCode(obj.getIamMsObject().getObjectCode())
                 			.objectName(obj.getIamMsObject().getObjectName())
                             .objectType(obj.getIamMsObject().getObjectType().getParamInfoId())
+                            .objectUrl(obj.getIamMsObject().getObjectUrl())
                 			.build();
+                	if(obj.getIamMsObject().getObjectParent() != null){
+                	    objectModel.setObjectParentId(obj.getIamMsObject().getObjectParent().getObjectId());
+                    }
                     setObjectChild(obj, objectList ,objectModel.getObjects());
                     listChid.add(objectModel);
                 }
@@ -156,7 +162,12 @@ public class GetRoleObjectService {
             			.objectCode(obj.getIamMsObject().getObjectCode())
             			.objectName(obj.getIamMsObject().getObjectName())
                         .objectType(obj.getIamMsObject().getObjectType().getParamInfoId())
+                        .objectParentId(obj.getIamMsObject().getObjectParent().getObjectId())
+                        .objectUrl(obj.getIamMsObject().getObjectUrl())
             			.build();
+                if(obj.getIamMsObject().getObjectParent() != null){
+                    childObjectModel.setObjectParentId(obj.getIamMsObject().getObjectParent().getObjectId());
+                }
                 listChild.add(childObjectModel);
                 setObjectChild(obj, list , childObjectModel.getObjects() );
             }

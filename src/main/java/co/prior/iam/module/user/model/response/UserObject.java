@@ -9,9 +9,12 @@ import lombok.Data;
 @Builder
 public class UserObject {
 
+	private Long objectId;
 	private String objectCode;
 	private String objectName;
+	private Long objectParentId;
 	private List<UserObject> objects;
+	private String objectUrl;
 
 	
 }

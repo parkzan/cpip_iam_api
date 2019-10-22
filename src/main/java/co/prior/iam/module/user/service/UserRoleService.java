@@ -363,8 +363,11 @@ public class UserRoleService {
 			}
 			
 			userObjects.add(UserObject.builder()
+					.objectId(roleObject.getObjectId())
 					.objectCode(roleObject.getObjectCode())
 					.objectName(roleObject.getObjectName())
+					.objectUrl(roleObject.getObjectUrl())
+					.objectParentId(roleObject.getObjectParentId())
 					.objects(objects)
 					.build());
 		}
@@ -376,20 +379,23 @@ public class UserRoleService {
 		for (ObjectModel roleObject : roleObjects) {
 			List<UserObject> objects = new ArrayList<>();
 			List<ObjectModel> list = roleObject.getObjects();
+			if (!list.isEmpty()) {
+				this.addObjects(objects, list);
+			}
 
-			for (ObjectModel objectModel : list){
-				 if(objectModel.getObjectType() == objType.getParamInfoId()){
-					 if (!list.isEmpty()) {
-						 this.addObjects(objects, list);
-					 }
+				 if(roleObject.getObjectType() == objType.getParamInfoId()){
+
 
 					 userObjects.add(UserObject.builder()
+							 .objectId(roleObject.getObjectId())
 							 .objectCode(roleObject.getObjectCode())
 							 .objectName(roleObject.getObjectName())
+							 .objectUrl(roleObject.getObjectUrl())
 							 .objects(objects)
+							 .objectParentId(roleObject.getObjectParentId())
 							 .build());
 				 }
-			}
+
 
 		}
 	}
