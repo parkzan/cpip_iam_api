@@ -11,7 +11,7 @@ public class AuthResponse {
 	
 	@Builder.Default
     private String tokenType = "Bearer";
-	
+
 	private long expiresIn;
 	private long expiresAt;
 	private String refreshToken;
