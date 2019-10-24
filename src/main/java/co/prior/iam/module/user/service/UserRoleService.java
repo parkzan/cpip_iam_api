@@ -376,11 +376,13 @@ public class UserRoleService {
 	private void addMenuObjects(List<UserObject> userObjects, List<ObjectModel> roleObjects) {
 		log.info("role : {}",roleObjects );
 		ParamInfoData objType = this.getObjectType(ObjectType.MENU);
+
+		log.info("ObjectType : {}",objType.getParamInfoId() );
 		for (ObjectModel roleObject : roleObjects) {
 			List<UserObject> objects = new ArrayList<>();
 			List<ObjectModel> list = roleObject.getObjects();
 			if (!list.isEmpty()) {
-				this.addObjects(objects, list);
+				this.addMenuObjects(objects, list);
 			}
 
 				 if(roleObject.getObjectType() == objType.getParamInfoId()){

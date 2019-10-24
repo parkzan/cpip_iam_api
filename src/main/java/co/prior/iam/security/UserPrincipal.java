@@ -53,6 +53,8 @@ public class UserPrincipal implements UserDetails {
 
 	private Long userType;
 
+	private String userTypeCode;
+
 	private Set<String> objects;
 
 	private List<UserRoleObject> menuObject;
