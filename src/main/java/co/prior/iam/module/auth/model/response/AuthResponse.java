@@ -17,6 +17,7 @@ public class AuthResponse {
 	private String refreshToken;
 	private long refreshExpiresIn;
 	private long refreshExpiresAt;
+	private String firstTimeLogin;
 
     
 }

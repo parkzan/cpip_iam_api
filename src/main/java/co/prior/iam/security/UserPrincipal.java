@@ -46,6 +46,7 @@ public class UserPrincipal implements UserDetails {
 	
 	private String engLastName;
 
+	private String firstTimeLogin;
 
 	private Long provinceId;
 
