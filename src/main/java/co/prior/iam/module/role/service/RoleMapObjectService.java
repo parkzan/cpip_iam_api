@@ -59,9 +59,9 @@ public class RoleMapObjectService {
 					IamMsObject newIamObject = this.objectRepository.findByIamMsSystem_SystemIdAndObjectIdAndIsDeleted(
 							objectsList.get(0).getIamMsSystem().getSystemId(), newObj, AnswerFlag.N.toString())
 							.orElseThrow(() -> new DataNotFoundException(ErrorCode.OBJECT_NOT_FOUND));
-					if(newIamObject.getObjectType() == null){
-						throw new DataNotFoundException(ErrorCode.DATA_INVALID);
-					}
+//					if(newIamObject.getObjectType() == null){
+//						throw new DataNotFoundException(ErrorCode.DATA_INVALID);
+//					}
 
 					IamMsRoleObject model = new IamMsRoleObject();
 					model.setIamMsObject(newIamObject);
@@ -79,9 +79,9 @@ public class RoleMapObjectService {
 				IamMsObject iamMsObject = this.objectRepository.findByObjectIdAndIsDeleted(newObj, AnswerFlag.N.toString())
 						.orElseThrow(() -> new DataNotFoundException(ErrorCode.OBJECT_NOT_FOUND));
 
-				if(iamMsObject.getObjectType() == null){
-					throw new DataNotFoundException(ErrorCode.DATA_INVALID);
-				}
+//				if(iamMsObject.getObjectType() == null){
+//					throw new DataNotFoundException(ErrorCode.DATA_INVALID);
+//				}
 				IamMsRoleObject newModel = new IamMsRoleObject();
 				newModel.setIamMsRole(iamMsRole);
 				newModel.setIamMsSystem(iamMsRole.getIamMsSystem());

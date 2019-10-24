@@ -52,15 +52,13 @@ public class GetRoleObjectService {
         }
         
         for (IamMsRoleObject obj : objectList) {
-            if(obj.getIamMsObject().getObjectType() == null){
-                throw new DataNotFoundException(ErrorCode.INTERNAL_SERVER_ERROR);
-            }
+
             if (obj.getIamMsObject().getObjectParent() == null) {
             	ObjectModel objectModel = ObjectModel.builder()
             			.objectId(obj.getIamMsObject().getObjectId())
             			.objectCode(obj.getIamMsObject().getObjectCode())
             			.objectName(obj.getIamMsObject().getObjectName())
-                        .objectType(obj.getIamMsObject().getObjectType().getParamInfoId())
+                        .objectType(obj.getIamMsObject().getObjectType() == null? null : obj.getIamMsObject().getObjectType().getParamInfoId())
                         .objectUrl(obj.getIamMsObject().getObjectUrl())
             			.build();
                 setObjectChild(obj, objectList ,objectModel.getObjects());
@@ -145,7 +143,7 @@ public class GetRoleObjectService {
                 			.objectId(obj.getIamMsObject().getObjectId())
                 			.objectCode(obj.getIamMsObject().getObjectCode())
                 			.objectName(obj.getIamMsObject().getObjectName())
-                            .objectType(obj.getIamMsObject().getObjectType().getParamInfoId())
+                            .objectType(obj.getIamMsObject().getObjectType() == null? null : obj.getIamMsObject().getObjectType().getParamInfoId())
                             .objectUrl(obj.getIamMsObject().getObjectUrl())
                 			.build();
                 	if(obj.getIamMsObject().getObjectParent() != null){
@@ -165,15 +163,13 @@ public class GetRoleObjectService {
 
     private void setObjectChild(IamMsRoleObject root, List<IamMsRoleObject> list, List<ObjectModel> listChild) {
         for (IamMsRoleObject obj : list) {
-            if(obj.getIamMsObject().getObjectType() == null){
-                throw new DataNotFoundException(ErrorCode.INTERNAL_SERVER_ERROR);
-            }
+
             if (obj.getIamMsObject().getObjectParent() == root.getIamMsObject()) {
             	ObjectModel childObjectModel = ObjectModel.builder()
             			.objectId(obj.getIamMsObject().getObjectId())
             			.objectCode(obj.getIamMsObject().getObjectCode())
             			.objectName(obj.getIamMsObject().getObjectName())
-                        .objectType(obj.getIamMsObject().getObjectType().getParamInfoId())
+                        .objectType(obj.getIamMsObject().getObjectType() == null? null : obj.getIamMsObject().getObjectType().getParamInfoId())
                         .objectParentId(obj.getIamMsObject().getObjectParent().getObjectId())
                         .objectUrl(obj.getIamMsObject().getObjectUrl())
             			.build();
