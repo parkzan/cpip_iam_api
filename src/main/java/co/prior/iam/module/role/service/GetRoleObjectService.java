@@ -52,6 +52,9 @@ public class GetRoleObjectService {
         }
         
         for (IamMsRoleObject obj : objectList) {
+            if(obj.getIamMsObject().getObjectType() == null){
+                throw new DataNotFoundException(ErrorCode.INTERNAL_SERVER_ERROR);
+            }
             if (obj.getIamMsObject().getObjectParent() == null) {
             	ObjectModel objectModel = ObjectModel.builder()
             			.objectId(obj.getIamMsObject().getObjectId())
@@ -92,6 +95,9 @@ public class GetRoleObjectService {
 
             if (!objectList.isEmpty()) {
                 for (IamMsRoleObject obj : objectList) {
+                    if(obj.getIamMsObject().getObjectType() == null){
+                        throw new DataNotFoundException(ErrorCode.INTERNAL_SERVER_ERROR);
+                    }
                     if (obj.getIamMsObject().getObjectParent() == null) {
                     	ObjectModel objectModel = ObjectModel.builder()
                     			.objectId(obj.getIamMsObject().getObjectId())
@@ -131,6 +137,9 @@ public class GetRoleObjectService {
             		.build();
             
             for (IamMsRoleObject obj : objectList) {
+                if(obj.getIamMsObject().getObjectType() == null){
+                    throw new DataNotFoundException(ErrorCode.INTERNAL_SERVER_ERROR);
+                }
                 if (obj.getIamMsObject().getObjectParent() == null) {
                 	ObjectModel objectModel = ObjectModel.builder()
                 			.objectId(obj.getIamMsObject().getObjectId())
@@ -156,6 +165,9 @@ public class GetRoleObjectService {
 
     private void setObjectChild(IamMsRoleObject root, List<IamMsRoleObject> list, List<ObjectModel> listChild) {
         for (IamMsRoleObject obj : list) {
+            if(obj.getIamMsObject().getObjectType() == null){
+                throw new DataNotFoundException(ErrorCode.INTERNAL_SERVER_ERROR);
+            }
             if (obj.getIamMsObject().getObjectParent() == root.getIamMsObject()) {
             	ObjectModel childObjectModel = ObjectModel.builder()
             			.objectId(obj.getIamMsObject().getObjectId())
@@ -171,6 +183,8 @@ public class GetRoleObjectService {
                 listChild.add(childObjectModel);
                 setObjectChild(obj, list , childObjectModel.getObjects() );
             }
+
+
         }
     }
     
