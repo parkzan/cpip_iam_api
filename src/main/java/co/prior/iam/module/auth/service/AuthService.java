@@ -180,7 +180,7 @@ public class AuthService {
                     .firstTimeLogin(AnswerFlag.Y.toString().equalsIgnoreCase(isIamAdmin) ? AnswerFlag.N.toString() : AnswerFlag.Y.toString())
                     .isIamAdmin(isIamAdmin)
                     .noOfFailTimes(0)
-                    .disableFlag(AnswerFlag.Y.toString())
+                    .disableFlag(AnswerFlag.N.toString())
                     .userType(userType.getParamInfoId())
                     .province(ppiMsProvince)
                     .build();
@@ -207,7 +207,7 @@ public class AuthService {
                     .firstTimeLogin(AnswerFlag.Y.toString().equalsIgnoreCase(isIamAdmin) ? AnswerFlag.N.toString() : AnswerFlag.Y.toString())
                     .isIamAdmin(isIamAdmin)
                     .noOfFailTimes(0)
-                    .disableFlag(AnswerFlag.Y.toString())
+                    .disableFlag(AnswerFlag.N.toString())
                     .userType(userType.getParamInfoId())
                     .survey(ppiMsSurvey)
                     .build();
@@ -226,18 +226,18 @@ public class AuthService {
                 .engFirstName(request.getEngFirstName())
                 .engMiddleName(request.getEngMiddleName())
                 .engLastName(request.getEngLastName())
-                .firstTimeLogin(AnswerFlag.Y.toString().equalsIgnoreCase(isIamAdmin) ? AnswerFlag.N.toString() : AnswerFlag.Y.toString())
+                .firstTimeLogin(AnswerFlag.Y.toString())
                 .isIamAdmin(isIamAdmin)
                 .noOfFailTimes(0)
                 .build();
 
-        if (isIamAdmin.equals(AnswerFlag.Y.toString())) {
-            iamMsUser.setUserType(userTypeAdmin.getParamInfoId());
-            iamMsUser.setDisableFlag(AnswerFlag.N.toString());
-        } else {
+//        if (isIamAdmin.equals(AnswerFlag.Y.toString())) {
+//            iamMsUser.setUserType(userTypeAdmin.getParamInfoId());
+//            iamMsUser.setDisableFlag(AnswerFlag.N.toString());
+//        } else {
             iamMsUser.setUserType(userType.getParamInfoId());
-            iamMsUser.setDisableFlag(AnswerFlag.Y.toString());
-        }
+            iamMsUser.setDisableFlag(AnswerFlag.N.toString());
+//        }
 
 
         iamMsUser.setUserPassword(passwordEncoder.encode(request.getPassword()));

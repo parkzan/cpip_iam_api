@@ -190,5 +190,12 @@ public class ParamService {
 		return Optional.empty();
 	}
 
+	public IamMsParameterInfo findByParamCodeAndIsDeleted(String paramcode){
+		IamMsParameterInfo info = this.paramInfoRepository.findByParamCodeAndIsDeleted(paramcode,AnswerFlag.N.toString())
+				.orElseThrow(() -> new DataNotFoundException(ErrorCode.INTERNAL_SERVER_ERROR));
+
+		return info;
+	}
+
 
 }

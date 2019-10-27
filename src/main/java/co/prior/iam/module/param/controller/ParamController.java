@@ -2,12 +2,9 @@ package co.prior.iam.module.param.controller;
 
 import java.util.List;
 
+import co.prior.iam.entity.IamMsParameterInfo;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import co.prior.iam.module.param.model.request.CreateParamGroupRequest;
 import co.prior.iam.module.param.model.request.CreateParamInfoRequest;
@@ -60,6 +57,15 @@ public class ParamController {
 		this.paramService.refreshParams();
 
 		return ResponseEntity.noContent().build();
+	}
+
+	@GetMapping("/params/info/bycode/{paramcode}")
+	public ResponseEntity<IamMsParameterInfo> getParamsByCode(@PathVariable String paramcode) {
+		log.info("Controller getParams");
+
+		IamMsParameterInfo response = this.paramService.findByParamCodeAndIsDeleted(paramcode);
+
+		return ResponseEntity.ok(response);
 	}
 
 }
