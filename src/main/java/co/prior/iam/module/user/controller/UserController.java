@@ -1,5 +1,6 @@
 package co.prior.iam.module.user.controller;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import co.prior.iam.module.user.model.request.ResignUserRequest;
@@ -51,10 +52,10 @@ public class UserController {
 	
 	@PostMapping("/users")
     @PreAuthorize("hasRole('ROLE_IAM_ADMIN')")
-    public ResponseEntity<IamMsUserPage> getUsers(@RequestBody GetUsersRequest request) {
+    public ResponseEntity<IamMsUserPage> getUsers(@RequestBody GetUsersRequest request, HttpServletRequest httpRequest) {
 		log.info("Controller getUsers systemId: {}", request);
 		
-		IamMsUserPage response = this.userService.getUsers(request);
+		IamMsUserPage response = this.userService.getUsers(request,httpRequest);
 		
         return ResponseEntity.ok(response);
     }

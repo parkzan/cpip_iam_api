@@ -11,5 +11,7 @@ public class ObjectEditReq {
     private Long systemId;
     private Long objectId;
     private String newName;
+    private String url;
+    private long type;
 
 }
