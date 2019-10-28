@@ -12,5 +12,7 @@ public class ObjectCreateReq {
     private String objectName;
     private long systemId;
     private long objectParentId;
+    private String url;
+    private long type;
 
 }

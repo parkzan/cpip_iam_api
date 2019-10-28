@@ -29,4 +29,7 @@ public interface IamMsUserRepository extends PagingAndSortingRepository<IamMsUse
 
 
     boolean existsByUserCodeAndIsDeleted(String userCode, String isDeleted);
+
+    Page<IamMsUser> findPageableByUserCodeNotAndIsDeletedOrderByUserCode(
+            String userCode, String isDeleted, Pageable pageable);
 }

@@ -46,6 +46,8 @@ public class ObjectChildInqueryService {
 					.objectId(object.getObjectId())
 					.objectCode(object.getObjectCode())
 					.objectName(object.getObjectName())
+					.objectUrl(object.getObjectUrl())
+					.type(object.getObjectType())
 					.objectParentId(object.getObjectParent().getObjectId())
 					.objectTotalChild(countObjectChild(object, listAllObject, count))
 					.build();
