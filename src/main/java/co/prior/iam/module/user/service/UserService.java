@@ -275,6 +275,7 @@ public class UserService {
 
         iamMsUser.setDisableFlag(AnswerFlag.N.toString().equalsIgnoreCase(
                 request.getDisabledFlag()) ? AnswerFlag.N.toString() : AnswerFlag.Y.toString());
+        iamMsUser.setNoOfFailTimes(0);
 
         this.iamMsUserRepository.save(iamMsUser);
     }
