@@ -19,5 +19,8 @@ public class ActivateUserRequest {
 	
 	@NotBlank
 	private String newPassword;
+
+	@NotBlank
+	private String confirmPassword;
 	
 }

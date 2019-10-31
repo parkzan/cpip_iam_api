@@ -32,9 +32,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	private final JwtAuthenticationEntryPoint unauthorizedHandler;
 	private final PasswordEncoder passwordEncoder;
 
-	public WebSecurityConfig(JwtAuthenticationFilter jwtAuthenticationFilter, UserDetailsService userDetailsService, 
-			JwtAuthenticationEntryPoint unauthorizedHandler, PasswordEncoder passwordEncoder) {
-
+	public WebSecurityConfig(JwtAuthenticationFilter jwtAuthenticationFilter, UserDetailsService userDetailsService, JwtAuthenticationEntryPoint unauthorizedHandler, PasswordEncoder passwordEncoder) {
 		this.jwtAuthenticationFilter = jwtAuthenticationFilter;
 		this.userDetailsService = userDetailsService;
 		this.unauthorizedHandler = unauthorizedHandler;

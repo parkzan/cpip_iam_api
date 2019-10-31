@@ -258,6 +258,14 @@ public class AuthService {
             throw new BadRequestException(ErrorCode.PASSWORD_INCORRECT);
         }
 
+        else if(!request.getNewPassword().equals(request.getConfirmPassword())){
+            throw new BadRequestException(ErrorCode.CONFIRM_PASSWORD_INCORRECT);
+        }
+        else if (request.getNewPassword().equals(request.getOldPassword())){
+            throw new BadRequestException(ErrorCode.PASSWORD_DUPLICATED);
+
+        }
+
         iamMsUser.setUserPassword(passwordEncoder.encode(request.getNewPassword()));
         iamMsUser.setFirstTimeLogin(AnswerFlag.N.toString());
         iamMsUser.setDisableFlag(AnswerFlag.N.toString());
