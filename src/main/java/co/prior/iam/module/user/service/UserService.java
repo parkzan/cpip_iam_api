@@ -1,6 +1,7 @@
 package co.prior.iam.module.user.service;
 
 import co.prior.iam.entity.IamMsUser;
+import co.prior.iam.entity.IamMsUserRole;
 import co.prior.iam.entity.PpiMsProvince;
 import co.prior.iam.entity.PpiMsSurvey;
 import co.prior.iam.error.exception.DataNotFoundException;
@@ -8,12 +9,14 @@ import co.prior.iam.model.AnswerFlag;
 import co.prior.iam.model.ErrorCode;
 import co.prior.iam.model.PageableRequest;
 import co.prior.iam.model.SortedModel;
+import co.prior.iam.module.user.model.request.DeleteAllUserRoleInUserRequest;
 import co.prior.iam.module.user.model.request.EditUserRequest;
 import co.prior.iam.module.user.model.request.GetUsersRequest;
 import co.prior.iam.module.user.model.request.ResignUserRequest;
 import co.prior.iam.module.user.model.response.GetUserResponse;
 import co.prior.iam.module.user.model.response.IamMsUserPage;
 import co.prior.iam.repository.IamMsUserRepository;
+import co.prior.iam.repository.IamMsUserRoleRepository;
 import co.prior.iam.repository.PpiMsProvinceRepository;
 import co.prior.iam.repository.PpiMsSurveyRepository;
 import co.prior.iam.security.UserPrincipal;
@@ -38,11 +41,13 @@ public class UserService {
     private final IamMsUserRepository iamMsUserRepository;
     private final PpiMsSurveyRepository ppiMsSurveyRepository;
     private final PpiMsProvinceRepository ppiMsProvinceRepository;
+    private final IamMsUserRoleRepository iamMsUserRoleRepository;
 
-    public UserService(IamMsUserRepository iamMsUserRepository, PpiMsSurveyRepository ppiMsSurveyRepository, PpiMsProvinceRepository ppiMsProvinceRepository) {
+    public UserService(IamMsUserRepository iamMsUserRepository, PpiMsSurveyRepository ppiMsSurveyRepository, PpiMsProvinceRepository ppiMsProvinceRepository, IamMsUserRoleRepository iamMsUserRoleRepository) {
         this.iamMsUserRepository = iamMsUserRepository;
         this.ppiMsSurveyRepository = ppiMsSurveyRepository;
         this.ppiMsProvinceRepository = ppiMsProvinceRepository;
+        this.iamMsUserRoleRepository = iamMsUserRoleRepository;
     }
 
     public IamMsUserPage getUsers(GetUsersRequest request, HttpServletRequest httpRequest) {
@@ -255,6 +260,14 @@ public class UserService {
 
         iamMsUser.setIsDeleted(AnswerFlag.Y.toString());
         this.iamMsUserRepository.save(iamMsUser);
+
+        List<IamMsUserRole> iamMsUserRoles = this.iamMsUserRoleRepository.findByIamMsUser_UserIdAndIsDeleted(userId , AnswerFlag.N.toString());
+        if(!iamMsUserRoles.isEmpty()){
+            for (IamMsUserRole iamMsUserRole : iamMsUserRoles){
+                iamMsUserRole.setIsDeleted(AnswerFlag.Y.toString());
+            }
+        }
+
     }
 
     public long getUserId(String userCode) {

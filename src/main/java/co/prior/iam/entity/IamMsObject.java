@@ -51,7 +51,7 @@ public class IamMsObject extends BaseEntity<IamMsObject> {
 
     @ToString.Exclude
     @ManyToOne
-    @JoinColumn(name = "OBJECT_TYPE")
+    @JoinColumn(name = "object_type")
     private IamMsParameterInfo objectType;
 
     @ToString.Exclude
