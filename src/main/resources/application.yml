@@ -2,7 +2,7 @@ server:
   servlet:
     contextPath: /iam/v2
   port: 8080
-  max-http-header-size: 30KB
+  max-http-header-size: 50KB
 
 spring:
   profiles:
