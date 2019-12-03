@@ -2,7 +2,8 @@ server:
   servlet:
     contextPath: /iam/v2
   port: 8080
-  max-http-header-size: 20KB
+  max-http-header-size: 50KB
+
 
 spring:
   profiles:
@@ -46,7 +47,7 @@ security:
       expirationTime: 1800 # second(s)
     refresh:
       secret: jwt-refresh-secret
-      expirationTime: 3600 # second(s)
+      expirationTime: 28800 # second(s)
 
 
 
