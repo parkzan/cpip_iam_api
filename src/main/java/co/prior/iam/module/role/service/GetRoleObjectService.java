@@ -60,6 +60,7 @@ public class GetRoleObjectService {
             			.objectName(obj.getIamMsObject().getObjectName())
                         .objectType(obj.getIamMsObject().getObjectType() == null? null : obj.getIamMsObject().getObjectType().getParamInfoId())
                         .objectUrl(obj.getIamMsObject().getObjectUrl())
+                        .sorting(obj.getIamMsObject().getSortingOrder())
             			.build();
                 setObjectChild(obj, objectList ,objectModel.getObjects());
                 listChid.add(objectModel);
@@ -102,6 +103,7 @@ public class GetRoleObjectService {
                     			.objectCode(obj.getIamMsObject().getObjectCode())
                     			.objectName(obj.getIamMsObject().getObjectName())
                                 .objectUrl(obj.getIamMsObject().getObjectUrl())
+                                .sorting(obj.getIamMsObject().getSortingOrder())
                     			.build();
                         setObjectChild(obj, objectList ,objectModel.getObjects());
                         listChid.add(objectModel);
@@ -145,6 +147,7 @@ public class GetRoleObjectService {
                 			.objectName(obj.getIamMsObject().getObjectName())
                             .objectType(obj.getIamMsObject().getObjectType() == null? null : obj.getIamMsObject().getObjectType().getParamInfoId())
                             .objectUrl(obj.getIamMsObject().getObjectUrl())
+                            .sorting(obj.getIamMsObject().getSortingOrder())
                 			.build();
                 	if(obj.getIamMsObject().getObjectParent() != null){
                 	    objectModel.setObjectParentId(obj.getIamMsObject().getObjectParent().getObjectId());
@@ -172,6 +175,7 @@ public class GetRoleObjectService {
                         .objectType(obj.getIamMsObject().getObjectType() == null? null : obj.getIamMsObject().getObjectType().getParamInfoId())
                         .objectParentId(obj.getIamMsObject().getObjectParent().getObjectId())
                         .objectUrl(obj.getIamMsObject().getObjectUrl())
+                        .sorting(obj.getIamMsObject().getSortingOrder())
             			.build();
                 if(obj.getIamMsObject().getObjectParent() != null){
                     childObjectModel.setObjectParentId(obj.getIamMsObject().getObjectParent().getObjectId());
