@@ -15,6 +15,7 @@ public class UserObject {
 	private Long objectParentId;
 	private List<UserObject> objects;
 	private String objectUrl;
+	private Float sort;
 
 	
 }
