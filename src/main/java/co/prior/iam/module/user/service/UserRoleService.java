@@ -294,6 +294,7 @@ public class UserRoleService {
 					.objects(userObjects)
 					.build());
 		}
+
 		
 		return userRoleObjects;
 	}
@@ -308,6 +309,7 @@ public class UserRoleService {
 			IamMsRole iamMsRole = iamMsUserRole.getIamMsRole();
 			List<UserObject> userObjects = new ArrayList<>();
 			Optional<RoleMapObjectRespone> roleMapObjectOpt = this.getRoleObjectService.getRoleMapObject(iamMsRole.getRoleId());
+
 			if (roleMapObjectOpt.isPresent()) {
 				List<ObjectModel> roleObjects = roleMapObjectOpt.get().getObjects();
 				this.addMenuObjects(userObjects, roleObjects);
@@ -319,6 +321,9 @@ public class UserRoleService {
 					.build());
 
 		}
+
+
+
 
 		return userMenuRoleObjects;
 
@@ -395,11 +400,18 @@ public class UserRoleService {
 							 .objectUrl(roleObject.getObjectUrl())
 							 .objects(objects)
 							 .objectParentId(roleObject.getObjectParentId())
+							 .sort(roleObject.getSorting())
 							 .build());
+//
+//					 if(roleObject.getSorting() != null)
+//
 				 }
 
 
 		}
+		userObjects.sort(Comparator.comparing(UserObject::getSort));
+
+
 	}
 
 	private void addObject(Set<String> lists, List<ObjectModel> roleObjects) {
@@ -424,7 +436,10 @@ public class UserRoleService {
 						.build());
 	}
 
+	private void sortTreeObject(List<UserRoleObject> userRoleObjects){
 
+
+	}
 
 
 

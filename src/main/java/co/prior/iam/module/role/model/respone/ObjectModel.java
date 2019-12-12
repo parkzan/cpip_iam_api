@@ -17,6 +17,7 @@ public class ObjectModel {
     private long objectType;
     private Long objectParentId;
     private String objectUrl;
+    private Float sorting ;
     
     @Builder.Default
     private List<ObjectModel> objects = new ArrayList<>();
