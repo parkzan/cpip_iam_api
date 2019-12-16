@@ -17,5 +17,6 @@ public class ObjectRespone {
     private long objectTotalChild;
     private String objectUrl;
     private IamMsParameterInfo type;
+    private Float sortingOrder;
     
 }

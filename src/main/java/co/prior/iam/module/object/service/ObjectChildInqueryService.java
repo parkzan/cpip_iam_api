@@ -50,6 +50,7 @@ public class ObjectChildInqueryService {
 					.type(object.getObjectType())
 					.objectParentId(object.getObjectParent().getObjectId())
 					.objectTotalChild(countObjectChild(object, listAllObject, count))
+					.sortingOrder(object.getSortingOrder())
 					.build();
 			list.add(respone);
 		}

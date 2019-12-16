@@ -37,6 +37,7 @@ public class ObjectEditService {
         iamMsObject.setObjectName(objectEditReq.getNewName());
         iamMsObject.setObjectType(type);
         iamMsObject.setObjectUrl(objectEditReq.getUrl());
+        iamMsObject.setSortingOrder(objectEditReq.getSort());
 
 
         this.objectRepository.save(iamMsObject);

@@ -63,6 +63,7 @@ public class ObjectCreateService {
         model.setObjectParent(parentObject);
         model.setObjectUrl(objectCreateReq.getUrl());
         model.setObjectType(type);
+        model.setSortingOrder(objectCreateReq.getSort());
         model.setUpdatedBy(null);
         model.setUpdatedDate(null);
         this.objectRepository.save(model);

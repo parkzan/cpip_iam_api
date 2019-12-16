@@ -40,6 +40,7 @@ public class ObjectInqueryService {
 							.objectCode(object.getObjectCode())
 							.objectName(object.getObjectName())
 							.objectTotalChild(countObjectChild(object , listModel ,count))
+							.sortingOrder(object.getSortingOrder())
 							.build();
 					list.add(respone);
 				}

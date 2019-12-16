@@ -14,5 +14,6 @@ public class ObjectCreateReq {
     private long objectParentId;
     private String url;
     private long type;
+    private float sort;
 
 }
