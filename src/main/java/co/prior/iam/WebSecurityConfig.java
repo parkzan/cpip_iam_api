@@ -2,6 +2,7 @@ package co.prior.iam;
 
 import java.util.Arrays;
 
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -9,6 +10,7 @@ import org.springframework.security.config.BeanIds;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -22,6 +24,8 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import co.prior.iam.model.JwtConstants;
 import co.prior.iam.security.JwtAuthenticationEntryPoint;
 import co.prior.iam.security.JwtAuthenticationFilter;
+import org.springframework.web.filter.CorsFilter;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
 
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
@@ -83,9 +87,33 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		final CorsConfiguration configuration = new CorsConfiguration().applyPermitDefaultValues();
 		configuration.setAllowCredentials(Boolean.TRUE);
 		configuration.addExposedHeader(JwtConstants.HEADER_STRING.value());
+		configuration.setAllowedOrigins(Arrays.asList("*"));
+		configuration.setAllowedHeaders(Arrays.asList("*"));
 		configuration.setAllowedMethods(Arrays.asList("*"));
 		source.registerCorsConfiguration("/**", configuration);
 		return source;
+	}
+
+
+	@Bean
+	public FilterRegistrationBean corsFilterRegistrationBean() {
+		UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+		CorsConfiguration configuration = new CorsConfiguration();
+		configuration.applyPermitDefaultValues();
+		configuration.setAllowCredentials(true);
+		configuration.addExposedHeader(JwtConstants.HEADER_STRING.value());
+		configuration.setAllowedOrigins(Arrays.asList("*"));
+		configuration.setAllowedHeaders(Arrays.asList("*"));
+		configuration.setAllowedMethods(Arrays.asList("*"));
+		source.registerCorsConfiguration("/**", configuration);
+		FilterRegistrationBean bean = new FilterRegistrationBean(new CorsFilter(source));
+		bean.setOrder(0);
+		return bean;
+	}
+
+	@Override
+	public void configure(WebSecurity web) throws Exception {
+		web.ignoring().antMatchers(HttpMethod.OPTIONS);
 	}
 
 }
