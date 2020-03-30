@@ -54,7 +54,7 @@ public class UserController {
     }
 	
 	@PostMapping("/users")
-    @PreAuthorize("hasRole('ROLE_IAM_ADMIN')")
+//    @PreAuthorize("hasRole('ROLE_IAM_ADMIN')")
     public ResponseEntity<IamMsUserPage> getUsers(@RequestBody GetUsersRequest request, HttpServletRequest httpRequest) {
 		log.info("Controller getUsers systemId: {}", request);
 		
