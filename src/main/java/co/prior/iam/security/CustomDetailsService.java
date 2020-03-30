@@ -70,6 +70,11 @@ public class CustomDetailsService implements UserDetailsService {
                     .userTypeCode(parameterInfo.getParamCode())
                     .isAccountNonLocked(isAccountNonLocked)
                     .isEnabled(isEnabled)
+                    .lineManager(iamMsUser.getLineManager())
+                    .position(iamMsUser.getPosition())
+                    .unit(iamMsUser.getUnit())
+                    .division(iamMsUser.getDivision())
+                    .department(iamMsUser.getDepartment())
                     .build();
         } else if (iamMsUser.getSurvey() != null) {
             return UserPrincipal.builder()
@@ -88,6 +93,11 @@ public class CustomDetailsService implements UserDetailsService {
                     .userTypeCode(parameterInfo.getParamCode())
                     .isAccountNonLocked(isAccountNonLocked)
                     .isEnabled(isEnabled)
+                    .lineManager(iamMsUser.getLineManager())
+                    .position(iamMsUser.getPosition())
+                    .unit(iamMsUser.getUnit())
+                    .division(iamMsUser.getDivision())
+                    .department(iamMsUser.getDepartment())
                     .build();
         }
 
@@ -106,6 +116,11 @@ public class CustomDetailsService implements UserDetailsService {
                 .userTypeCode(parameterInfo.getParamCode())
                 .isAccountNonLocked(isAccountNonLocked)
                 .isEnabled(isEnabled)
+                .lineManager(iamMsUser.getLineManager())
+                .position(iamMsUser.getPosition())
+                .unit(iamMsUser.getUnit())
+                .division(iamMsUser.getDivision())
+                .department(iamMsUser.getDepartment())
                 .build();
     }
 
@@ -136,6 +151,11 @@ public class CustomDetailsService implements UserDetailsService {
                     .userTypeCode(parameterInfo.getParamCode())
                     .authorities(AnswerFlag.Y.toString().equals(iamMsUser.getIsIamAdmin()) ?
                             Arrays.asList(new SimpleGrantedAuthority("ROLE_IAM_ADMIN")) : null)
+                    .lineManager(iamMsUser.getLineManager())
+                    .position(iamMsUser.getPosition())
+                    .unit(iamMsUser.getUnit())
+                    .division(iamMsUser.getDivision())
+                    .department(iamMsUser.getDepartment())
                     .build();
         } else if (iamMsUser.getSurvey() != null) {
             return UserPrincipal.builder()
@@ -154,6 +174,11 @@ public class CustomDetailsService implements UserDetailsService {
                     .userTypeCode(parameterInfo.getParamCode())
                     .authorities(AnswerFlag.Y.toString().equals(iamMsUser.getIsIamAdmin()) ?
                             Arrays.asList(new SimpleGrantedAuthority("ROLE_IAM_ADMIN")) : null)
+                    .lineManager(iamMsUser.getLineManager())
+                    .position(iamMsUser.getPosition())
+                    .unit(iamMsUser.getUnit())
+                    .division(iamMsUser.getDivision())
+                    .department(iamMsUser.getDepartment())
                     .build();
         }
 
@@ -172,6 +197,11 @@ public class CustomDetailsService implements UserDetailsService {
                 .engLastName(iamMsUser.getEngLastName())
                 .authorities(AnswerFlag.Y.toString().equals(iamMsUser.getIsIamAdmin()) ?
                         Arrays.asList(new SimpleGrantedAuthority("ROLE_IAM_ADMIN")) : null)
+                .lineManager(iamMsUser.getLineManager())
+                .position(iamMsUser.getPosition())
+                .unit(iamMsUser.getUnit())
+                .division(iamMsUser.getDivision())
+                .department(iamMsUser.getDepartment())
                 .build();
 
 
