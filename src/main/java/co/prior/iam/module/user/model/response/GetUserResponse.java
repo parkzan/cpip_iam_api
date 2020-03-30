@@ -27,5 +27,10 @@ public class GetUserResponse {
 	private LocalDateTime updatedDate;
 	private String updatedBy;
 	private Integer noOfFailTimes;
+	private Long lineManager;
+	private String department;
+	private String division;
+	private String unit;
+	private String position;
 	
 }

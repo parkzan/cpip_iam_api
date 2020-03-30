@@ -55,7 +55,11 @@ public class UserPrincipal implements UserDetails {
 	private Long userType;
 
 	private String userTypeCode;
-
+	private Long lineManager;
+	private String department;
+	private String division;
+	private String unit;
+	private String position;
 	private Set<String> objects;
 
 	private List<UserRoleObject> menuObject;

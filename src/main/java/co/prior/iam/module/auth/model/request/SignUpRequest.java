@@ -46,5 +46,15 @@ public class SignUpRequest {
 	private Long surveyId;
 	@Nullable
 	private Long provinceId;
+
+	private Long lineManager;
+
+	private String department;
+
+	private String division;
+
+	private String unit;
+
+	private String position;
 	
 }

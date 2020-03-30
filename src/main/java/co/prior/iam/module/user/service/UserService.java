@@ -92,6 +92,11 @@ public class UserService {
                         .createdBy(user.getCreatedBy())
                         .userType(user.getUserType())
                         .provinceId(user.getProvince().getProvinceId())
+                        .lineManager(user.getLineManager() != null ? user.getLineManager().getUserId() : null)
+                        .position(user.getPosition())
+                        .division(user.getDivision())
+                        .unit(user.getUnit())
+                        .department(user.getDepartment())
                         .build());
             } else if (user.getSurvey() != null) {
                 data.add(GetUserResponse.builder()
@@ -112,6 +117,11 @@ public class UserService {
                         .createdBy(user.getCreatedBy())
                         .userType(user.getUserType())
                         .surveyId(user.getSurvey().getSurveyId())
+                        .lineManager(user.getLineManager() != null ? user.getLineManager().getUserId() : null)
+                        .position(user.getPosition())
+                        .division(user.getDivision())
+                        .unit(user.getUnit())
+                        .department(user.getDepartment())
                         .build());
             } else if (user.getSurvey() == null && user.getProvince() == null) {
                 data.add(GetUserResponse.builder()
@@ -131,6 +141,11 @@ public class UserService {
                         .createdDate(user.getCreatedDate())
                         .createdBy(user.getCreatedBy())
                         .userType(user.getUserType())
+                        .lineManager(user.getLineManager() != null ? user.getLineManager().getUserId() : null )
+                        .position(user.getPosition())
+                        .division(user.getDivision())
+                        .unit(user.getUnit())
+                        .department(user.getDepartment())
                         .build());
             }
 
@@ -220,6 +235,8 @@ public class UserService {
         IamMsUser iamMsUser = this.iamMsUserRepository.findByUserIdAndIsDeleted(request.getUserId(), AnswerFlag.N.toString())
                 .orElseThrow(() -> new DataNotFoundException(ErrorCode.USER_NOT_FOUND));
 
+        Optional<IamMsUser> lineManager = this.iamMsUserRepository.findByUserIdAndIsDeleted(request.getLineManager(),AnswerFlag.N.toString());
+
         if (request.getSurveyId() != null) {
             Optional<PpiMsSurvey> survey = this.ppiMsSurveyRepository.findBySurveyIdAndIsDeleted(request.getSurveyId(), AnswerFlag.N.toString());
             if (!survey.isPresent()) {
@@ -248,6 +265,11 @@ public class UserService {
         iamMsUser.setEngLastName(request.getEngLastName());
         iamMsUser.setDisableFlag(request.getDisableFlag().toString());
         iamMsUser.setUserType(request.getUserType());
+        iamMsUser.setLineManager(lineManager.get());
+        iamMsUser.setDepartment(request.getDepartment());
+        iamMsUser.setDivision(request.getDivision());
+        iamMsUser.setUnit(request.getUnit());
+        iamMsUser.setPosition(request.getPosition());
         this.iamMsUserRepository.save(iamMsUser);
     }
 
@@ -291,6 +313,15 @@ public class UserService {
         iamMsUser.setNoOfFailTimes(0);
 
         this.iamMsUserRepository.save(iamMsUser);
+    }
+
+
+    public List<IamMsUser> searchUser() {
+        log.info("Service searchUser: {}");
+
+        List<IamMsUser> user = this.iamMsUserRepository.findAllByIsDeleted(AnswerFlag.N.toString());
+
+        return user;
     }
 
 

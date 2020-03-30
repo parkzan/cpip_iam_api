@@ -1,9 +1,6 @@
 package co.prior.iam.module.auth.service;
 
-import co.prior.iam.entity.IamMsParameterInfo;
-import co.prior.iam.entity.IamMsUser;
-import co.prior.iam.entity.PpiMsProvince;
-import co.prior.iam.entity.PpiMsSurvey;
+import co.prior.iam.entity.*;
 import co.prior.iam.error.exception.BadRequestException;
 import co.prior.iam.error.exception.DataDuplicateException;
 import co.prior.iam.error.exception.DataNotFoundException;
@@ -36,6 +33,7 @@ import org.springframework.util.StringUtils;
 
 import java.time.LocalDateTime;
 import java.util.Calendar;
+import java.util.Optional;
 
 @Slf4j
 @Service
@@ -149,7 +147,7 @@ public class AuthService {
 
     @Transactional()
     public IamMsUser signUp(SignUpRequest request) {
-        log.info("Service signUp systemId: {}, userCode: {}", request.getUserCode());
+        log.info("Service signUp systemId: {}, userCode: {}", request);
 
         ParamInfoData userTypeAdmin = getUserType(UserType.ADMIN);
         if (this.iamMsUserRepository.existsByUserCodeAndIsDeleted(
@@ -158,6 +156,7 @@ public class AuthService {
             throw new DataDuplicateException(ErrorCode.USER_DUPLICATED);
         }
 
+        Optional<IamMsUser> lineManager = this.iamMsUserRepository.findByUserIdAndIsDeleted(request.getLineManager(),AnswerFlag.N.toString());
 
         IamMsParameterInfo userType = this.paramInfoRepository.findByParamInfoIdAndIsDeleted(request.getUserType(), AnswerFlag.N.toString())
                 .orElseThrow(() -> new DataNotFoundException(ErrorCode.INTERNAL_SERVER_ERROR));
@@ -183,6 +182,11 @@ public class AuthService {
                     .disableFlag(AnswerFlag.N.toString())
                     .userType(userType.getParamInfoId())
                     .province(ppiMsProvince)
+                    .lineManager(lineManager.get())
+                    .department(request.getDepartment())
+                    .unit(request.getUnit())
+                    .division(request.getDivision())
+                    .position(request.getPosition())
                     .build();
 
             iamMsUser.setUpdatedBy(null);
@@ -210,6 +214,11 @@ public class AuthService {
                     .disableFlag(AnswerFlag.N.toString())
                     .userType(userType.getParamInfoId())
                     .survey(ppiMsSurvey)
+                    .lineManager(lineManager.get())
+                    .department(request.getDepartment())
+                    .unit(request.getUnit())
+                    .division(request.getDivision())
+                    .position(request.getPosition())
                     .build();
 
             iamMsUser.setUserPassword(passwordEncoder.encode(request.getPassword()));
@@ -229,6 +238,11 @@ public class AuthService {
                 .firstTimeLogin(AnswerFlag.Y.toString())
                 .isIamAdmin(isIamAdmin)
                 .noOfFailTimes(0)
+                .lineManager(lineManager.get())
+                .department(request.getDepartment())
+                .unit(request.getUnit())
+                .division(request.getDivision())
+                .position(request.getPosition())
                 .build();
 
 //        if (isIamAdmin.equals(AnswerFlag.Y.toString())) {

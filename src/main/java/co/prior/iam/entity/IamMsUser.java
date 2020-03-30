@@ -3,17 +3,7 @@ package co.prior.iam.entity;
 import java.time.LocalDateTime;
 import java.util.Set;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.SequenceGenerator;
-import javax.persistence.Table;
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -36,6 +26,7 @@ import lombok.ToString;
 public class IamMsUser extends BaseEntity<IamMsUser> {
 
 	@Id
+	@Column(name = "USER_ID")
     @SequenceGenerator(name = "user_id_seq", sequenceName = "iam_ms_user_seq", allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user_id_seq")
 	private Long userId;
@@ -51,6 +42,13 @@ public class IamMsUser extends BaseEntity<IamMsUser> {
 	private String isIamAdmin;
 	private Integer noOfFailTimes;
 	private String disableFlag;
+	@ManyToOne
+	@JoinColumn(name = "LINE_MANAGER",referencedColumnName = "USER_ID")
+	private IamMsUser lineManager;
+	private String department;
+	private String division;
+	private String unit;
+	private String position;
 
 
 	@JsonIgnore

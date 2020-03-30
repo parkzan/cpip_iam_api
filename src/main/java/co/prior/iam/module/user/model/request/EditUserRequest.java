@@ -36,5 +36,16 @@ public class EditUserRequest {
 	private Long surveyId;
 
 	private Long provinceId;
-	
+
+	private Long LineManager;
+
+	private String department;
+
+	private String division;
+
+	private String unit;
+
+	private String position;
+
+
 }

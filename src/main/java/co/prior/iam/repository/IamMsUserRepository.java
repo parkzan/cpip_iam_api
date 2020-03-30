@@ -1,9 +1,11 @@
 package co.prior.iam.repository;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
 
@@ -32,4 +34,7 @@ public interface IamMsUserRepository extends PagingAndSortingRepository<IamMsUse
 
     Page<IamMsUser> findPageableByUserCodeNotAndIsDeletedOrderByUserCode(
             String userCode, String isDeleted, Pageable pageable);
+
+    @Query(value = "select u from IamMsUser u where u.isDeleted = ?1")
+    List<IamMsUser> findAllByIsDeleted(String isDeleted);
 }

@@ -3,6 +3,7 @@ package co.prior.iam.module.user.controller;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
+import co.prior.iam.entity.IamMsUser;
 import co.prior.iam.module.user.model.request.ResignUserRequest;
 import co.prior.iam.module.user.service.UserRoleService;
 import org.springframework.http.ResponseEntity;
@@ -25,6 +26,8 @@ import co.prior.iam.module.user.service.UserService;
 import co.prior.iam.security.CurrentUser;
 import co.prior.iam.security.UserPrincipal;
 import lombok.extern.slf4j.Slf4j;
+
+import java.util.List;
 
 @Slf4j
 @RestController
@@ -99,4 +102,12 @@ public class UserController {
 
 		return ResponseEntity.noContent().build();
 	}
+
+	@GetMapping("user/search")
+	public ResponseEntity<List<IamMsUser>> searchUser(){
+		log.info("Controller searchUser {}");
+		List<IamMsUser>  result = this.userService.searchUser();
+		return ResponseEntity.ok(result);
+	}
+
 }
