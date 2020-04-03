@@ -27,4 +27,6 @@ public interface IamMsUserRoleRepository extends JpaRepository<IamMsUserRole, Lo
 
 	boolean existsByIamMsSystem_SystemIdAndIamMsUser_UserIdAndIamMsRole_RoleIdAndIsDeleted(
 			long systemId, long userId, long roleId, String isDeleted);
+
+	List<IamMsUserRole> findByIamMsSystem_SystemCodeAndIsDeleted(String systemCode, String isDeleted);
 }

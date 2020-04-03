@@ -5,6 +5,7 @@ import javax.validation.Valid;
 
 import co.prior.iam.entity.IamMsUser;
 import co.prior.iam.module.user.model.request.ResignUserRequest;
+import co.prior.iam.module.user.model.response.GetUserRoleSystemRespone;
 import co.prior.iam.module.user.service.UserRoleService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -108,6 +109,13 @@ public class UserController {
 		log.info("Controller searchUser {}");
 		List<IamMsUser>  result = this.userService.searchUser();
 		return ResponseEntity.ok(result);
+	}
+
+	@GetMapping("/user/systemByCode/{system_code}")
+	public ResponseEntity<List<GetUserRoleSystemRespone>> getUserRolesBySystemCode(@PathVariable(value = "system_code") String systemCode) {
+		log.info("Controller getUserRolesBySystemCode: {}", systemCode);
+
+		return ResponseEntity.ok(this.userRoleService.getUserRolesBySystemCode(systemCode));
 	}
 
 }
