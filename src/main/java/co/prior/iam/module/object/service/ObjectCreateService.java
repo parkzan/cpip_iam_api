@@ -42,7 +42,7 @@ public class ObjectCreateService {
         Optional<IamMsObject> iamMsObject = this.objectRepository.findByIamMsSystemAndObjectCodeAndIsDeleted(
                 iamMsSystem, objectCreateReq.getObjectCode(), AnswerFlag.N.toString());
 
-        IamMsParameterInfo type = this.paramRepository.findByParamInfoIdAndIsDeleted(objectCreateReq.getType(), AnswerFlag.N.toString())
+        IamMsParameterInfo type = this.paramRepository.findByParamCodeAndIsDeleted(objectCreateReq.getType(), AnswerFlag.N.toString())
 				.orElseThrow(() -> new DataNotFoundException(ErrorCode.INTERNAL_SERVER_ERROR));
 
         IamMsObject parentObject = null;

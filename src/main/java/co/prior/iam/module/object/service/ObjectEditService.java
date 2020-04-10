@@ -31,7 +31,7 @@ public class ObjectEditService {
         IamMsObject iamMsObject = this.objectRepository.findByObjectId(objectEditReq.getObjectId())
                 .orElseThrow(() -> new DataNotFoundException(ErrorCode.OBJECT_NOT_FOUND));
 
-        IamMsParameterInfo type = this.paramRepository.findByParamInfoIdAndIsDeleted(objectEditReq.getType(), AnswerFlag.N.toString())
+        IamMsParameterInfo type = this.paramRepository.findByParamCodeAndIsDeleted(objectEditReq.getType(), AnswerFlag.N.toString())
                 .orElseThrow(() -> new DataNotFoundException(ErrorCode.INTERNAL_SERVER_ERROR));
 
         iamMsObject.setObjectName(objectEditReq.getNewName());

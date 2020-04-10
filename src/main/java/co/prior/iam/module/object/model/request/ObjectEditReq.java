@@ -12,7 +12,7 @@ public class ObjectEditReq {
     private Long objectId;
     private String newName;
     private String url;
-    private long type;
+    private String type;
     private float sort;
 
 }

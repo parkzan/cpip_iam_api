@@ -13,7 +13,7 @@ public class ObjectCreateReq {
     private long systemId;
     private long objectParentId;
     private String url;
-    private long type;
+    private String type;
     private float sort;
 
 }
