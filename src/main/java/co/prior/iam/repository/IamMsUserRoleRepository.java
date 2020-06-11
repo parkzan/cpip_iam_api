@@ -13,16 +13,19 @@ import co.prior.iam.entity.IamMsUserRole;
 public interface IamMsUserRoleRepository extends JpaRepository<IamMsUserRole, Long> {
 
 	Optional<IamMsUserRole> findByUserRoleIdAndIsDeleted(long userRoleId, String isDeleted);
-	
+
 	List<IamMsUserRole> findByIamMsUser_UserIdAndIsDeleted(long userId, String isDeleted);
+	
+	List<IamMsUserRole> findByIamMsUser_UserIdAndIsDeletedAndIamMsSystem_IsDeleted(long userId, String isDeleted, String systemIsDeleted);
 
 	List<IamMsUserRole> findByIamMsSystem_SystemIdAndIsDeleted(long systemId, String isDeleted);
+
 	List<IamMsUserRole> findByIamMsSystem_SystemIdAndIamMsUser_UserIdAndIsDeleted(long systemId,long userId ,String isDeleted);
 
 	List<IamMsUserRole> findByIamMsRole_RoleIdAndIsDeleted(long roleId, String isDeleted);
 
 
-	@Query(value = " select system_id from {h-schema}iam_ms_user_role where user_id = ?1  and is_deleted = 'N' group by  system_id" , nativeQuery = true )
+	@Query(value = " select r.system_id from {h-schema}iam_ms_user_role r , {h-schema}iam_ms_system s  where r.user_id = ?1 and r.system_id = s.system_id and s.is_deleted = 'N'  and r.is_deleted = 'N' group by  r.system_id" , nativeQuery = true )
 	List<Long> getListSystemId(long user_id);
 
 	boolean existsByIamMsSystem_SystemIdAndIamMsUser_UserIdAndIamMsRole_RoleIdAndIsDeleted(
