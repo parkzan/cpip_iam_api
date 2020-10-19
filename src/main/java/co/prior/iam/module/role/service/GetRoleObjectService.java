@@ -123,8 +123,11 @@ public class GetRoleObjectService {
 
         Optional<IamMsRole> iamMsRoleOpt = this.roleRepository.findByRoleIdAndIsDeleted(roleId, AnswerFlag.N.toString());
         
-        List<IamMsRoleObject> objectList = this.roleObjectRepository.findByIamMsRole_RoleIdAndIsDeleted(
-        		roleId, AnswerFlag.N.toString());
+//        List<IamMsRoleObject> objectList = this.roleObjectRepository.findByIamMsRole_RoleIdAndIsDeleted(
+//        		roleId, AnswerFlag.N.toString());
+        List<IamMsRoleObject> objectList = this.roleObjectRepository.findByIamMsRole_RoleIdAndIsDeletedAndIamMsObject_IsDeleted(
+        		roleId, AnswerFlag.N.toString(), AnswerFlag.N.toString());
+
 
         if (iamMsRoleOpt.isPresent() && !objectList.isEmpty()) {
         	List<ObjectModel> listChid = new ArrayList<>();
